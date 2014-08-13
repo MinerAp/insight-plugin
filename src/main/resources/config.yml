@@ -1,0 +1,13 @@
+database:
+  connection:
+    type: mysql
+    address: localhost
+    port: 3306
+    databaseName: insight
+    username: 
+    password: 
+  tuning:
+    cacheSize: 1000
+
+logging:
+  inventory: true

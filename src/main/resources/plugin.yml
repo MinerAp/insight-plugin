@@ -1,0 +1,9 @@
+name: Insight
+version: ${project.version}
+load: POSTWORLD
+author: Andy Shulman
+main: com.amshulman.insight.InsightPlugin
+softdepend: [WorldEdit, PlayerHeads]
+commands:
+  insight:
+    aliases: [i]
