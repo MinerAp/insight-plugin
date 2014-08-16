@@ -66,11 +66,11 @@
 			<artifactId>insight-sql</artifactId>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.amshulman</groupId>
 			<artifactId>insight-redis</artifactId>
 			<scope>compile</scope>
-		</dependency>
+		</dependency> -->
 
 		<!-- insight-cb -->
 		<dependency>
