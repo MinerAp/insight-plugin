@@ -22,10 +22,6 @@ public class BlockFromToListener extends InternalEventHandler<BlockFromToEvent> 
     @Override
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void listen(final BlockFromToEvent event) {
-//        System.out.println("--------------------------");
-//        System.out.println("from: " + event.getBlock().getType());
-//        System.out.println("to: " + event.getToBlock().getType());
-//        System.out.println("face: " + event.getFace());
         long when = System.currentTimeMillis();
         switch (event.getBlock().getType()) {
             case WATER:
@@ -68,52 +64,6 @@ public class BlockFromToListener extends InternalEventHandler<BlockFromToEvent> 
                 break;
         }
     }
-
-/*    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onBlockFromTo(BlockFromToEvent event) {
-            final Block to = event.getToBlock();
-            final Material typeFrom = event.getBlock().getType();
-            final Material typeTo = to.getType();
-            final boolean canFlow = typeTo == Material.AIR || nonFluidProofBlocks.contains(typeTo);
-            if (typeFrom == Material.LAVA || typeFrom == Material.STATIONARY_LAVA) {
-                if (canFlow) {
-                    if (isSurroundedByWater(to) && event.getBlock().getData() <= 2) {
-                        // queueBlockReplace("LavaFlow", to.getState(), 4, (byte) 0);
-                    } else if (typeTo == Material.AIR) {
-                        // queueBlockPlace("LavaFlow", to.getLocation(), 10, (byte) (event.getBlock().getData() + 1));
-                    } else {
-                        // queueBlockReplace("LavaFlow", to.getState(), 10, (byte) (event.getBlock().getData() + 1));
-                    }
-                } else if (typeTo == 8 || typeTo == 9) {
-                    if (event.getFace() == BlockFace.DOWN) {
-                        // queueBlockReplace("LavaFlow", to.getState(), 1, (byte) 0);
-                    } else {
-                        // queueBlockReplace("LavaFlow", to.getState(), 4, (byte) 0);
-                    }
-                }
-            } else if ((typeFrom == 8 || typeFrom == 9)) {
-                if (typeTo == Material.AIR) {
-                    // queueBlockPlace("WaterFlow", to.getLocation(), 8, (byte) (event.getBlock().getData() + 1));
-                } else if (nonFluidProofBlocks.contains(typeTo)) {
-                    // queueBlockReplace("WaterFlow", to.getState(), 8, (byte) (event.getBlock().getData() + 1));
-                }
-                else if (typeTo == Material.LAVA || typeTo == Material.STATIONARY_LAVA) {
-                    if (to.getData() == 0) {
-                        // queueBlockReplace("WaterFlow", to.getState(), 49, (byte) 0);
-                    } else if (event.getFace() == BlockFace.DOWN) {
-                        // queueBlockReplace("LavaFlow", to.getState(), 1, (byte) 0);
-                    }
-                }
-                if (typeTo == Material.AIR || nonFluidProofBlocks.contains(typeTo)) {
-                    for (final BlockFace face : new BlockFace[] { BlockFace.DOWN, BlockFace.NORTH, BlockFace.WEST, BlockFace.EAST, BlockFace.SOUTH }) {
-                        final Block lower = to.getRelative(face);
-                        if (lower.getTypeId() == 10 || lower.getTypeId() == 11) {
-                            // queueBlockReplace("WaterFlow", lower.getState(), lower.getData() == 0 ? 49 : 4, (byte) 0);
-                        }
-                    }
-                }
-            }
-    }*/
 
     private static boolean hasAdjacentWater(Block block) {
         for (BlockFace face : CARDINAL_DIRECTIONS) {
