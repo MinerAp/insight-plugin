@@ -93,30 +93,19 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
         registerEventHandler(new WandListener(configurationContext));
 
         registerEventHandler(new BlockBreakListener());
-        registerEventHandler(new BlockBurnListener());
-        registerEventHandler(new BlockFadeListener());
         registerEventHandler(new BlockFormListener());
         registerEventHandler(new BlockFromToListener());
-        registerEventHandler(new BlockIgniteListener()); // TODO
         registerEventHandler(new BlockPlaceListener());
-        registerEventHandler(new BlockSpreadListener());
         registerEventHandler(new CreatureSpawnListener()); // TODO
         registerEventHandler(new EntityBlockFormListener());
         registerEventHandler(new EntityChangeBlockListener());
         registerEventHandler(new EntityExplodeListener()); // TODO
         registerEventHandler(new EntityTargetListener()); // TODO
-        registerEventHandler(new HangingBreakByEntityListener()); // TODO
-        registerEventHandler(new HangingBreakListener()); // TODO
-        registerEventHandler(new HangingPlaceListener()); // TODO
-        registerEventHandler(new LeavesDecayListener());
-        registerEventHandler(new PlayerBucketEmptyListener());
-        registerEventHandler(new PlayerBucketFillListener());
         registerEventHandler(new PlayerExpChangeListener()); // TODO
         registerEventHandler(new PlayerInteractEntityListener()); // TODO
         registerEventHandler(new PlayerShearEntityListener()); // TODO
         registerEventHandler(new PotionSplashListener()); // TODO
         registerEventHandler(new SignChangeListener());
-        registerEventHandler(new StructureGrowListener()); // TODO
 
         if (configurationContext.isLoggingInventory()) {
             registerEventHandler(new InventoryCloseListener(writeBackend));
@@ -130,13 +119,13 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
             registerEventHandler(new PlayerDropItemListener());
             registerEventHandler(new PlayerPickupItemListener());
         }
-        
+
         boolean loginLogging = false;
         if (loginLogging) {
             registerEventHandler(new PlayerJoinListener());
             registerEventHandler(new PlayerQuitListener());
         }
-        
+
         boolean vehicleLogging = false;
         if (vehicleLogging) {
             registerEventHandler(new VehicleCreateListener()); // TODO
@@ -149,21 +138,52 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
         if (leashLogging) {
             registerEventHandler(new EntityUnleashListener()); // TODO
             registerEventHandler(new PlayerLeashEntityListener()); // TODO
-            registerEventHandler(new PlayerUnleashEntityListener()); // TODO            
+            registerEventHandler(new PlayerUnleashEntityListener()); // TODO
         }
-        
+
         boolean deathLogging = true;
         if (deathLogging) {
             registerEventHandler(new EntityDeathListener());
-            
+
         }
-        
+
         boolean pistonLogging = false;
         if (pistonLogging) {
             registerEventHandler(new BlockPistonExtendListener()); // TODO
             registerEventHandler(new BlockPistonRetractListener()); // TODO
         }
-        
+
+        boolean bucketLogging = true;
+        if (bucketLogging) {
+            registerEventHandler(new PlayerBucketEmptyListener());
+            registerEventHandler(new PlayerBucketFillListener());
+        }
+
+        boolean leafLogging = true;
+        if (leafLogging) {
+            registerEventHandler(new LeavesDecayListener());
+        }
+
+        boolean hangingLogging = true;
+        if (hangingLogging) {
+            registerEventHandler(new HangingBreakByEntityListener()); // TODO
+            registerEventHandler(new HangingBreakListener()); // TODO
+            registerEventHandler(new HangingPlaceListener()); // TODO
+        }
+
+        boolean fireLogging = true;
+        if (fireLogging) {
+            registerEventHandler(new BlockBurnListener());
+            registerEventHandler(new BlockIgniteListener()); // TODO
+        }
+
+        boolean naturalLogging = true;
+        if (naturalLogging) {
+            registerEventHandler(new BlockSpreadListener());
+            registerEventHandler(new BlockFadeListener());
+            registerEventHandler(new StructureGrowListener()); // TODO
+        }
+
         super.onEnable();
     }
 
