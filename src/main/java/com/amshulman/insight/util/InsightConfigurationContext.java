@@ -34,6 +34,16 @@ public class InsightConfigurationContext extends ConfigurationContext implements
     PlayerInfoManager infoManager;
 
     boolean loggingInventory;
+    boolean loggingDrops;
+    boolean loggingLogins;
+    boolean loggingVehicles;
+    boolean loggingLeashes;
+    boolean loggingDeaths;
+    boolean loggingPistons;
+    boolean loggingBuckets;
+    boolean loggingHangings;
+    boolean loggingFire;
+    boolean loggingNaturalChanges;
 
     public InsightConfigurationContext(MbapiPlugin plugin) {
         super(plugin);
@@ -71,14 +81,16 @@ public class InsightConfigurationContext extends ConfigurationContext implements
 
         /* logging choices */
         loggingInventory = configuration.getBoolean("logging.inventory");
-
-
-
-
-
-
-
-
+        loggingDrops = configuration.getBoolean("logging.drops");
+        loggingLogins = configuration.getBoolean("logging.logins");
+        loggingVehicles = configuration.getBoolean("logging.vehicles");
+        loggingLeashes = configuration.getBoolean("logging.leashes");
+        loggingDeaths = configuration.getBoolean("logging.deaths");
+        loggingPistons = configuration.getBoolean("logging.pistons");
+        loggingBuckets = configuration.getBoolean("logging.buckets");
+        loggingHangings = configuration.getBoolean("logging.hangings");
+        loggingFire = configuration.getBoolean("logging.fire");
+        loggingNaturalChanges = configuration.getBoolean("logging.nature");
 
         infoManager = new PlayerInfoManager();
 

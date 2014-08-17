@@ -114,74 +114,60 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
             registerEventHandler(new InventoryInteractListener());
         }
 
-        boolean dropLogging = true;
-        if (dropLogging) {
+        if (configurationContext.isLoggingDrops()) {
             registerEventHandler(new PlayerDropItemListener());
             registerEventHandler(new PlayerPickupItemListener());
         }
 
-        boolean loginLogging = false;
-        if (loginLogging) {
+        if (configurationContext.isLoggingLogins()) {
             registerEventHandler(new PlayerJoinListener());
             registerEventHandler(new PlayerQuitListener());
         }
 
-        boolean vehicleLogging = false;
-        if (vehicleLogging) {
+        if (configurationContext.isLoggingVehicles()) {
             registerEventHandler(new VehicleCreateListener()); // TODO
             registerEventHandler(new VehicleDestroyListener()); // TODO
             registerEventHandler(new VehicleEnterListener()); // TODO
             registerEventHandler(new VehicleExitListener()); // TODO
         }
 
-        boolean leashLogging = false;
-        if (leashLogging) {
+        if (configurationContext.isLoggingLeashes()) {
             registerEventHandler(new EntityUnleashListener()); // TODO
             registerEventHandler(new PlayerLeashEntityListener()); // TODO
             registerEventHandler(new PlayerUnleashEntityListener()); // TODO
         }
 
-        boolean deathLogging = true;
-        if (deathLogging) {
+        if (configurationContext.isLoggingDeaths()) {
             registerEventHandler(new EntityDeathListener());
 
         }
 
-        boolean pistonLogging = false;
-        if (pistonLogging) {
+        if (configurationContext.isLoggingPistons()) {
             registerEventHandler(new BlockPistonExtendListener()); // TODO
             registerEventHandler(new BlockPistonRetractListener()); // TODO
         }
 
-        boolean bucketLogging = true;
-        if (bucketLogging) {
+        if (configurationContext.isLoggingBuckets()) {
             registerEventHandler(new PlayerBucketEmptyListener());
             registerEventHandler(new PlayerBucketFillListener());
         }
 
-        boolean leafLogging = true;
-        if (leafLogging) {
-            registerEventHandler(new LeavesDecayListener());
-        }
-
-        boolean hangingLogging = true;
-        if (hangingLogging) {
+        if (configurationContext.isLoggingHangings()) {
             registerEventHandler(new HangingBreakByEntityListener()); // TODO
             registerEventHandler(new HangingBreakListener()); // TODO
             registerEventHandler(new HangingPlaceListener()); // TODO
         }
 
-        boolean fireLogging = true;
-        if (fireLogging) {
+        if (configurationContext.isLoggingFire()) {
             registerEventHandler(new BlockBurnListener());
             registerEventHandler(new BlockIgniteListener()); // TODO
         }
 
-        boolean naturalLogging = true;
-        if (naturalLogging) {
+        if (configurationContext.isLoggingNaturalChanges()) {
             registerEventHandler(new BlockSpreadListener());
             registerEventHandler(new BlockFadeListener());
             registerEventHandler(new StructureGrowListener()); // TODO
+            registerEventHandler(new LeavesDecayListener());
         }
 
         super.onEnable();

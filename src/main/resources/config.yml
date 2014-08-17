@@ -11,3 +11,13 @@ database:
 
 logging:
   inventory: true
+  drops: true
+  logins: false
+  vehicles: false
+  leashes: false
+  deaths: true
+  pistons: false
+  buckets: true
+  hangings: true
+  fire: true
+  nature: true
