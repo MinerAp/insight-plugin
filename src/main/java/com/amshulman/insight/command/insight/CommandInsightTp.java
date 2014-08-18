@@ -1,7 +1,6 @@
 package com.amshulman.insight.command.insight;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -11,6 +10,7 @@ import com.amshulman.insight.util.Commands.InsightCommands;
 import com.amshulman.insight.util.InsightConfigurationContext;
 import com.amshulman.insight.util.PlayerInfo;
 import com.amshulman.mbapi.commands.PlayerOnlyCommand;
+import com.amshulman.mbapi.util.LocationUtil;
 import com.amshulman.typesafety.TypeSafeCollections;
 import com.amshulman.typesafety.TypeSafeList;
 
@@ -41,7 +41,7 @@ public class CommandInsightTp extends PlayerOnlyCommand {
         }
 
         InsightRecord record = playerInfo.getLastResults().getRecord(recordNum);
-        player.teleport(new Location(Bukkit.getWorld(record.getWorld()), record.getX(), record.getY(), record.getZ()));
+        player.teleport(LocationUtil.center(Bukkit.getWorld(record.getWorld()), record.getX(), record.getY() + 1, record.getZ()));
         return true;
     }
 
