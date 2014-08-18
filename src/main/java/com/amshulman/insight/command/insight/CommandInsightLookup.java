@@ -36,7 +36,7 @@ public class CommandInsightLookup extends ConsoleOrPlayerCommand {
         try {
             lookupQueryParams = QueryUtil.parseArgs(args);
         } catch (RecognitionException e) {
-            player.sendMessage(ChatColor.RED + "Invalid query argument:" + e.getOffendingToken().getText());
+            player.sendMessage(ChatColor.RED + "Invalid query argument: " + e.getOffendingToken().getText());
             return true;
         } catch (InvalidActionException e) {
             player.sendMessage(ChatColor.RED + "Unknown action specified: " + e.getMessage());
