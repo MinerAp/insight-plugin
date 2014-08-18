@@ -15,16 +15,19 @@ import com.amshulman.insight.query.QueryParameters;
 import com.amshulman.insight.util.Commands.InsightCommands;
 import com.amshulman.insight.util.InsightConfigurationContext;
 import com.amshulman.insight.util.QueryUtil;
+import com.amshulman.insight.worldedit.WorldEditBridge;
 import com.amshulman.mbapi.commands.ConsoleOrPlayerCommand;
 import com.amshulman.typesafety.TypeSafeList;
 
 public class CommandInsightLookup extends ConsoleOrPlayerCommand {
 
     private final PlayerCallbackReadBackend readBackend;
+    private final boolean worldEditEnabled;
 
     public CommandInsightLookup(InsightConfigurationContext configurationContext) {
         super(configurationContext, InsightCommands.LOOKUP, 1, Integer.MAX_VALUE);
         readBackend = configurationContext.getReadBackend();
+        worldEditEnabled = configurationContext.isWorldEditEnabled();
     }
 
     @Override
@@ -53,11 +56,19 @@ public class CommandInsightLookup extends ConsoleOrPlayerCommand {
         QueryUtil.copyMaterials(lookupQueryParams, queryBuilder);
         QueryUtil.copyOrder(lookupQueryParams, queryBuilder);
         QueryUtil.copyTimes(lookupQueryParams, queryBuilder);
-        // QueryUtil.copyLocation(lookupQueryParams, queryBuilder);
 
         if (lookupQueryParams.isLocationSet()) {
             if (lookupQueryParams.getRadius() == QueryParameters.WORLDEDIT) {
+                if (!worldEditEnabled) {
+                    player.sendMessage(ChatColor.RED + "WorldEdit is not loaded");
+                    return true;
+                }
 
+                boolean success = WorldEditBridge.getSelectedArea(player, queryBuilder);
+                if (!success) {
+                    player.sendMessage(ChatColor.RED + "Error getting selection.");
+                    return true;
+                }
             } else {
                 queryBuilder.setArea(player.getLocation(), lookupQueryParams.getRadius());
             }

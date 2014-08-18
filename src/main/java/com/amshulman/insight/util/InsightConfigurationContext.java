@@ -2,16 +2,17 @@ package com.amshulman.insight.util;
 
 import java.util.logging.Logger;
 
-import org.bukkit.configuration.file.FileConfiguration;
-
 import lombok.EqualsAndHashCode;
 import lombok.Value;
+
+import org.bukkit.configuration.file.FileConfiguration;
 
 import com.amshulman.insight.backend.BackendType;
 import com.amshulman.insight.backend.PlayerCallbackReadBackend;
 import com.amshulman.insight.backend.SqlReadWriteBackend;
 import com.amshulman.insight.backend.WriteBackend;
 import com.amshulman.insight.management.PlayerInfoManager;
+import com.amshulman.insight.worldedit.WorldEditBridge;
 import com.amshulman.mbapi.MbapiPlugin;
 import com.amshulman.mbapi.util.ConfigurationContext;
 
@@ -27,6 +28,8 @@ public class InsightConfigurationContext extends ConfigurationContext implements
     String databaseUsername;
     String databasePassword;
     BackendType databaseType;
+
+    boolean worldEditEnabled;
 
     Logger logger;
     PlayerCallbackReadBackend readBackend;
@@ -75,7 +78,13 @@ public class InsightConfigurationContext extends ConfigurationContext implements
 
         databaseUsername = configuration.getString("database.connection.username");
         databasePassword = configuration.getString("database.connection.password");
-        
+
+        boolean worldEditEnabled = false;
+        try {
+            worldEditEnabled = WorldEditBridge.isWorldEditEnabled();
+        } catch (NoClassDefFoundError e) {}
+        this.worldEditEnabled = worldEditEnabled;
+
         /* tuning */
         cacheSize = configuration.getInt("database.tuning.cacheSize");
 
