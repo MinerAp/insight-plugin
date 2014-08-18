@@ -2,11 +2,14 @@ package com.amshulman.insight;
 
 import javax.annotation.Nonnull;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+
 import com.amshulman.insight.backend.WriteBackend;
 import com.amshulman.insight.command.CommandInsight;
 import com.amshulman.insight.event.InternalEventHandler;
 import com.amshulman.insight.event.InventoryInteractListener;
-import com.amshulman.insight.event.PlayerRegistrationHandler;
+import com.amshulman.insight.event.RegistrationHandler;
 import com.amshulman.insight.event.WandListener;
 import com.amshulman.insight.event.block.BlockBreakListener;
 import com.amshulman.insight.event.block.BlockBurnListener;
@@ -88,8 +91,12 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
 
         writeBackend = configurationContext.getWriteBackend();
 
+        for (World world : Bukkit.getWorlds()) {
+            writeBackend.registerWorld(world.getName());
+        }
+
         registerCommandExecutor(new CommandInsight(configurationContext));
-        registerEventHandler(new PlayerRegistrationHandler(configurationContext));
+        registerEventHandler(new RegistrationHandler(configurationContext));
         registerEventHandler(new WandListener(configurationContext));
 
         registerEventHandler(new BlockBreakListener());
