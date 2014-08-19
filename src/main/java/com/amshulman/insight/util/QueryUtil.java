@@ -11,9 +11,7 @@ import org.bukkit.command.CommandSender;
 
 import com.amshulman.insight.action.InsightAction;
 import com.amshulman.insight.parser.InsightParserErrorStrategy;
-import com.amshulman.insight.parser.InvalidActionException;
-import com.amshulman.insight.parser.InvalidMaterialException;
-import com.amshulman.insight.parser.InvalidRadiusException;
+import com.amshulman.insight.parser.InvalidTokenException;
 import com.amshulman.insight.parser.QueryLexer;
 import com.amshulman.insight.parser.QueryParser;
 import com.amshulman.insight.query.QueryParameterBuilder;
@@ -33,12 +31,8 @@ public final class QueryUtil {
             return parser.parse().queryParameters;
         } catch (RecognitionException e) {
             sender.sendMessage(ChatColor.RED + "Invalid argument: " + e.getOffendingToken().getText());
-        } catch (InvalidActionException e) {
-            sender.sendMessage(ChatColor.RED + "Unknown action specified: " + e.getMessage());
-        } catch (InvalidMaterialException e) {
-            sender.sendMessage(ChatColor.RED + "Unknown material specified: " + e.getMessage());
-        } catch (InvalidRadiusException e) {
-            sender.sendMessage(ChatColor.RED + "Invalid radius specified: " + e.getMessage());
+        } catch (InvalidTokenException e) {
+            sender.sendMessage(ChatColor.RED + "Unknown " + e.getType().toString().toLowerCase() + " specified: " + e.getMessage());
         }
 
         return null;
