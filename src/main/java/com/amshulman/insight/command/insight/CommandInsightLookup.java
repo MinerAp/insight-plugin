@@ -66,7 +66,7 @@ public class CommandInsightLookup extends ConsoleOrPlayerCommand {
         }
 
         readBackend.query(player.getName(), queryBuilder.build(), true);
-        return false;
+        return true;
     }
 
     @Override
@@ -96,7 +96,7 @@ public class CommandInsightLookup extends ConsoleOrPlayerCommand {
         QueryUtil.copyWorlds(params, queryBuilder); // Different from above
 
         readBackend.query(console.getName(), queryBuilder.build(), true);
-        return false;
+        return true;
     }
 
     @Override
