@@ -77,9 +77,25 @@ public class CommandInsightLookup extends ConsoleOrPlayerCommand {
         }
 
         if (params.isLocationSet()) {
+            console.sendMessage(ChatColor.RED + "You may not specify a location from the console");
             return true;
         }
 
+        if (params.getWorlds().isEmpty()) {
+            console.sendMessage(ChatColor.RED + "You must specify at least one world to query");
+            return true;
+        }
+
+        QueryParameterBuilder queryBuilder = readBackend.newQueryBuilder();
+        QueryUtil.copyActors(params, queryBuilder);
+        QueryUtil.copyActions(params, queryBuilder);
+        QueryUtil.copyActees(params, queryBuilder);
+        QueryUtil.copyMaterials(params, queryBuilder);
+        QueryUtil.copyOrder(params, queryBuilder);
+        QueryUtil.copyTimes(params, queryBuilder);
+        QueryUtil.copyWorlds(params, queryBuilder); // Different from above
+
+        readBackend.query(console.getName(), queryBuilder.build(), true);
         return false;
     }
 
