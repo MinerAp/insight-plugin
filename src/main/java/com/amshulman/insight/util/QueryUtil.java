@@ -6,9 +6,14 @@ import lombok.NoArgsConstructor;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RecognitionException;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 
 import com.amshulman.insight.action.InsightAction;
 import com.amshulman.insight.parser.InsightParserErrorStrategy;
+import com.amshulman.insight.parser.InvalidActionException;
+import com.amshulman.insight.parser.InvalidMaterialException;
+import com.amshulman.insight.parser.InvalidRadiusException;
 import com.amshulman.insight.parser.QueryLexer;
 import com.amshulman.insight.parser.QueryParser;
 import com.amshulman.insight.query.QueryParameterBuilder;
@@ -20,10 +25,23 @@ import com.amshulman.typesafety.TypeSafeList;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class QueryUtil {
 
-    public static QueryParameters parseArgs(TypeSafeList<String> args) throws RecognitionException {
+    public static QueryParameters parseArgs(CommandSender sender, TypeSafeList<String> args) {
         QueryParser parser = new QueryParser(new CommonTokenStream(new QueryLexer(new ANTLRInputStream(StringUtil.remainingArgs(args, 0)))));
         parser.setErrorHandler(new InsightParserErrorStrategy());
-        return parser.parse().queryParameters;
+
+        try {
+            return parser.parse().queryParameters;
+        } catch (RecognitionException e) {
+            sender.sendMessage(ChatColor.RED + "Invalid argument: " + e.getOffendingToken().getText());
+        } catch (InvalidActionException e) {
+            sender.sendMessage(ChatColor.RED + "Unknown action specified: " + e.getMessage());
+        } catch (InvalidMaterialException e) {
+            sender.sendMessage(ChatColor.RED + "Unknown material specified: " + e.getMessage());
+        } catch (InvalidRadiusException e) {
+            sender.sendMessage(ChatColor.RED + "Invalid radius specified: " + e.getMessage());
+        }
+
+        return null;
     }
 
     public static TypeSafeList<String> tabComplete(TypeSafeList<String> args) {

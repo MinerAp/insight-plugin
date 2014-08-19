@@ -7,9 +7,6 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import com.amshulman.insight.backend.PlayerCallbackReadBackend;
-import com.amshulman.insight.parser.InvalidActionException;
-import com.amshulman.insight.parser.InvalidMaterialException;
-import com.amshulman.insight.parser.InvalidRadiusException;
 import com.amshulman.insight.query.QueryParameterBuilder;
 import com.amshulman.insight.query.QueryParameters;
 import com.amshulman.insight.util.Commands.InsightCommands;
@@ -32,20 +29,8 @@ public class CommandInsightLookup extends ConsoleOrPlayerCommand {
 
     @Override
     protected boolean executeForPlayer(Player player, TypeSafeList<String> args) throws RecognitionException {
-        QueryParameters lookupQueryParams;
-        try {
-            lookupQueryParams = QueryUtil.parseArgs(args);
-        } catch (RecognitionException e) {
-            player.sendMessage(ChatColor.RED + "Invalid query argument: " + e.getOffendingToken().getText());
-            return true;
-        } catch (InvalidActionException e) {
-            player.sendMessage(ChatColor.RED + "Unknown action specified: " + e.getMessage());
-            return true;
-        } catch (InvalidMaterialException e) {
-            player.sendMessage(ChatColor.RED + "Unknown material specified: " + e.getMessage());
-            return true;
-        } catch (InvalidRadiusException e) {
-            player.sendMessage(ChatColor.RED + "Invalid radius specified: " + e.getMessage());
+        QueryParameters lookupQueryParams = QueryUtil.parseArgs(player, args);
+        if (lookupQueryParams == null) {
             return true;
         }
 
@@ -86,14 +71,8 @@ public class CommandInsightLookup extends ConsoleOrPlayerCommand {
 
     @Override
     protected boolean executeForConsole(ConsoleCommandSender console, TypeSafeList<String> args) throws RecognitionException {
-        QueryParameters params;
-        try {
-            params = QueryUtil.parseArgs(args);
-        } catch (RecognitionException e) {
-            e.printStackTrace();
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
+        QueryParameters params = QueryUtil.parseArgs(console, args);
+        if (params == null) {
             return true;
         }
 
