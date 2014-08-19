@@ -53,6 +53,7 @@ import com.amshulman.insight.event.tbd.EntityExplodeListener;
 import com.amshulman.insight.event.tbd.PlayerJoinListener;
 import com.amshulman.insight.event.tbd.PlayerQuitListener;
 import com.amshulman.insight.event.tbd.PotionSplashListener;
+import com.amshulman.insight.parser.QueryParser;
 import com.amshulman.insight.row.RowEntry;
 import com.amshulman.insight.util.CraftBukkitUtil;
 import com.amshulman.insight.util.InsightConfigurationContext;
@@ -94,6 +95,9 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
         for (World world : Bukkit.getWorlds()) {
             writeBackend.registerWorld(world.getName());
         }
+
+        // Give the query parser a list of known worlds to accept
+        QueryParser.setWorlds(configurationContext.getRawReadBackend().getWorlds());
 
         registerCommandExecutor(new CommandInsight(configurationContext));
         registerEventHandler(new RegistrationHandler(configurationContext));

@@ -7,6 +7,7 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 
 import com.amshulman.insight.backend.WriteBackend;
+import com.amshulman.insight.parser.QueryParser;
 import com.amshulman.insight.util.InsightConfigurationContext;
 
 public class RegistrationHandler implements Listener {
@@ -24,6 +25,8 @@ public class RegistrationHandler implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onEvent(WorldLoadEvent event) {
-        backend.registerWorld(event.getWorld().getName());
+        String worldName = event.getWorld().getName();
+        backend.registerWorld(worldName);
+        QueryParser.getWorlds().add(worldName);
     }
 }

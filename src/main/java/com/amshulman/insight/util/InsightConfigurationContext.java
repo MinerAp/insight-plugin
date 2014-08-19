@@ -9,6 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import com.amshulman.insight.backend.BackendType;
 import com.amshulman.insight.backend.PlayerCallbackReadBackend;
+import com.amshulman.insight.backend.ReadBackend;
 import com.amshulman.insight.backend.SqlReadWriteBackend;
 import com.amshulman.insight.backend.WriteBackend;
 import com.amshulman.insight.management.PlayerInfoManager;
@@ -33,6 +34,7 @@ public class InsightConfigurationContext extends ConfigurationContext implements
 
     Logger logger;
     PlayerCallbackReadBackend readBackend;
+    ReadBackend rawReadBackend;
     WriteBackend writeBackend;
     PlayerInfoManager infoManager;
 
@@ -108,6 +110,7 @@ public class InsightConfigurationContext extends ConfigurationContext implements
             case POSTGRES:
                 SqlReadWriteBackend sqlBackend = new SqlReadWriteBackend(this);
                 readBackend = new PlayerCallbackReadBackend(sqlBackend, infoManager);
+                rawReadBackend = sqlBackend;
                 writeBackend = sqlBackend;
                 break;
             case REDIS:
