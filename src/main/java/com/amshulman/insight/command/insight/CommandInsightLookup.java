@@ -51,7 +51,7 @@ public class CommandInsightLookup extends ConsoleOrPlayerCommand {
 
                 boolean success = WorldEditBridge.getSelectedArea(player, queryBuilder);
                 if (!success) {
-                    player.sendMessage(ChatColor.RED + "Error getting selection.");
+                    player.sendMessage(ChatColor.RED + "Error getting selection");
                     return true;
                 }
             } else {
