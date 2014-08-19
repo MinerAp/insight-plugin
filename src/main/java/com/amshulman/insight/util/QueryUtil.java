@@ -48,7 +48,16 @@ public final class QueryUtil {
         return null;
     }
 
-    public static void copyActors(QueryParameters from, QueryParameterBuilder to) {
+    public static void copyCommonParameters(QueryParameters from, QueryParameterBuilder to) {
+        QueryUtil.copyActors(from, to);
+        QueryUtil.copyActions(from, to);
+        QueryUtil.copyActees(from, to);
+        QueryUtil.copyMaterials(from, to);
+        QueryUtil.copyOrder(from, to);
+        QueryUtil.copyTimes(from, to);
+    }
+
+    private static void copyActors(QueryParameters from, QueryParameterBuilder to) {
         for (String actor : from.getActors()) {
             to.addActor(actor);
         }
@@ -58,7 +67,7 @@ public final class QueryUtil {
         }
     }
 
-    public static void copyActions(QueryParameters from, QueryParameterBuilder to) {
+    private static void copyActions(QueryParameters from, QueryParameterBuilder to) {
         for (InsightAction action : from.getActions()) {
             to.addAction(action);
         }
@@ -68,7 +77,7 @@ public final class QueryUtil {
         }
     }
 
-    public static void copyActees(QueryParameters from, QueryParameterBuilder to) {
+    private static void copyActees(QueryParameters from, QueryParameterBuilder to) {
         for (String actee : from.getActees()) {
             to.addActee(actee);
         }
@@ -78,7 +87,7 @@ public final class QueryUtil {
         }
     }
 
-    public static void copyMaterials(QueryParameters from, QueryParameterBuilder to) {
+    private static void copyMaterials(QueryParameters from, QueryParameterBuilder to) {
         for (InsightMaterial m : from.getMaterials()) {
             to.addMaterial(m);
         }
@@ -88,13 +97,13 @@ public final class QueryUtil {
         }
     }
 
-    public static void copyOrder(QueryParameters from, QueryParameterBuilder to) {
+    private static void copyOrder(QueryParameters from, QueryParameterBuilder to) {
         if (from.isReverseOrder()) {
             to.reverseOrder();
         }
     }
 
-    public static void copyTimes(QueryParameters from, QueryParameterBuilder to) {
+    private static void copyTimes(QueryParameters from, QueryParameterBuilder to) {
         to.setAfter(from.getAfter());
         to.setBefore(from.getBefore());
     }

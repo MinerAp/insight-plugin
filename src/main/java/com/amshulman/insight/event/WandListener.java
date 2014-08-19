@@ -47,13 +47,7 @@ public class WandListener implements Listener {
 
         QueryParameters wandQueryParams = infoManager.getPlayerInfo(playerName).getWandQueryParameters();
         QueryParameterBuilder queryBuilder = readBackend.newQueryBuilder();
-
-        QueryUtil.copyActors(wandQueryParams, queryBuilder);
-        QueryUtil.copyActions(wandQueryParams, queryBuilder);
-        QueryUtil.copyActees(wandQueryParams, queryBuilder);
-        QueryUtil.copyMaterials(wandQueryParams, queryBuilder);
-        QueryUtil.copyOrder(wandQueryParams, queryBuilder);
-        QueryUtil.copyTimes(wandQueryParams, queryBuilder);
+        QueryUtil.copyCommonParameters(wandQueryParams, queryBuilder);
 
         int radius = wandQueryParams.getRadius();
         queryBuilder.setArea(block.getLocation(), radius);

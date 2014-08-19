@@ -35,12 +35,7 @@ public class CommandInsightLookup extends ConsoleOrPlayerCommand {
         }
 
         QueryParameterBuilder queryBuilder = readBackend.newQueryBuilder();
-        QueryUtil.copyActors(queryParams, queryBuilder);
-        QueryUtil.copyActions(queryParams, queryBuilder);
-        QueryUtil.copyActees(queryParams, queryBuilder);
-        QueryUtil.copyMaterials(queryParams, queryBuilder);
-        QueryUtil.copyOrder(queryParams, queryBuilder);
-        QueryUtil.copyTimes(queryParams, queryBuilder);
+        QueryUtil.copyCommonParameters(queryParams, queryBuilder);
 
         if (queryParams.isLocationSet()) {
             if (queryParams.getRadius() == QueryParameters.WORLDEDIT) {
@@ -87,13 +82,8 @@ public class CommandInsightLookup extends ConsoleOrPlayerCommand {
         }
 
         QueryParameterBuilder queryBuilder = readBackend.newQueryBuilder();
-        QueryUtil.copyActors(queryParams, queryBuilder);
-        QueryUtil.copyActions(queryParams, queryBuilder);
-        QueryUtil.copyActees(queryParams, queryBuilder);
-        QueryUtil.copyMaterials(queryParams, queryBuilder);
-        QueryUtil.copyOrder(queryParams, queryBuilder);
-        QueryUtil.copyTimes(queryParams, queryBuilder);
-        QueryUtil.copyWorlds(queryParams, queryBuilder); // Different from above
+        QueryUtil.copyCommonParameters(queryParams, queryBuilder);
+        QueryUtil.copyWorlds(queryParams, queryBuilder);
 
         readBackend.query(console.getName(), queryBuilder.build(), true);
         return true;
