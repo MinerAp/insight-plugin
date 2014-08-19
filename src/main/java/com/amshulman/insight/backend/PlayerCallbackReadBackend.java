@@ -111,7 +111,7 @@ public class PlayerCallbackReadBackend implements AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         readBackend.close();
     }
 }
