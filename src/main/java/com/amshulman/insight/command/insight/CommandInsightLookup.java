@@ -85,7 +85,7 @@ public class CommandInsightLookup extends ConsoleOrPlayerCommand {
         QueryUtil.copyCommonParameters(queryParams, queryBuilder);
         QueryUtil.copyWorlds(queryParams, queryBuilder);
 
-        readBackend.query(console.getName(), queryBuilder.build(), true);
+        readBackend.query(console.getName(), queryBuilder.build(), false);
         return true;
     }
 
