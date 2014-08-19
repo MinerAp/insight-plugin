@@ -7,8 +7,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import com.amshulman.insight.management.PlayerInfoManager;
+import com.amshulman.insight.query.QueryParameterBuilder;
+import com.amshulman.insight.query.QueryParameters;
 import com.amshulman.insight.util.Commands.InsightCommands;
 import com.amshulman.insight.util.InsightConfigurationContext;
+import com.amshulman.insight.util.PlayerInfo;
 import com.amshulman.insight.util.QueryUtil;
 import com.amshulman.insight.util.WandUtil;
 import com.amshulman.mbapi.commands.PlayerOnlyCommand;
@@ -16,12 +20,16 @@ import com.amshulman.typesafety.TypeSafeList;
 
 public class CommandInsightWand extends PlayerOnlyCommand {
 
+    PlayerInfoManager infoManager;
+
     public CommandInsightWand(InsightConfigurationContext configurationContext) {
-        super(configurationContext, InsightCommands.WAND, 0, 0);
+        super(configurationContext, InsightCommands.WAND, 0, Integer.MAX_VALUE);
+        infoManager = configurationContext.getInfoManager();
     }
 
     @Override
     protected boolean executeForPlayer(Player player, TypeSafeList<String> args) {
+        PlayerInfo playerInfo = infoManager.getPlayerInfo(player.getName());
         PlayerInventory inv = player.getInventory();
         ItemStack inHand = inv.getItemInHand();
 
@@ -35,7 +43,22 @@ public class CommandInsightWand extends PlayerOnlyCommand {
         }
 
         if (hasWands) {
+            playerInfo.setWandQueryParameters(new QueryParameterBuilder().build());
             return true;
+        }
+
+        if (args.size() > 0) {
+            QueryParameters params = QueryUtil.parseArgs(player, args);
+            if (params == null) {
+                return true;
+            }
+
+            if (!params.getWorlds().isEmpty()) {
+                player.sendMessage(ChatColor.RED + "You cannot specify the world as a wand parameter");
+                return true;
+            }
+
+            playerInfo.setWandQueryParameters(params);
         }
 
         if (!Material.AIR.equals(inHand.getType())) {
