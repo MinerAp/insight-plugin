@@ -29,21 +29,21 @@ public class CommandInsightLookup extends ConsoleOrPlayerCommand {
 
     @Override
     protected boolean executeForPlayer(Player player, TypeSafeList<String> args) throws RecognitionException {
-        QueryParameters lookupQueryParams = QueryUtil.parseArgs(player, args);
-        if (lookupQueryParams == null) {
+        QueryParameters queryParams = QueryUtil.parseArgs(player, args);
+        if (queryParams == null) {
             return true;
         }
 
         QueryParameterBuilder queryBuilder = readBackend.newQueryBuilder();
-        QueryUtil.copyActors(lookupQueryParams, queryBuilder);
-        QueryUtil.copyActions(lookupQueryParams, queryBuilder);
-        QueryUtil.copyActees(lookupQueryParams, queryBuilder);
-        QueryUtil.copyMaterials(lookupQueryParams, queryBuilder);
-        QueryUtil.copyOrder(lookupQueryParams, queryBuilder);
-        QueryUtil.copyTimes(lookupQueryParams, queryBuilder);
+        QueryUtil.copyActors(queryParams, queryBuilder);
+        QueryUtil.copyActions(queryParams, queryBuilder);
+        QueryUtil.copyActees(queryParams, queryBuilder);
+        QueryUtil.copyMaterials(queryParams, queryBuilder);
+        QueryUtil.copyOrder(queryParams, queryBuilder);
+        QueryUtil.copyTimes(queryParams, queryBuilder);
 
-        if (lookupQueryParams.isLocationSet()) {
-            if (lookupQueryParams.getRadius() == QueryParameters.WORLDEDIT) {
+        if (queryParams.isLocationSet()) {
+            if (queryParams.getRadius() == QueryParameters.WORLDEDIT) {
                 if (!worldEditEnabled) {
                     player.sendMessage(ChatColor.RED + "WorldEdit is not loaded");
                     return true;
@@ -55,13 +55,13 @@ public class CommandInsightLookup extends ConsoleOrPlayerCommand {
                     return true;
                 }
             } else {
-                queryBuilder.setArea(player.getLocation(), lookupQueryParams.getRadius());
+                queryBuilder.setArea(player.getLocation(), queryParams.getRadius());
             }
         } else {
-            if (lookupQueryParams.getWorlds().isEmpty()) {
+            if (queryParams.getWorlds().isEmpty()) {
                 queryBuilder.addWorld(player.getWorld().getName());
             } else {
-                QueryUtil.copyWorlds(lookupQueryParams, queryBuilder);
+                QueryUtil.copyWorlds(queryParams, queryBuilder);
             }
         }
 
@@ -71,29 +71,29 @@ public class CommandInsightLookup extends ConsoleOrPlayerCommand {
 
     @Override
     protected boolean executeForConsole(ConsoleCommandSender console, TypeSafeList<String> args) throws RecognitionException {
-        QueryParameters params = QueryUtil.parseArgs(console, args);
-        if (params == null) {
+        QueryParameters queryParams = QueryUtil.parseArgs(console, args);
+        if (queryParams == null) {
             return true;
         }
 
-        if (params.isLocationSet()) {
+        if (queryParams.isLocationSet()) {
             console.sendMessage(ChatColor.RED + "You may not specify a location from the console");
             return true;
         }
 
-        if (params.getWorlds().isEmpty()) {
+        if (queryParams.getWorlds().isEmpty()) {
             console.sendMessage(ChatColor.RED + "You must specify at least one world to query");
             return true;
         }
 
         QueryParameterBuilder queryBuilder = readBackend.newQueryBuilder();
-        QueryUtil.copyActors(params, queryBuilder);
-        QueryUtil.copyActions(params, queryBuilder);
-        QueryUtil.copyActees(params, queryBuilder);
-        QueryUtil.copyMaterials(params, queryBuilder);
-        QueryUtil.copyOrder(params, queryBuilder);
-        QueryUtil.copyTimes(params, queryBuilder);
-        QueryUtil.copyWorlds(params, queryBuilder); // Different from above
+        QueryUtil.copyActors(queryParams, queryBuilder);
+        QueryUtil.copyActions(queryParams, queryBuilder);
+        QueryUtil.copyActees(queryParams, queryBuilder);
+        QueryUtil.copyMaterials(queryParams, queryBuilder);
+        QueryUtil.copyOrder(queryParams, queryBuilder);
+        QueryUtil.copyTimes(queryParams, queryBuilder);
+        QueryUtil.copyWorlds(queryParams, queryBuilder); // Different from above
 
         readBackend.query(console.getName(), queryBuilder.build(), true);
         return true;
