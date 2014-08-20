@@ -42,13 +42,15 @@ public final class QueryUtil {
         return null;
     }
 
-    public static void copyCommonParameters(QueryParameters from, QueryParameterBuilder to) {
+    public static QueryParameterBuilder copyCommonParameters(QueryParameters from, QueryParameterBuilder to) {
         QueryUtil.copyActors(from, to);
         QueryUtil.copyActions(from, to);
         QueryUtil.copyActees(from, to);
         QueryUtil.copyMaterials(from, to);
         QueryUtil.copyOrder(from, to);
         QueryUtil.copyTimes(from, to);
+
+        return to;
     }
 
     private static void copyActors(QueryParameters from, QueryParameterBuilder to) {

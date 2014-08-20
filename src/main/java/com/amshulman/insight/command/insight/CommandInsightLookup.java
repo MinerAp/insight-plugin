@@ -35,8 +35,7 @@ public class CommandInsightLookup extends ConsoleOrPlayerCommand {
             return true;
         }
 
-        QueryParameterBuilder queryBuilder = readBackend.newQueryBuilder();
-        QueryUtil.copyCommonParameters(queryParams, queryBuilder);
+        QueryParameterBuilder queryBuilder = QueryUtil.copyCommonParameters(queryParams, readBackend.newQueryBuilder());
 
         if (queryParams.isLocationSet()) {
             if (queryParams.getRadius() == QueryParameters.WORLDEDIT) {
@@ -79,8 +78,7 @@ public class CommandInsightLookup extends ConsoleOrPlayerCommand {
             return true;
         }
 
-        QueryParameterBuilder queryBuilder = readBackend.newQueryBuilder();
-        QueryUtil.copyCommonParameters(queryParams, queryBuilder);
+        QueryParameterBuilder queryBuilder = QueryUtil.copyCommonParameters(queryParams, readBackend.newQueryBuilder());
 
         if (queryParams.getWorlds().isEmpty()) {
             for (String world : QueryParser.getWorlds()) {
