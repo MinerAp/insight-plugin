@@ -7,6 +7,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import com.amshulman.insight.backend.PlayerCallbackReadBackend;
+import com.amshulman.insight.parser.QueryParser;
 import com.amshulman.insight.query.QueryParameterBuilder;
 import com.amshulman.insight.query.QueryParameters;
 import com.amshulman.insight.util.Commands.InsightCommands;
@@ -54,7 +55,9 @@ public class CommandInsightLookup extends ConsoleOrPlayerCommand {
             }
         } else {
             if (queryParams.getWorlds().isEmpty()) {
-                queryBuilder.addWorld(player.getWorld().getName());
+                for (String world : QueryParser.getWorlds()) {
+                    queryBuilder.addWorld(world);
+                }
             } else {
                 QueryUtil.copyWorlds(queryParams, queryBuilder);
             }
@@ -76,14 +79,16 @@ public class CommandInsightLookup extends ConsoleOrPlayerCommand {
             return true;
         }
 
-        if (queryParams.getWorlds().isEmpty()) {
-            console.sendMessage(ChatColor.RED + "You must specify at least one world to query");
-            return true;
-        }
-
         QueryParameterBuilder queryBuilder = readBackend.newQueryBuilder();
         QueryUtil.copyCommonParameters(queryParams, queryBuilder);
-        QueryUtil.copyWorlds(queryParams, queryBuilder);
+
+        if (queryParams.getWorlds().isEmpty()) {
+            for (String world : QueryParser.getWorlds()) {
+                queryBuilder.addWorld(world);
+            }
+        } else {
+            QueryUtil.copyWorlds(queryParams, queryBuilder);
+        }
 
         readBackend.query(console.getName(), queryBuilder.build(), false);
         return true;
