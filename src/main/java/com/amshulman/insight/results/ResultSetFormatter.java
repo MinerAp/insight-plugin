@@ -25,7 +25,6 @@ import com.amshulman.insight.serialization.SkullMeta;
 import com.amshulman.insight.types.EventCompat;
 import com.amshulman.insight.types.MaterialCompat;
 import com.amshulman.mbapi.util.CoreTypes;
-import com.amshulman.mbapi.util.StringUtil;
 import com.amshulman.typesafety.TypeSafeList;
 import com.amshulman.typesafety.impl.TypeSafeListImpl;
 import com.google.gson.Gson;
@@ -111,37 +110,41 @@ public final class ResultSetFormatter {
     }
 
     private static String buildHeader(InsightResultSet resultSet, int pageNumber) {
+        StringBuilder sb = new StringBuilder(100).append(HEADER_BASE);
         QueryParameters params = resultSet.getQueryParameters();
-        String location;
 
         if (params.isLocationSet() && params.getRadius() == 0) {
-            location = String.format("at %s in %s", formatLocation(params.getPoint()), params.getPoint().getWorld().getName());
+            sb.append("Examining changes at ")
+              .append(HEADER_ACCENT).append(formatLocation(params.getPoint()))
+              .append(HEADER_BASE).append(" in ")
+              .append(HEADER_ACCENT).append(params.getPoint().getWorld().getName());
         } else {
             TypeSafeList<String> worlds = new TypeSafeListImpl<String>(new ArrayList<String>(params.getWorlds()), CoreTypes.STRING);
             Collections.sort(worlds.getCollection(), String.CASE_INSENSITIVE_ORDER);
 
             if (worlds.size() == 1) {
-                location = String.format("in %s", worlds.get(0));
+                sb.append("Examining changes in ").append(HEADER_ACCENT).append(worlds.get(0));
+            } else if (worlds.size() == 2) {
+                sb.append("Examining changes across ")
+                  .append(HEADER_ACCENT).append(worlds.get(0))
+                  .append(HEADER_BASE).append(" and ")
+                  .append(HEADER_ACCENT + worlds.get(1));
             } else {
-                String first, second;
-
-                if (worlds.size() == 2) {
-                    first = worlds.get(0);
-                    second = worlds.get(1);
-                } else {
-                    String worldsList = StringUtil.createList(worlds);
-                    int lastComma = worldsList.lastIndexOf(',');
-
-                    first = worldsList.substring(0, lastComma + 1);
-                    second = worldsList.substring(lastComma + 2, worldsList.length());
+                sb.append("Examining changes across ").append(HEADER_ACCENT).append(worlds.get(0));
+                for (int i = 1; i < worlds.size() - 1; ++i) {
+                    sb.append(HEADER_BASE).append(", ").append(HEADER_ACCENT).append(worlds.get(i));
                 }
-
-                location = String.format("across %s and %s", first, second);
+                sb.append(HEADER_BASE).append(", and ").append(HEADER_ACCENT).append(worlds.get(worlds.size() - 1));
             }
         }
 
-        int totalPages = (resultSet.getSize() + pageSize - 1) / pageSize;
-        return String.format("Examining changes %s, page %d of %d:", location, pageNumber, totalPages);
+        sb.append(HEADER_BASE).append(", page ")
+          .append(HEADER_ACCENT).append(pageNumber)
+          .append(HEADER_BASE).append(" of ")
+          .append(HEADER_ACCENT).append((resultSet.getSize() + pageSize - 1) / pageSize)
+          .append(HEADER_BASE).append(":");
+
+        return sb.toString();
     }
 
     private static ChatRootMessage prepareFancyHeader(InsightResultSet resultSet, int pageNumber) {
@@ -196,10 +199,10 @@ public final class ResultSetFormatter {
             ++current;
 
             // record id
-            msg.append("[").append(current).append("] ");
+            msg.append(BODY_ACCENT).append("[").append(current).append("] ");
 
-            msg.append(df.format(r.getDatetime())).append(' '); // date and time
-            msg.append(r.getActor()).append(' '); // actor
+            msg.append(BODY_BASE).append(df.format(r.getDatetime())).append(' '); // date and time
+            msg.append(ChatColor.WHITE).append(r.getActor()).append(' '); // actor
             msg.append(r.getAction().getFriendlyDescription()); // action
 
             if (r.getAction() instanceof BlockAction) {
