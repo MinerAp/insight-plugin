@@ -1,5 +1,6 @@
 package com.amshulman.insight.event.block;
 
+import org.bukkit.block.BlockState;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockSpreadEvent;
@@ -18,7 +19,13 @@ public class BlockSpreadListener extends InternalEventHandler<BlockSpreadEvent> 
             case BROWN_MUSHROOM:
             case RED_MUSHROOM:
             case GRASS:
-                add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.BLOCK_GROW, event.getBlock()));
+            case MYCEL:
+            case VINE:
+                BlockState state = event.getBlock().getState();
+                state.setType(event.getSource().getType());
+                state.setRawData(event.getSource().getData());
+
+                add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.BLOCK_GROW, state));
                 System.out.println("BlockSpreadListener -- organics");
                 break;
             case FIRE:
