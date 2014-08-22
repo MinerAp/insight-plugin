@@ -38,10 +38,6 @@ public final class QueryUtil {
         return null;
     }
 
-    public static TypeSafeList<String> tabComplete(TypeSafeList<String> args) {
-        return null;
-    }
-
     public static QueryParameterBuilder copyCommonParameters(QueryParameters from, QueryParameterBuilder to) {
         QueryUtil.copyActors(from, to);
         QueryUtil.copyActions(from, to);

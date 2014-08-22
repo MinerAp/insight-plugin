@@ -15,7 +15,10 @@ import com.amshulman.insight.util.InsightConfigurationContext;
 import com.amshulman.insight.util.QueryUtil;
 import com.amshulman.insight.worldedit.WorldEditBridge;
 import com.amshulman.mbapi.commands.ConsoleOrPlayerCommand;
+import com.amshulman.mbapi.util.CoreTypes;
+import com.amshulman.typesafety.TypeSafeCollections;
 import com.amshulman.typesafety.TypeSafeList;
+import com.amshulman.typesafety.impl.TypeSafeSetImpl;
 
 public class CommandInsightLookup extends ConsoleOrPlayerCommand {
 
@@ -94,6 +97,29 @@ public class CommandInsightLookup extends ConsoleOrPlayerCommand {
 
     @Override
     public TypeSafeList<String> onTabComplete(CommandSender sender, TypeSafeList<String> args) {
-        return QueryUtil.tabComplete(args);
+        TypeSafeList<String> temp = TypeSafeCollections.emptyList(); // TODO
+
+        for (int i = args.size() - 2; i >= 0; --i) {
+            String arg = args.get(i).toLowerCase();
+            switch (arg) {
+                case "actor":
+                case "actee":
+                    return tabCompleteFromList(args.get(i + 1), temp);
+                case "action":
+                    return tabCompleteFromList(args.get(i + 1), temp);
+                case "material":
+                    return tabCompleteFromList(args.get(i + 1), temp);
+                case "world":
+                    return tabCompleteFromList(args.get(i + 1), new TypeSafeSetImpl<String>(QueryParser.getWorlds(), CoreTypes.STRING));
+                case "radius":
+                case "before":
+                case "after":
+                    return TypeSafeCollections.emptyList();
+                default:
+                    continue;
+            }
+        }
+
+        return TypeSafeCollections.emptyList();
     }
 }

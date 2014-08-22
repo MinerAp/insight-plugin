@@ -16,6 +16,7 @@ import com.amshulman.insight.util.PlayerInfo;
 import com.amshulman.insight.util.QueryUtil;
 import com.amshulman.insight.util.WandUtil;
 import com.amshulman.mbapi.commands.PlayerOnlyCommand;
+import com.amshulman.typesafety.TypeSafeCollections;
 import com.amshulman.typesafety.TypeSafeList;
 
 public class CommandInsightWand extends PlayerOnlyCommand {
@@ -76,6 +77,28 @@ public class CommandInsightWand extends PlayerOnlyCommand {
 
     @Override
     public TypeSafeList<String> onTabComplete(CommandSender sender, TypeSafeList<String> args) {
-        return QueryUtil.tabComplete(args);
+        TypeSafeList<String> temp = TypeSafeCollections.emptyList(); // TODO
+
+        for (int i = args.size() - 2; i >= 0; --i) {
+            String arg = args.get(i).toLowerCase();
+            switch (arg) {
+                case "actor":
+                case "actee":
+                    return tabCompleteFromList(args.get(i + 1), temp);
+                case "action":
+                    return tabCompleteFromList(args.get(i + 1), temp);
+                case "material":
+                    return tabCompleteFromList(args.get(i + 1), temp);
+                case "world":
+                case "radius":
+                case "before":
+                case "after":
+                    return TypeSafeCollections.emptyList();
+                default:
+                    continue;
+            }
+        }
+
+        return TypeSafeCollections.emptyList();
     }
 }
