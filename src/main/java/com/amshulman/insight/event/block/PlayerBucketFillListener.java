@@ -22,13 +22,9 @@ public class PlayerBucketFillListener extends InternalEventHandler<PlayerBucketF
         if (Material.STATIONARY_WATER.equals(liquid.getType()) || Material.WATER.equals(liquid.getType())) {
             blockState.setType(Material.STATIONARY_WATER);
             add(new BlockRowEntry(System.currentTimeMillis(), event.getPlayer().getName(), EventCompat.BUCKET_REMOVE, blockState));
-
-            System.out.println("PlayerBucketFillListener - water");
         } else if (Material.STATIONARY_LAVA.equals(liquid.getType()) || Material.LAVA.equals(liquid.getType())) {
             blockState.setType(Material.STATIONARY_LAVA);
             add(new BlockRowEntry(System.currentTimeMillis(), event.getPlayer().getName(), EventCompat.BUCKET_REMOVE, blockState));
-
-            System.out.println("PlayerBucketFillListener - lava");
         }
     }
 }

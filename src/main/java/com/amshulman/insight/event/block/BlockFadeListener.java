@@ -21,12 +21,10 @@ public class BlockFadeListener extends InternalEventHandler<BlockFadeEvent> {
             case ICE:
             case SNOW:
                 add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.BLOCK_MELT, event.getBlock()));
-                System.out.println("BlockFadeListener - melt");
                 break;
             case GRASS:
             case MYCEL:
                 add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.BLOCK_DIE, event.getBlock()));
-                System.out.println("BlockFadeListener - grass");
                 break;
             default:
                 System.out.println("BlockFadeListener - ???");

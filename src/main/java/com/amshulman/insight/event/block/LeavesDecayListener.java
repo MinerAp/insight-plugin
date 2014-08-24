@@ -15,6 +15,5 @@ public class LeavesDecayListener extends InternalEventHandler<LeavesDecayEvent> 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void listen(LeavesDecayEvent event) {
         add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.BLOCK_DIE, event.getBlock()));
-        System.out.println("LeavesDecayListener");
     }
 }

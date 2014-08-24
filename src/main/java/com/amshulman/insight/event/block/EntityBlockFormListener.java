@@ -14,6 +14,5 @@ public class EntityBlockFormListener extends InternalEventHandler<EntityBlockFor
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void listen(EntityBlockFormEvent event) {
         add(new BlockRowEntry(System.currentTimeMillis(), event.getEntity().getType().name(), EventCompat.BLOCK_FORM, event.getBlock()));
-        System.out.println("EntityBlockFormListener");
     }
 }

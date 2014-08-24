@@ -15,6 +15,5 @@ public class BlockBurnListener extends InternalEventHandler<BlockBurnEvent> {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void listen(BlockBurnEvent event) {
         add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.FIRE, EventCompat.BLOCK_BURN, event.getBlock()));
-        System.out.println("BlockBurnListener");
     }
 }

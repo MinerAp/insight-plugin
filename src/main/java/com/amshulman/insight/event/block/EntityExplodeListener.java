@@ -21,7 +21,5 @@ public class EntityExplodeListener extends InternalEventHandler<EntityExplodeEve
         for (Block b : event.blockList()) {
             add(new BlockRowEntry(time, name, EventCompat.BLOCK_EXPLODE, b));
         }
-
-        System.out.println("EntityExplodeListener");
     }
 }

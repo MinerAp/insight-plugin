@@ -19,12 +19,8 @@ public class PlayerBucketEmptyListener extends InternalEventHandler<PlayerBucket
 
         if (Material.WATER_BUCKET.equals(event.getBucket())) {
             blockState.setType(Material.STATIONARY_WATER);
-
-            System.out.println("PlayerBucketEmptyListener - water");
         } else if (Material.LAVA_BUCKET.equals(event.getBucket())) {
             blockState.setType(Material.STATIONARY_LAVA);
-
-            System.out.println("PlayerBucketEmptyListener - lava");
         }
 
         if (!blockState.getType().equals(event.getBlockClicked().getType())) {

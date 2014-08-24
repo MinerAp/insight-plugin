@@ -26,7 +26,6 @@ public class BlockSpreadListener extends InternalEventHandler<BlockSpreadEvent> 
                 state.setRawData(event.getSource().getData());
 
                 add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.BLOCK_GROW, state));
-                System.out.println("BlockSpreadListener -- organics");
                 break;
             case FIRE:
                 break; // handled by BlockIgniteListener

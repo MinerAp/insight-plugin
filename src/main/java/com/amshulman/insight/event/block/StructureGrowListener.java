@@ -22,7 +22,5 @@ public class StructureGrowListener extends InternalEventHandler<StructureGrowEve
         for (BlockState b : event.getBlocks()) {
             add(new BlockRowEntry(time, name, EventCompat.BLOCK_GROW, b));
         }
-
-        System.out.println("StructureGrowListener");
     }
 }

@@ -15,6 +15,5 @@ public class BlockFormListener extends InternalEventHandler<BlockFormEvent> {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void listen(BlockFormEvent event) {
         add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.BLOCK_FORM, event.getBlock()));
-        System.out.println("BlockFormListener");
     }
 }

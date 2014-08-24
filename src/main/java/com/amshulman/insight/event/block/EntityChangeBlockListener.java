@@ -31,7 +31,6 @@ public class EntityChangeBlockListener extends InternalEventHandler<EntityChange
                 } else if (Material.WOODEN_DOOR.equals(event.getBlock().getRelative(BlockFace.DOWN).getType())) {
                     add(new BlockRowEntry(System.currentTimeMillis(), event.getEntity().getType().name(), EventCompat.BLOCK_BREAK, event.getBlock().getRelative(BlockFace.UP)));
                 }
-                System.out.println("EntityBreakDoorListener");
                 break;
             /*
              * case ARROW:
