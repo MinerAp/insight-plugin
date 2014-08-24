@@ -10,6 +10,7 @@ import org.bukkit.event.block.BlockIgniteEvent;
 import com.amshulman.insight.event.InternalEventHandler;
 import com.amshulman.insight.row.BlockRowEntry;
 import com.amshulman.insight.types.EventCompat;
+import com.amshulman.insight.util.EntityUtil;
 import com.amshulman.insight.util.NonPlayerLookup;
 import com.amshulman.insight.util.craftbukkit.Block;
 
@@ -48,11 +49,15 @@ public class BlockIgniteListener extends InternalEventHandler<BlockIgniteEvent> 
                 add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.BLOCK_IGNITE, fire));
                 break;
             case FIREBALL:
+                if (event.getIgnitingEntity() != null) {
+                    add(new BlockRowEntry(System.currentTimeMillis(), EntityUtil.getName(event.getIgnitingEntity()), EventCompat.BLOCK_IGNITE, fire));
+                } else {
+                    add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.BLOCK_IGNITE, fire));
+                }
+
                 System.out.println("BlockIgniteListener - fireball");
                 break;
             case ENDER_CRYSTAL:
-            default:
-                System.out.println("BlockIgniteListener - ???");
                 break;
         }
     }

@@ -21,6 +21,7 @@ import com.amshulman.insight.event.block.BlockPlaceListener;
 import com.amshulman.insight.event.block.BlockSpreadListener;
 import com.amshulman.insight.event.block.EntityBlockFormListener;
 import com.amshulman.insight.event.block.EntityChangeBlockListener;
+import com.amshulman.insight.event.block.EntityExplodeListener;
 import com.amshulman.insight.event.block.LeavesDecayListener;
 import com.amshulman.insight.event.block.PlayerBucketEmptyListener;
 import com.amshulman.insight.event.block.PlayerBucketFillListener;
@@ -29,6 +30,8 @@ import com.amshulman.insight.event.block.todo.BlockPistonExtendListener;
 import com.amshulman.insight.event.block.todo.BlockPistonRetractListener;
 import com.amshulman.insight.event.block.todo.SignChangeListener;
 import com.amshulman.insight.event.entity.EntityDeathListener;
+import com.amshulman.insight.event.entity.VehicleEnterListener;
+import com.amshulman.insight.event.entity.VehicleExitListener;
 import com.amshulman.insight.event.entity.todo.EntityTargetListener;
 import com.amshulman.insight.event.entity.todo.EntityUnleashListener;
 import com.amshulman.insight.event.entity.todo.HangingBreakByEntityListener;
@@ -40,8 +43,6 @@ import com.amshulman.insight.event.entity.todo.PlayerShearEntityListener;
 import com.amshulman.insight.event.entity.todo.PlayerUnleashEntityListener;
 import com.amshulman.insight.event.entity.todo.VehicleCreateListener;
 import com.amshulman.insight.event.entity.todo.VehicleDestroyListener;
-import com.amshulman.insight.event.entity.todo.VehicleEnterListener;
-import com.amshulman.insight.event.entity.todo.VehicleExitListener;
 import com.amshulman.insight.event.intransitive.PlayerExpChangeListener;
 import com.amshulman.insight.event.item.FurnaceBurnListener;
 import com.amshulman.insight.event.item.InventoryCloseListener;
@@ -49,7 +50,6 @@ import com.amshulman.insight.event.item.InventoryOpenListener;
 import com.amshulman.insight.event.item.PlayerDropItemListener;
 import com.amshulman.insight.event.item.PlayerPickupItemListener;
 import com.amshulman.insight.event.tbd.CreatureSpawnListener;
-import com.amshulman.insight.event.tbd.EntityExplodeListener;
 import com.amshulman.insight.event.tbd.PlayerJoinListener;
 import com.amshulman.insight.event.tbd.PlayerQuitListener;
 import com.amshulman.insight.event.tbd.PotionSplashListener;
@@ -110,13 +110,13 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
         registerEventHandler(new CreatureSpawnListener()); // TODO
         registerEventHandler(new EntityBlockFormListener());
         registerEventHandler(new EntityChangeBlockListener());
-        registerEventHandler(new EntityExplodeListener()); // TODO
+        registerEventHandler(new EntityExplodeListener());
         registerEventHandler(new EntityTargetListener()); // TODO
         registerEventHandler(new PlayerExpChangeListener()); // TODO
         registerEventHandler(new PlayerInteractEntityListener()); // TODO
         registerEventHandler(new PlayerShearEntityListener()); // TODO
         registerEventHandler(new PotionSplashListener()); // TODO
-        registerEventHandler(new SignChangeListener());
+        registerEventHandler(new SignChangeListener()); // TODO
 
         if (configurationContext.isLoggingInventory()) {
             registerEventHandler(new InventoryCloseListener(writeBackend));
@@ -131,15 +131,15 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
         }
 
         if (configurationContext.isLoggingLogins()) {
-            registerEventHandler(new PlayerJoinListener());
-            registerEventHandler(new PlayerQuitListener());
+            registerEventHandler(new PlayerJoinListener()); // TODO
+            registerEventHandler(new PlayerQuitListener()); // TODO
         }
 
         if (configurationContext.isLoggingVehicles()) {
             registerEventHandler(new VehicleCreateListener()); // TODO
             registerEventHandler(new VehicleDestroyListener()); // TODO
-            registerEventHandler(new VehicleEnterListener()); // TODO
-            registerEventHandler(new VehicleExitListener()); // TODO
+            registerEventHandler(new VehicleEnterListener());
+            registerEventHandler(new VehicleExitListener());
         }
 
         if (configurationContext.isLoggingLeashes()) {
@@ -171,13 +171,13 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
 
         if (configurationContext.isLoggingFire()) {
             registerEventHandler(new BlockBurnListener());
-            registerEventHandler(new BlockIgniteListener()); // TODO
+            registerEventHandler(new BlockIgniteListener());
         }
 
         if (configurationContext.isLoggingNaturalChanges()) {
             registerEventHandler(new BlockSpreadListener());
             registerEventHandler(new BlockFadeListener());
-            registerEventHandler(new StructureGrowListener()); // TODO
+            registerEventHandler(new StructureGrowListener());
             registerEventHandler(new LeavesDecayListener());
         }
 

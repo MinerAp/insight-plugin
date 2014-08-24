@@ -1,4 +1,4 @@
-package com.amshulman.insight.event.tbd;
+package com.amshulman.insight.event.block;
 
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
