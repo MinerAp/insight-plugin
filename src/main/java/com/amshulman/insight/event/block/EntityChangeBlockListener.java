@@ -1,6 +1,6 @@
 package com.amshulman.insight.event.block;
 
-import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,22 +15,25 @@ public class EntityChangeBlockListener extends InternalEventHandler<EntityChange
     @Override
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void listen(EntityChangeBlockEvent event) {
+        long when = System.currentTimeMillis();
         switch (event.getEntity().getType()) {
             case SHEEP:
-                add(new BlockRowEntry(System.currentTimeMillis(), event.getEntity().getType().name(), EventCompat.ENTITY_EAT, event.getBlock()));
-                System.out.println("EntityChangeBlockListener - sheep eat");
+                add(new BlockRowEntry(when, event.getEntity().getType().name(), EventCompat.ENTITY_EAT, event.getBlock()));
                 break;
             case FALLING_BLOCK:
-                add(new BlockRowEntry(System.currentTimeMillis(), event.getEntity().getType().name(), EventCompat.BLOCK_DROP, event.getBlock()));
-                System.out.println("EntityChangeBlockListener - falling block");
+                add(new BlockRowEntry(when, event.getEntity().getType().name(), EventCompat.BLOCK_DROP, event.getBlock()));
                 break;
             case ZOMBIE:
-                add(new BlockRowEntry(System.currentTimeMillis(), event.getEntity().getType().name(), EventCompat.BLOCK_BREAK, event.getBlock()));
-                if (Material.WOODEN_DOOR.equals(event.getBlock().getRelative(BlockFace.UP).getType())) {
-                    add(new BlockRowEntry(System.currentTimeMillis(), event.getEntity().getType().name(), EventCompat.BLOCK_BREAK, event.getBlock().getRelative(BlockFace.DOWN)));
-                } else if (Material.WOODEN_DOOR.equals(event.getBlock().getRelative(BlockFace.DOWN).getType())) {
-                    add(new BlockRowEntry(System.currentTimeMillis(), event.getEntity().getType().name(), EventCompat.BLOCK_BREAK, event.getBlock().getRelative(BlockFace.UP)));
+                add(new BlockRowEntry(when, event.getEntity().getType().name(), EventCompat.BLOCK_BREAK, event.getBlock()));
+
+                Block other;
+                if (event.getBlock().getData() < 8) {
+                    other = event.getBlock().getRelative(BlockFace.UP);
+                } else {
+                    other = event.getBlock().getRelative(BlockFace.DOWN);
                 }
+
+                add(new BlockRowEntry(when, event.getEntity().getType().name(), EventCompat.BLOCK_BREAK, other));
                 break;
             /*
              * case ARROW:
