@@ -42,8 +42,6 @@ import com.amshulman.insight.event.entity.todo.PlayerInteractEntityListener;
 import com.amshulman.insight.event.entity.todo.PlayerLeashEntityListener;
 import com.amshulman.insight.event.entity.todo.PlayerShearEntityListener;
 import com.amshulman.insight.event.entity.todo.PlayerUnleashEntityListener;
-import com.amshulman.insight.event.entity.todo.VehicleCreateListener;
-import com.amshulman.insight.event.entity.todo.VehicleDestroyListener;
 import com.amshulman.insight.event.item.FurnaceBurnListener;
 import com.amshulman.insight.event.item.InventoryCloseListener;
 import com.amshulman.insight.event.item.InventoryOpenListener;
@@ -135,8 +133,6 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
         }
 
         if (configurationContext.isLoggingVehicles()) {
-            registerEventHandler(new VehicleCreateListener()); // TODO
-            registerEventHandler(new VehicleDestroyListener()); // TODO
             registerEventHandler(new VehicleEnterListener());
             registerEventHandler(new VehicleExitListener());
         }
@@ -179,7 +175,7 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
             registerEventHandler(new StructureGrowListener());
             registerEventHandler(new LeavesDecayListener());
         }
-        
+
         if (configurationContext.isLoggingExpChanges()) {
             registerEventHandler(new PlayerExpChangeListener());
         }
