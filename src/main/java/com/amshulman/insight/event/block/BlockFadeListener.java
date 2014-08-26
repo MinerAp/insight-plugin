@@ -27,7 +27,7 @@ public class BlockFadeListener extends InternalEventHandler<BlockFadeEvent> {
                 add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.BLOCK_DIE, event.getBlock()));
                 break;
             default:
-                System.out.println("BlockFadeListener - ???");
+                System.out.println("BlockFadeListener - ??? " + event.getBlock().getType());
                 return;
         }
     }

@@ -15,6 +15,5 @@ public class VehicleExitListener extends InternalEventHandler<VehicleExitEvent> 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void listen(VehicleExitEvent event) {
         add(new EntityRowEntry(System.currentTimeMillis(), EntityUtil.getName(event.getExited()), EventCompat.VEHICLE_EXIT, event.getVehicle().getLocation(), EntityUtil.getName(event.getVehicle())));
-        System.out.println("VehicleExitListener");
     }
 }

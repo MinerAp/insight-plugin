@@ -45,7 +45,6 @@ public class InventoryCloseListener extends InternalEventHandler<InventoryCloseE
         if (InventoryUtils.ingredientsDropOnClose(type)) {
             for (ItemStack stack : InventoryUtils.getIngredientItems(event.getInventory())) {
                 if (stack != null && !Material.AIR.equals(stack.getType())) {
-                    // System.out.println("removing " + stack);
                     InventoryManager.recordItemRemoval(event.getInventory(), event.getPlayer(), stack);
                 }
             }
@@ -65,7 +64,6 @@ public class InventoryCloseListener extends InternalEventHandler<InventoryCloseE
             case WORKBENCH:
                 changes = InventoryManager.inventoryClose(event.getInventory(), event.getPlayer());
                 process(event.getPlayer().getName(), getLocation(event.getInventory()), changes, EventCompat.ITEM_INSERT, EventCompat.ITEM_REMOVE);
-                // System.out.println("InventoryCloseListener");
                 break;
 
             case CHEST:
@@ -77,20 +75,17 @@ public class InventoryCloseListener extends InternalEventHandler<InventoryCloseE
                 } else {
                     process(event.getPlayer().getName(), getLocation(event.getInventory()), changes, EventCompat.ITEM_INSERT, EventCompat.ITEM_REMOVE);
                 }
-                // System.out.println("InventoryCloseListener");
                 break;
-                
+
             case ENDER_CHEST:
                 changes = InventoryManager.inventoryClose(event.getInventory(), event.getPlayer());
                 process(event.getPlayer().getName(), getLocation(event.getInventory()), changes, EventCompat.ENDERCHEST_INSERT, EventCompat.ENDERCHEST_REMOVE);
-                // System.out.println("InventoryCloseListener");
                 break;
-                
+
             case CRAFTING:
                 changes = InventoryManager.inventoryCloseIfOpen(event.getInventory(), event.getPlayer());
                 if (changes != null) {
                     process(event.getPlayer().getName(), event.getPlayer().getLocation(), changes, EventCompat.CRAFTING_INSERT, EventCompat.CRAFTING_REMOVE);
-                    // System.out.println("InventoryCloseListener");
                 }
                 break;
 
@@ -109,8 +104,6 @@ public class InventoryCloseListener extends InternalEventHandler<InventoryCloseE
                 add(new ItemRowEntry(changes.getTimeOpened(), name, removeEvent, loc, InventoryUtils.reverseStack(stack)));
             }
         }
-
-        // System.out.println(changes.toString());
     }
 
     private void process2(String name, Location loc1, Location loc2, Container changes, ItemAction insertEvent, ItemAction removeEvent) {
@@ -123,8 +116,6 @@ public class InventoryCloseListener extends InternalEventHandler<InventoryCloseE
                 add(new ItemRowEntry(changes.getTimeOpened(), name, removeEvent, loc2, InventoryUtils.reverseStack(stack)));
             }
         }
-
-        // System.out.println(changes.toString());
     }
 
     private static Location getLocation(Inventory inv) {
@@ -147,7 +138,7 @@ public class InventoryCloseListener extends InternalEventHandler<InventoryCloseE
         }
 
         try {
-            System.out.println(holder.getClass());
+            // System.out.println(holder.getClass());
             Method m = holder.getClass().getMethod("getLocation");
             if (m == null) {
                 System.err.println("Could not find getLocation for " + holder.getClass()); // DEBUG

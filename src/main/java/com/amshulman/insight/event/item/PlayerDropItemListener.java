@@ -14,6 +14,5 @@ public class PlayerDropItemListener extends InternalEventHandler<PlayerDropItemE
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void listen(PlayerDropItemEvent event) {
         add(new ItemRowEntry(System.currentTimeMillis(), event.getPlayer().getName(), EventCompat.ITEM_DROP, event.getItemDrop()));
-        System.out.println("PlayerDropItemListener");
     }
 }

@@ -35,69 +35,8 @@ public class EntityChangeBlockListener extends InternalEventHandler<EntityChange
 
                 add(new BlockRowEntry(when, event.getEntity().getType().name(), EventCompat.BLOCK_BREAK, other));
                 break;
-            /*
-             * case ARROW:
-             * case BAT:
-             * case BLAZE:
-             * case BOAT:
-             * case CAVE_SPIDER:
-             * case CHICKEN:
-             * case COMPLEX_PART:
-             * case COW:
-             * case CREEPER:
-             * case DROPPED_ITEM:
-             * case EGG:
-             * case ENDERMAN:
-             * case ENDER_CRYSTAL:
-             * case ENDER_DRAGON:
-             * case ENDER_PEARL:
-             * case ENDER_SIGNAL:
-             * case EXPERIENCE_ORB:
-             * case FIREBALL:
-             * case FIREWORK:
-             * case FISHING_HOOK:
-             * case GHAST:
-             * case GIANT:
-             * case HORSE:
-             * case IRON_GOLEM:
-             * case ITEM_FRAME:
-             * case LEASH_HITCH:
-             * case LIGHTNING:
-             * case MAGMA_CUBE:
-             * case MINECART:
-             * case MINECART_CHEST:
-             * case MINECART_COMMAND:
-             * case MINECART_FURNACE:
-             * case MINECART_HOPPER:
-             * case MINECART_MOB_SPAWNER:
-             * case MINECART_TNT:
-             * case MUSHROOM_COW:
-             * case OCELOT:
-             * case PAINTING:
-             * case PIG:
-             * case PIG_ZOMBIE:
-             * case PLAYER:
-             * case PRIMED_TNT:
-             * case SILVERFISH:
-             * case SKELETON:
-             * case SLIME:
-             * case SMALL_FIREBALL:
-             * case SNOWBALL:
-             * case SNOWMAN:
-             * case SPIDER:
-             * case SPLASH_POTION:
-             * case SQUID:
-             * case THROWN_EXP_BOTTLE:
-             * case UNKNOWN:
-             * case VILLAGER:
-             * case WEATHER:
-             * case WITCH:
-             * case WITHER:
-             * case WITHER_SKULL:
-             * case WOLF:
-             */
             default:
-                System.out.println("EntityChangeBlockListener - ???");
+                System.out.println("EntityChangeBlockListener - ??? " + event.getEntityType() + " " + event.getBlock().getType());
                 break;
         }
     }

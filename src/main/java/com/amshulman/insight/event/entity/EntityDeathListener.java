@@ -27,20 +27,15 @@ public class EntityDeathListener extends InternalEventHandler<EntityDeathEvent> 
         if (previousEvent instanceof EntityDamageByEntityEvent) { // player killed
             EntityDamageByEntityEvent entityKillEvent = (EntityDamageByEntityEvent) previousEvent;
             add(new EntityRowEntry(System.currentTimeMillis(), EntityUtil.getName(entityKillEvent.getDamager()), EventCompat.ENTITY_KILL, loc, acteeName));
-            System.out.println("EntityDeathListener -- entity kill");
         } else if (previousEvent instanceof EntityDamageByBlockEvent) { // environment killed
             EntityDamageByBlockEvent natureKillEvent = (EntityDamageByBlockEvent) previousEvent;
             if (natureKillEvent.getDamager() != null) {
                 add(new EntityRowEntry(System.currentTimeMillis(), natureKillEvent.getDamager().getType().name(), EventCompat.ENTITY_KILL, loc, acteeName));
-                System.out.println("EntityDeathListener -- block kill");
-            } else {
+            } else { // death by lava or void
                 add(new EntityRowEntry(System.currentTimeMillis(), acteeName, EventCompat.ENTITY_DEATH, loc, acteeName));
-                System.out.println("EntityDeathListener -- death #1");
             }
-            System.out.println(EntityUtil.getName(event.getEntity()));
         } else { // died
             add(new EntityRowEntry(System.currentTimeMillis(), acteeName, EventCompat.ENTITY_DEATH, loc, acteeName));
-            System.out.println("EntityDeathListener -- death #2");
         }
 
         for (ItemStack stack : event.getDrops()) {

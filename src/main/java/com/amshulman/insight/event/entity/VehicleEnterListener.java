@@ -15,6 +15,5 @@ public class VehicleEnterListener extends InternalEventHandler<VehicleEnterEvent
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void listen(VehicleEnterEvent event) {
         add(new EntityRowEntry(System.currentTimeMillis(), EntityUtil.getName(event.getEntered()), EventCompat.VEHICLE_ENTER, event.getVehicle().getLocation(), EntityUtil.getName(event.getVehicle())));
-        System.out.println("VehicleEnterListener");
     }
 }

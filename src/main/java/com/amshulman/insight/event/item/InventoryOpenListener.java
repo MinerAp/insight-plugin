@@ -28,7 +28,6 @@ public class InventoryOpenListener extends InternalEventHandler<InventoryOpenEve
             case MERCHANT:
             case WORKBENCH:
                 InventoryManager.inventoryOpen(event.getInventory(), event.getPlayer());
-                //System.out.println("InventoryOpenListener");
                 break;
 
             case CRAFTING:

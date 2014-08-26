@@ -14,6 +14,5 @@ public class PlayerPickupItemListener extends InternalEventHandler<PlayerPickupI
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void listen(PlayerPickupItemEvent event) {
         add(new ItemRowEntry(System.currentTimeMillis(), event.getPlayer().getName(), EventCompat.ITEM_PICKUP, event.getItem()));
-        System.out.println("PlayerPickupItemListener");
     }
 }

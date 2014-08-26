@@ -30,8 +30,7 @@ public class BlockSpreadListener extends InternalEventHandler<BlockSpreadEvent> 
             case FIRE:
                 break; // handled by BlockIgniteListener
             default:
-                System.out.println("BlockSpreadListener -- ???");
-                System.out.println(event.getSource().getType());
+                System.out.println("BlockSpreadListener -- ??? " + event.getSource().getType());
                 break;
         }
     }

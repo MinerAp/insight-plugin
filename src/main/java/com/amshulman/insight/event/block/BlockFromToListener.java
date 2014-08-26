@@ -27,17 +27,14 @@ public class BlockFromToListener extends InternalEventHandler<BlockFromToEvent> 
             case WATER:
             case STATIONARY_WATER:
                 add(new BlockRowEntry(when, NonPlayerLookup.WATER, EventCompat.BLOCK_FLOW, event.getToBlock()));
-                System.out.println("BlockFromToListener - water: flow");
 
                 for (BlockFace face : ALL_FLOW_DIRECTIONS) {
                     Block b = event.getToBlock().getRelative(face);
                     if (isLava(b.getType())) {
                         if (isSourceBlock(b)) {
                             add(new BlockRowEntry(++when, NonPlayerLookup.WATER, EventCompat.BLOCK_FORM, getState(b, Material.OBSIDIAN)));
-                            System.out.println("BlockFromToListener - water: lava -> obsidian");
                         } else {
                             add(new BlockRowEntry(++when, NonPlayerLookup.WATER, EventCompat.BLOCK_FORM, getState(b, Material.COBBLESTONE)));
-                            System.out.println("BlockFromToListener - water: lava -> cobblestone");
                         }
                     }
                 }
@@ -46,21 +43,17 @@ public class BlockFromToListener extends InternalEventHandler<BlockFromToEvent> 
             case STATIONARY_LAVA:
                 if (event.getFace() == BlockFace.DOWN && isWater(event.getToBlock().getType())) {
                     add(new BlockRowEntry(when, NonPlayerLookup.LAVA, EventCompat.BLOCK_FORM, getState(event.getToBlock(), Material.STONE)));
-                    System.out.println("BlockFromToListener - lava: water -> stone");
                 } else if (event.getFace() != BlockFace.DOWN && hasAdjacentWater(event.getToBlock())) {
                     add(new BlockRowEntry(when, NonPlayerLookup.LAVA, EventCompat.BLOCK_FORM, getState(event.getToBlock(), Material.COBBLESTONE)));
-                    System.out.println("BlockFromToListener - lava: lava -> cobblestone");
                 } else {
                     add(new BlockRowEntry(when, NonPlayerLookup.LAVA, EventCompat.BLOCK_FLOW, event.getToBlock()));
-                    System.out.println("BlockFromToListener - lava flow");
                 }
                 break;
             case DRAGON_EGG:
                 add(new BlockRowEntry(when, NonPlayerLookup.NATURE, EventCompat.BLOCK_TELEPORT, getState(event.getToBlock(), Material.DRAGON_EGG)));
-                System.out.println("BlockFromToListener - teleport");
                 break;
             default:
-                System.out.println("BlockFromToListener - ???");
+                System.out.println("BlockFromToListener - ??? " + event.getBlock().getType());
                 break;
         }
     }
