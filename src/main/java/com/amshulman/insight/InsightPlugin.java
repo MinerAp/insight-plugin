@@ -30,6 +30,7 @@ import com.amshulman.insight.event.block.todo.BlockPistonExtendListener;
 import com.amshulman.insight.event.block.todo.BlockPistonRetractListener;
 import com.amshulman.insight.event.block.todo.SignChangeListener;
 import com.amshulman.insight.event.entity.EntityDeathListener;
+import com.amshulman.insight.event.entity.PlayerExpChangeListener;
 import com.amshulman.insight.event.entity.VehicleEnterListener;
 import com.amshulman.insight.event.entity.VehicleExitListener;
 import com.amshulman.insight.event.entity.todo.EntityTargetListener;
@@ -43,7 +44,6 @@ import com.amshulman.insight.event.entity.todo.PlayerShearEntityListener;
 import com.amshulman.insight.event.entity.todo.PlayerUnleashEntityListener;
 import com.amshulman.insight.event.entity.todo.VehicleCreateListener;
 import com.amshulman.insight.event.entity.todo.VehicleDestroyListener;
-import com.amshulman.insight.event.intransitive.PlayerExpChangeListener;
 import com.amshulman.insight.event.item.FurnaceBurnListener;
 import com.amshulman.insight.event.item.InventoryCloseListener;
 import com.amshulman.insight.event.item.InventoryOpenListener;
@@ -112,7 +112,6 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
         registerEventHandler(new EntityChangeBlockListener());
         registerEventHandler(new EntityExplodeListener());
         registerEventHandler(new EntityTargetListener()); // TODO
-        registerEventHandler(new PlayerExpChangeListener()); // TODO
         registerEventHandler(new PlayerInteractEntityListener()); // TODO
         registerEventHandler(new PlayerShearEntityListener()); // TODO
         registerEventHandler(new PotionSplashListener()); // TODO
@@ -179,6 +178,10 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
             registerEventHandler(new BlockFadeListener());
             registerEventHandler(new StructureGrowListener());
             registerEventHandler(new LeavesDecayListener());
+        }
+        
+        if (configurationContext.isLoggingExpChanges()) {
+            registerEventHandler(new PlayerExpChangeListener());
         }
 
         super.onEnable();

@@ -1,17 +1,19 @@
-package com.amshulman.insight.event.intransitive;
+package com.amshulman.insight.event.entity;
 
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 
 import com.amshulman.insight.event.InternalEventHandler;
+import com.amshulman.insight.row.EntityRowEntry;
+import com.amshulman.insight.types.EventCompat;
 
 public class PlayerExpChangeListener extends InternalEventHandler<PlayerExpChangeEvent> {
 
     @Override
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void listen(PlayerExpChangeEvent event) {
-        // TODO Auto-generated method stub
-        System.out.println("PlayerExpChangeListener");
+        add(new EntityRowEntry(System.currentTimeMillis(), event.getPlayer().getName(), EventCompat.ENTITY_KILL, event.getPlayer().getLocation(), EntityType.EXPERIENCE_ORB.toString()));
     }
 }

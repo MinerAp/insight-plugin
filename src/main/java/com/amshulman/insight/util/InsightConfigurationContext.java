@@ -49,6 +49,7 @@ public class InsightConfigurationContext extends ConfigurationContext implements
     boolean loggingHangings;
     boolean loggingFire;
     boolean loggingNaturalChanges;
+    boolean loggingExpChanges;
 
     public InsightConfigurationContext(MbapiPlugin plugin) {
         super(plugin);
@@ -102,6 +103,7 @@ public class InsightConfigurationContext extends ConfigurationContext implements
         loggingHangings = configuration.getBoolean("logging.hangings");
         loggingFire = configuration.getBoolean("logging.fire");
         loggingNaturalChanges = configuration.getBoolean("logging.nature");
+        loggingExpChanges = configuration.getBoolean("logging.xp");
 
         infoManager = new PlayerInfoManager();
 
