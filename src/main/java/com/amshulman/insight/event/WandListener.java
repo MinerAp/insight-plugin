@@ -57,7 +57,7 @@ public class WandListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onWandDamage(BlockDamageEvent event) {
         if (WandUtil.isWand(event.getItemInHand())) {
-            return;
+            event.setCancelled(true);
         }
     }
 }
