@@ -216,13 +216,17 @@ public final class ResultSetFormatter {
                     msg.append(' ').append(r.getActee());
                 }
             } else if (r.getAction() instanceof ItemAction) {
-                int quantity = 1;
+                if (r.getAction() != EventCompat.ITEM_ROTATE) {
+                    int quantity = 1;
 
-                if (r.getMetadata() != null) {
-                    quantity = ((ItemMetadata) r.getMetadata()).getQuantity();
+                    if (r.getMetadata() != null) {
+                        quantity = ((ItemMetadata) r.getMetadata()).getQuantity();
+                    }
+
+                    msg.append(' ').append(quantity);
                 }
 
-                msg.append(' ').append(quantity).append(' ').append(MaterialCompat.getFriendlyName(r.getMaterial()));
+                msg.append(' ').append(MaterialCompat.getFriendlyName(r.getMaterial()));
             }
 
             if (multipleBlocks) {
@@ -354,7 +358,12 @@ public final class ResultSetFormatter {
                     hover.setMetadata(itemMeta.getMeta());
                 }
 
-                rootMessage.addMessage(new ChatMessage(" " + quantity + " "));
+                if (r.getAction() != EventCompat.ITEM_ROTATE) {
+                    rootMessage.addMessage(new ChatMessage(" " + quantity + " "));
+                } else {
+                    rootMessage.addMessage(new ChatMessage(" "));
+                }
+
                 rootMessage.addMessage(new ChatMessage(MaterialCompat.getFriendlyName(r.getMaterial())).setHoverEvent(hover));
             }
 
