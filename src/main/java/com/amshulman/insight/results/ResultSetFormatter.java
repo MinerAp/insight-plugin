@@ -316,6 +316,9 @@ public final class ResultSetFormatter {
                     case REDSTONE_COMPARATOR_ON:
                         hover = new ChatItemHover(Material.REDSTONE_COMPARATOR);
                         break;
+                    case AIR:
+                        hover = null;
+                        break;
                     default:
                         hover = new ChatItemHover(mat.getValue0());
                         if (mat.getValue1() != 0) {
