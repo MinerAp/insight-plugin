@@ -212,7 +212,9 @@ public final class ResultSetFormatter {
             if (r.getAction() instanceof BlockAction) {
                 msg.append(' ').append(MaterialCompat.getFriendlyName(r.getMaterial()));
             } else if (r.getAction() instanceof EntityAction) {
-                msg.append(' ').append(r.getActee());
+                if (r.getAction() != EventCompat.ENTITY_DEATH) {
+                    msg.append(' ').append(r.getActee());
+                }
             } else if (r.getAction() instanceof ItemAction) {
                 int quantity = 1;
 
