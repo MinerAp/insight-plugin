@@ -163,21 +163,25 @@ public final class ResultSetFormatter {
             if (worlds.size() == 1) {
                 rootMessage.addMessage(new ChatMessage("Examining changes in ").setColor(HEADER_BASE));
                 rootMessage.addMessage(new ChatMessage(worlds.get(0)).setColor(HEADER_ACCENT));
-            } else if (worlds.size() == 2) {
-                rootMessage.addMessage(new ChatMessage("Examining changes across ").setColor(HEADER_BASE));
-                rootMessage.addMessage(new ChatMessage(worlds.get(0)).setColor(HEADER_ACCENT));
-                rootMessage.addMessage(new ChatMessage(" and ").setColor(HEADER_BASE));
-                rootMessage.addMessage(new ChatMessage(worlds.get(1)).setColor(HEADER_ACCENT));
             } else {
                 rootMessage.addMessage(new ChatMessage("Examining changes across ").setColor(HEADER_BASE));
+                ChatRootMessage worldsText = new ChatRootMessage();
 
-                rootMessage.addMessage(new ChatMessage(worlds.get(0)).setColor(HEADER_ACCENT));
-                for (int i = 1; i < worlds.size() - 1; ++i) {
-                    rootMessage.addMessage(new ChatMessage(", ").setColor(HEADER_BASE));
-                    rootMessage.addMessage(new ChatMessage(worlds.get(i)).setColor(HEADER_ACCENT));
+                if (worlds.size() == 2) {
+                    worldsText.addMessage(new ChatMessage(worlds.get(0)).setColor(HEADER_ACCENT));
+                    worldsText.addMessage(new ChatMessage(" and ").setColor(HEADER_BASE));
+                    worldsText.addMessage(new ChatMessage(worlds.get(1)).setColor(HEADER_ACCENT));
+                } else {
+                    worldsText.addMessage(new ChatMessage(worlds.get(0)).setColor(HEADER_ACCENT));
+                    for (int i = 1; i < worlds.size() - 1; ++i) {
+                        worldsText.addMessage(new ChatMessage(", ").setColor(HEADER_BASE));
+                        worldsText.addMessage(new ChatMessage(worlds.get(i)).setColor(HEADER_ACCENT));
+                    }
+                    worldsText.addMessage(new ChatMessage(", and ").setColor(HEADER_BASE));
+                    worldsText.addMessage(new ChatMessage(worlds.get(worlds.size() - 1)).setColor(HEADER_ACCENT));
                 }
-                rootMessage.addMessage(new ChatMessage(", and ").setColor(HEADER_BASE));
-                rootMessage.addMessage(new ChatMessage(worlds.get(worlds.size() - 1)).setColor(HEADER_ACCENT));
+
+                rootMessage.addMessage(new ChatMessage(worlds.size() + " worlds").setColor(HEADER_ACCENT).setHoverEvent(new ChatTextHover(worldsText)));
             }
         }
 
