@@ -29,15 +29,16 @@ import com.amshulman.insight.event.block.StructureGrowListener;
 import com.amshulman.insight.event.block.todo.BlockPistonExtendListener;
 import com.amshulman.insight.event.block.todo.BlockPistonRetractListener;
 import com.amshulman.insight.event.block.todo.SignChangeListener;
+import com.amshulman.insight.event.entity.EntityDamageByEntityListener;
 import com.amshulman.insight.event.entity.EntityDeathListener;
+import com.amshulman.insight.event.entity.HangingBreakByEntityListener;
+import com.amshulman.insight.event.entity.HangingBreakListener;
+import com.amshulman.insight.event.entity.HangingPlaceListener;
 import com.amshulman.insight.event.entity.PlayerExpChangeListener;
 import com.amshulman.insight.event.entity.VehicleEnterListener;
 import com.amshulman.insight.event.entity.VehicleExitListener;
 import com.amshulman.insight.event.entity.todo.EntityTargetListener;
 import com.amshulman.insight.event.entity.todo.EntityUnleashListener;
-import com.amshulman.insight.event.entity.todo.HangingBreakByEntityListener;
-import com.amshulman.insight.event.entity.todo.HangingBreakListener;
-import com.amshulman.insight.event.entity.todo.HangingPlaceListener;
 import com.amshulman.insight.event.entity.todo.PlayerInteractEntityListener;
 import com.amshulman.insight.event.entity.todo.PlayerLeashEntityListener;
 import com.amshulman.insight.event.entity.todo.PlayerShearEntityListener;
@@ -110,7 +111,6 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
         registerEventHandler(new EntityChangeBlockListener());
         registerEventHandler(new EntityExplodeListener());
         registerEventHandler(new EntityTargetListener()); // TODO
-        registerEventHandler(new PlayerInteractEntityListener()); // TODO
         registerEventHandler(new PlayerShearEntityListener()); // TODO
         registerEventHandler(new PotionSplashListener()); // TODO
         registerEventHandler(new SignChangeListener()); // TODO
@@ -145,7 +145,6 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
 
         if (configurationContext.isLoggingDeaths()) {
             registerEventHandler(new EntityDeathListener());
-
         }
 
         if (configurationContext.isLoggingPistons()) {
@@ -159,9 +158,10 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
         }
 
         if (configurationContext.isLoggingHangings()) {
-            registerEventHandler(new HangingBreakByEntityListener()); // TODO
-            registerEventHandler(new HangingBreakListener()); // TODO
-            registerEventHandler(new HangingPlaceListener()); // TODO
+            registerEventHandler(new HangingBreakByEntityListener());
+            registerEventHandler(new HangingBreakListener());
+            registerEventHandler(new HangingPlaceListener());
+            registerEventHandler(new EntityDamageByEntityListener());
         }
 
         if (configurationContext.isLoggingFire()) {
@@ -178,6 +178,10 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
 
         if (configurationContext.isLoggingExpChanges()) {
             registerEventHandler(new PlayerExpChangeListener());
+        }
+
+        if (configurationContext.isLoggingHangings() || true) {
+            registerEventHandler(new PlayerInteractEntityListener(configurationContext)); // TODO
         }
 
         super.onEnable();
