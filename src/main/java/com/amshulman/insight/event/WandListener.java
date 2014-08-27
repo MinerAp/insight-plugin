@@ -1,11 +1,15 @@
 package com.amshulman.insight.event;
 
-import org.bukkit.block.Block;
+import org.bukkit.Location;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.amshulman.insight.backend.PlayerCallbackReadBackend;
@@ -32,32 +36,53 @@ public class WandListener implements Listener {
             return;
         }
 
-        Block block;
-
         if (Action.LEFT_CLICK_BLOCK.equals(event.getAction())) {
-            block = event.getClickedBlock();
+            query(event.getPlayer().getName(), event.getClickedBlock().getLocation());
         } else if (Action.RIGHT_CLICK_BLOCK.equals(event.getAction())) {
-            block = event.getClickedBlock().getRelative(event.getBlockFace());
+            query(event.getPlayer().getName(), event.getClickedBlock().getRelative(event.getBlockFace()).getLocation());
         } else {
             return;
         }
 
         event.setCancelled(true);
-        String playerName = event.getPlayer().getName();
-
-        QueryParameters wandQueryParams = infoManager.getPlayerInfo(playerName).getWandQueryParameters();
-        QueryParameterBuilder queryBuilder = QueryUtil.copyCommonParameters(wandQueryParams, readBackend.newQueryBuilder());
-
-        int radius = wandQueryParams.getRadius();
-        queryBuilder.setArea(block.getLocation(), radius);
-
-        readBackend.query(playerName, queryBuilder.build(), true);
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onWandDamage(BlockDamageEvent event) {
-        if (WandUtil.isWand(event.getItemInHand())) {
+    public void onWandDamage(HangingBreakByEntityEvent event) {
+        if (event.getRemover() instanceof Player) {
+            Player player = (Player) event.getRemover();
+            if (WandUtil.isWand(player.getItemInHand())) {
+                query(player.getName(), event.getEntity().getLocation());
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onWandDamage(PlayerInteractEntityEvent event) {
+        if (WandUtil.isWand(event.getPlayer().getItemInHand())) {
             event.setCancelled(true);
         }
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onWandDamage(EntityDamageByEntityEvent event) {
+        if (event.getDamager() instanceof Player) {
+            Player player = (Player) event.getDamager();
+            if (WandUtil.isWand(player.getItemInHand())) {
+                if (!(event.getEntity() instanceof LivingEntity)) {
+                    query(player.getName(), event.getEntity().getLocation());
+                }
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    private void query(String playerName, Location loc) {
+        QueryParameters wandQueryParams = infoManager.getPlayerInfo(playerName).getWandQueryParameters();
+        QueryParameterBuilder queryBuilder = QueryUtil.copyCommonParameters(wandQueryParams, readBackend.newQueryBuilder());
+
+        queryBuilder.setArea(loc, wandQueryParams.getRadius());
+        readBackend.query(playerName, queryBuilder.build(), true);
     }
 }
