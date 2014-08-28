@@ -1,4 +1,4 @@
-package com.amshulman.insight.event.entity.todo;
+package com.amshulman.insight.event.entity;
 
 import org.bukkit.Material;
 import org.bukkit.entity.ItemFrame;
@@ -9,16 +9,20 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Dye;
 
 import com.amshulman.insight.event.InternalEventHandler;
+import com.amshulman.insight.row.EntityRowEntry;
 import com.amshulman.insight.row.ItemRowEntry;
 import com.amshulman.insight.types.EventCompat;
+import com.amshulman.insight.util.EntityUtil;
 import com.amshulman.insight.util.InsightConfigurationContext;
 
 public class PlayerInteractEntityListener extends InternalEventHandler<PlayerInteractEntityEvent> {
 
     private final boolean loggingHangings;
+    private final boolean loggingSheep;
 
     public PlayerInteractEntityListener(InsightConfigurationContext configurationContext) {
         loggingHangings = configurationContext.isLoggingHangings();
+        loggingSheep = configurationContext.isLoggingSheep();
     }
 
     @Override
@@ -35,7 +39,9 @@ public class PlayerInteractEntityListener extends InternalEventHandler<PlayerInt
                 add(new ItemRowEntry(System.currentTimeMillis(), event.getPlayer().getName(), EventCompat.ITEM_INSERT, itemFrame.getLocation(), inserted));
             }
         } else if (event.getPlayer().getItemInHand().getData() instanceof Dye) {
-            System.out.println("PlayerInteractEntityListener - dye");
+            if (loggingSheep) {
+                add(new EntityRowEntry(System.currentTimeMillis(), event.getPlayer().getName(), EventCompat.SHEEP_DYE, event.getRightClicked().getLocation(), EntityUtil.getName(event.getRightClicked())));
+            }
         }
     }
 }

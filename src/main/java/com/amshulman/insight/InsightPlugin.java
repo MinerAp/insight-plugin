@@ -35,13 +35,13 @@ import com.amshulman.insight.event.entity.HangingBreakByEntityListener;
 import com.amshulman.insight.event.entity.HangingBreakListener;
 import com.amshulman.insight.event.entity.HangingPlaceListener;
 import com.amshulman.insight.event.entity.PlayerExpChangeListener;
+import com.amshulman.insight.event.entity.PlayerInteractEntityListener;
+import com.amshulman.insight.event.entity.PlayerShearEntityListener;
 import com.amshulman.insight.event.entity.VehicleEnterListener;
 import com.amshulman.insight.event.entity.VehicleExitListener;
 import com.amshulman.insight.event.entity.todo.EntityTargetListener;
 import com.amshulman.insight.event.entity.todo.EntityUnleashListener;
-import com.amshulman.insight.event.entity.todo.PlayerInteractEntityListener;
 import com.amshulman.insight.event.entity.todo.PlayerLeashEntityListener;
-import com.amshulman.insight.event.entity.todo.PlayerShearEntityListener;
 import com.amshulman.insight.event.entity.todo.PlayerUnleashEntityListener;
 import com.amshulman.insight.event.item.FurnaceBurnListener;
 import com.amshulman.insight.event.item.InventoryCloseListener;
@@ -108,10 +108,8 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
         registerEventHandler(new BlockPlaceListener());
         registerEventHandler(new CreatureSpawnListener()); // TODO
         registerEventHandler(new EntityBlockFormListener());
-        registerEventHandler(new EntityChangeBlockListener());
         registerEventHandler(new EntityExplodeListener());
         registerEventHandler(new EntityTargetListener()); // TODO
-        registerEventHandler(new PlayerShearEntityListener()); // TODO
         registerEventHandler(new PotionSplashListener()); // TODO
         registerEventHandler(new SignChangeListener()); // TODO
 
@@ -180,8 +178,16 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
             registerEventHandler(new PlayerExpChangeListener());
         }
 
-        if (configurationContext.isLoggingHangings() || true) {
-            registerEventHandler(new PlayerInteractEntityListener(configurationContext)); // TODO
+        if (configurationContext.isLoggingSheep()) {
+            registerEventHandler(new PlayerShearEntityListener());
+        }
+
+        if (configurationContext.isLoggingSheep() || true) { // TODO
+            registerEventHandler(new EntityChangeBlockListener(configurationContext));
+        }
+
+        if (configurationContext.isLoggingHangings() || configurationContext.isLoggingSheep()) {
+            registerEventHandler(new PlayerInteractEntityListener(configurationContext));
         }
 
         super.onEnable();
