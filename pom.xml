@@ -166,6 +166,7 @@
 		<dependency>
 			<groupId>com.amshulman</groupId>
 			<artifactId>mbapi</artifactId>
+			<scope>compile</scope>
 		</dependency>
 
 		<!-- Bukkit -->
