@@ -273,6 +273,9 @@ public final class ResultSetFormatter {
                 ChatItemHover hover;
 
                 switch (mat.getValue0()) {
+                    case BED_BLOCK:
+                        hover = new ChatItemHover(Material.BED);
+                        break;
                     case REDSTONE_WIRE:
                         hover = new ChatItemHover(Material.REDSTONE);
                         break;
