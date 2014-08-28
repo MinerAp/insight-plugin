@@ -40,7 +40,7 @@ public class CommandInsightTp extends PlayerOnlyCommand {
             return true;
         }
 
-        InsightRecord record = playerInfo.getLastResults().getRecord(recordNum);
+        InsightRecord record = playerInfo.getLastResults().getRecord(recordNum - 1);
         player.teleport(LocationUtil.center(Bukkit.getWorld(record.getWorld()), record.getX(), record.getY() + 1, record.getZ()));
         return true;
     }
