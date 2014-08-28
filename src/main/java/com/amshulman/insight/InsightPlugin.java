@@ -106,12 +106,16 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
         registerEventHandler(new BlockFormListener());
         registerEventHandler(new BlockFromToListener());
         registerEventHandler(new BlockPlaceListener());
-        registerEventHandler(new CreatureSpawnListener()); // TODO
         registerEventHandler(new EntityBlockFormListener());
         registerEventHandler(new EntityExplodeListener());
-        registerEventHandler(new EntityTargetListener()); // TODO
-        registerEventHandler(new PotionSplashListener()); // TODO
-        registerEventHandler(new SignChangeListener()); // TODO
+
+        boolean unused = true;
+        if (!unused) {
+            registerEventHandler(new CreatureSpawnListener()); // TODO
+            registerEventHandler(new EntityTargetListener()); // TODO
+            registerEventHandler(new PotionSplashListener()); // TODO
+            registerEventHandler(new SignChangeListener()); // TODO
+        }
 
         if (configurationContext.isLoggingInventory()) {
             registerEventHandler(new InventoryCloseListener(writeBackend));
