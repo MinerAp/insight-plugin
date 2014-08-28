@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.amshulman.insight.action.BlockAction;
 import com.amshulman.insight.management.PlayerInfoManager;
 import com.amshulman.insight.results.InsightRecord;
 import com.amshulman.insight.util.Commands.InsightCommands;
@@ -41,7 +42,20 @@ public class CommandInsightTp extends PlayerOnlyCommand {
         }
 
         InsightRecord record = playerInfo.getLastResults().getRecord(recordNum - 1);
-        player.teleport(LocationUtil.center(Bukkit.getWorld(record.getWorld()), record.getX(), record.getY() + 1, record.getZ()));
+
+        int heightAdjustment;
+        float yaw, pitch;
+        if (record.getAction() instanceof BlockAction) {
+            heightAdjustment = 1;
+            yaw = 180;
+            pitch = 90;
+        } else {
+            heightAdjustment = 0;
+            yaw = 180;
+            pitch = 0;
+        }
+
+        player.teleport(LocationUtil.center(Bukkit.getWorld(record.getWorld()), record.getX(), record.getY() + heightAdjustment, record.getZ(), yaw, pitch));
         return true;
     }
 
