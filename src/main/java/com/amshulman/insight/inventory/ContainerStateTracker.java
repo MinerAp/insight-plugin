@@ -7,25 +7,29 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
+import org.bukkit.Location;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.amshulman.insight.util.InventoryUtils;
+import com.amshulman.insight.util.craftbukkit.InventoryUtil;
 
 public class ContainerStateTracker {
 
     private Container currentState;
     private Map<HumanEntity, Container> playerChangeSets = new HashMap<>();
+    private Location loc;
 
     ContainerStateTracker(Inventory inventory) {
         currentState = InventoryManager.getContainer(inventory);
+        loc = InventoryUtil.getLocation(inventory);
     }
 
     void openPlayerEditSession(HumanEntity player) {
         assert (!playerChangeSets.containsKey(player)); // DEBUG
 
-        playerChangeSets.put(player, new Container(System.currentTimeMillis()));
+        playerChangeSets.put(player, new Container(System.currentTimeMillis(), loc));
     }
 
     Container closePlayerEditSession(HumanEntity player) {

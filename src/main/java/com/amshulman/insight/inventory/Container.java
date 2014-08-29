@@ -9,16 +9,21 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.experimental.FieldDefaults;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public final class Container implements Iterable<ItemStack>, Cloneable {
 
-    private final Map<ItemStack, ItemStack> items;
-    @Getter private final long timeOpened;
+    Map<ItemStack, ItemStack> items;
+    @Getter long timeOpened;
+    @Getter Location location;
 
     Container(Inventory inv) {
         this((Iterable<ItemStack>) inv);
@@ -29,7 +34,7 @@ public final class Container implements Iterable<ItemStack>, Cloneable {
     }
 
     private Container(Iterable<ItemStack> inv) {
-        this(0L);
+        this(0L, null);
         Map<Material, Integer> foo = new EnumMap<>(Material.class);
 
         for (ItemStack stack : inv) {
@@ -52,14 +57,16 @@ public final class Container implements Iterable<ItemStack>, Cloneable {
         }
     }
 
-    Container(long timeOpened) {
+    Container(long timeOpened, Location location) {
         this.items = new TCustomHashMap<>(ITEM_STACK_SIMILARITY);
         this.timeOpened = timeOpened;
+        this.location = location;
     }
 
-    private Container(Map<ItemStack, ItemStack> items, long timeOpened) {
+    private Container(Map<ItemStack, ItemStack> items, long timeOpened, Location loc) {
         this.items = new TCustomHashMap<>(ITEM_STACK_SIMILARITY, items);
         this.timeOpened = timeOpened;
+        this.location = loc;
     }
 
     void add(ItemStack stack) {
@@ -81,7 +88,7 @@ public final class Container implements Iterable<ItemStack>, Cloneable {
 
     @Override
     public Container clone() {
-        return new Container(items, timeOpened);
+        return new Container(items, timeOpened, location);
     }
     
     @Override

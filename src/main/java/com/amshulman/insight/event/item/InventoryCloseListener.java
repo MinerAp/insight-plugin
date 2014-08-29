@@ -1,24 +1,16 @@
 package com.amshulman.insight.event.item;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import lombok.RequiredArgsConstructor;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.AnvilInventory;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.MerchantInventory;
 
 import com.amshulman.insight.action.ItemAction;
 import com.amshulman.insight.backend.WriteBackend;
@@ -28,8 +20,6 @@ import com.amshulman.insight.inventory.InventoryManager;
 import com.amshulman.insight.row.ItemRowEntry;
 import com.amshulman.insight.types.EventCompat;
 import com.amshulman.insight.util.InventoryUtils;
-import com.amshulman.insight.util.craftbukkit.Anvil;
-import com.amshulman.insight.util.craftbukkit.v1_7_R4.Merchant;
 
 @RequiredArgsConstructor
 public class InventoryCloseListener extends InternalEventHandler<InventoryCloseEvent> {
@@ -63,7 +53,7 @@ public class InventoryCloseListener extends InternalEventHandler<InventoryCloseE
             case MERCHANT:
             case WORKBENCH:
                 changes = InventoryManager.inventoryClose(event.getInventory(), event.getPlayer());
-                process(event.getPlayer().getName(), getLocation(event.getInventory()), changes, EventCompat.ITEM_INSERT, EventCompat.ITEM_REMOVE);
+                process(event.getPlayer().getName(), changes.getLocation(), changes, EventCompat.ITEM_INSERT, EventCompat.ITEM_REMOVE);
                 break;
 
             case CHEST:
@@ -73,13 +63,13 @@ public class InventoryCloseListener extends InternalEventHandler<InventoryCloseE
                     backend.suggestFlush(); // ensure we have room for both sets of records
                     process2(event.getPlayer().getName(), ((Chest) dc.getLeftSide()).getLocation(), ((Chest) dc.getRightSide()).getLocation(), changes, EventCompat.ITEM_INSERT, EventCompat.ITEM_REMOVE);
                 } else {
-                    process(event.getPlayer().getName(), getLocation(event.getInventory()), changes, EventCompat.ITEM_INSERT, EventCompat.ITEM_REMOVE);
+                    process(event.getPlayer().getName(), changes.getLocation(), changes, EventCompat.ITEM_INSERT, EventCompat.ITEM_REMOVE);
                 }
                 break;
 
             case ENDER_CHEST:
                 changes = InventoryManager.inventoryClose(event.getInventory(), event.getPlayer());
-                process(event.getPlayer().getName(), getLocation(event.getInventory()), changes, EventCompat.ENDERCHEST_INSERT, EventCompat.ENDERCHEST_REMOVE);
+                process(event.getPlayer().getName(), changes.getLocation(), changes, EventCompat.ENDERCHEST_INSERT, EventCompat.ENDERCHEST_REMOVE);
                 break;
 
             case CRAFTING:
@@ -89,9 +79,9 @@ public class InventoryCloseListener extends InternalEventHandler<InventoryCloseE
                 }
                 break;
 
+            // not logged
             case CREATIVE:
             case PLAYER:
-                // not logged
                 InventoryManager.inventoryCloseIfOpen(event.getInventory(), event.getPlayer()); // possible memory leak otherwise
         }
     }
@@ -115,41 +105,6 @@ public class InventoryCloseListener extends InternalEventHandler<InventoryCloseE
                 add(new ItemRowEntry(changes.getTimeOpened(), name, removeEvent, loc1, InventoryUtils.reverseStack(stack)));
                 add(new ItemRowEntry(changes.getTimeOpened(), name, removeEvent, loc2, InventoryUtils.reverseStack(stack)));
             }
-        }
-    }
-
-    private static Location getLocation(Inventory inv) {
-        InventoryHolder holder = inv.getHolder();
-        if (holder instanceof BlockState) {
-            return ((BlockState) holder).getLocation();
-        }
-
-        if (inv instanceof AnvilInventory) {
-            return Anvil.getInstance().getLocation(inv);
-        }
-
-        if (inv instanceof MerchantInventory) {
-            return Merchant.getInstance().getLocation(inv);
-        }
-
-        if (holder == null) {
-            System.err.println("Holder is null");
-            return null;
-        }
-
-        try {
-            // System.out.println(holder.getClass());
-            Method m = holder.getClass().getMethod("getLocation");
-            if (m == null) {
-                System.err.println("Could not find getLocation for " + holder.getClass()); // DEBUG
-                return null;
-            }
-
-            return (Location) m.invoke(holder);
-
-        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            e.printStackTrace();
-            return null;
         }
     }
 }
