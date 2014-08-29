@@ -1,5 +1,6 @@
 package com.amshulman.insight.event.block;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
@@ -46,6 +47,10 @@ public class EntityChangeBlockListener extends InternalEventHandler<EntityChange
                 add(new BlockRowEntry(when, EntityUtil.getName(event.getEntity()), EventCompat.BLOCK_BREAK, other));
                 break;
             default:
+                if (event.getBlock().getType() == Material.REDSTONE_ORE) {
+                    return; // Not logged
+                }
+
                 System.out.println("EntityChangeBlockListener - ??? " + event.getEntityType() + " " + event.getBlock().getType());
                 break;
         }

@@ -26,6 +26,8 @@ public class BlockFadeListener extends InternalEventHandler<BlockFadeEvent> {
             case MYCEL:
                 add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.BLOCK_DIE, event.getBlock()));
                 break;
+            case GLOWING_REDSTONE_ORE:
+                break; // Not logged
             default:
                 System.out.println("BlockFadeListener - ??? " + event.getBlock().getType());
                 return;
