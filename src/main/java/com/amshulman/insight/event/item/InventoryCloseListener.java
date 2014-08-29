@@ -2,6 +2,7 @@ package com.amshulman.insight.event.item;
 
 import lombok.RequiredArgsConstructor;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
@@ -87,6 +88,14 @@ public class InventoryCloseListener extends InternalEventHandler<InventoryCloseE
     }
 
     private void process(String name, Location loc, Container changes, ItemAction insertEvent, ItemAction removeEvent) {
+        if (loc == null) {
+            Bukkit.getLogger().warning("??? - throwing away changes because we have no where to put them");
+            for (ItemStack stack : changes) {
+                Bukkit.getLogger().warning(stack.toString());
+            }
+            return;
+        }
+
         for (ItemStack stack : changes) {
             if (stack.getAmount() > 0) {
                 add(new ItemRowEntry(changes.getTimeOpened(), name, insertEvent, loc, stack));
