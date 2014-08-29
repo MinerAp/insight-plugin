@@ -26,6 +26,11 @@ public class BlockPlaceListener extends InternalEventHandler<BlockPlaceEvent> {
             return;
         }
 
+        if (Material.SOIL.equals(event.getBlock().getType())) {
+            add(new BlockRowEntry(System.currentTimeMillis(), event.getPlayer().getName(), EventCompat.SOIL_TILL, event.getBlockReplacedState()));
+            return;
+        }
+
         MetadataEntry meta = null;
         if (Material.SKULL.equals(event.getBlock().getType())) {
             meta = new SkullMeta((Skull) event.getBlock().getState(), event.getPlayer().getItemInHand().getItemMeta());

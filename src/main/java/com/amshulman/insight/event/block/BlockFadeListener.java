@@ -28,6 +28,9 @@ public class BlockFadeListener extends InternalEventHandler<BlockFadeEvent> {
                 break;
             case GLOWING_REDSTONE_ORE:
                 break; // Not logged
+            case SOIL:
+                add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.SOIL_REVERT, event.getBlock()));
+                break;
             default:
                 System.out.println("BlockFadeListener - ??? " + event.getBlock().getType());
                 return;

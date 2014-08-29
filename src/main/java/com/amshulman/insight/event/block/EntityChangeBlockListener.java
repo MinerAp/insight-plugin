@@ -65,6 +65,9 @@ public class EntityChangeBlockListener extends InternalEventHandler<EntityChange
             default:
                 if (event.getBlock().getType() == Material.REDSTONE_ORE) {
                     return; // Not logged
+                } else if (event.getBlock().getType() == Material.SOIL) {
+                    add(new BlockRowEntry(when, EntityUtil.getName(event.getEntity()), EventCompat.SOIL_TRAMPLE, event.getBlock()));
+                    return;
                 }
 
                 System.out.println("EntityChangeBlockListener - ??? " + event.getEntityType() + " " + event.getBlock().getType());
