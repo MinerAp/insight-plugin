@@ -3,9 +3,12 @@ package com.amshulman.insight.event.block;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+import org.bukkit.entity.Enderman;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.material.MaterialData;
 
 import com.amshulman.insight.event.InternalEventHandler;
 import com.amshulman.insight.row.BlockRowEntry;
@@ -45,6 +48,19 @@ public class EntityChangeBlockListener extends InternalEventHandler<EntityChange
                 }
 
                 add(new BlockRowEntry(when, EntityUtil.getName(event.getEntity()), EventCompat.BLOCK_BREAK, other));
+                break;
+            case ENDERMAN:
+                MaterialData carried = ((Enderman) event.getEntity()).getCarriedMaterial();
+
+                if (Material.AIR == carried.getItemType()) {
+                    add(new BlockRowEntry(when, EntityUtil.getName(event.getEntity()), EventCompat.ENDERMAN_REMOVE, event.getBlock()));
+                } else {
+                    BlockState state = event.getBlock().getState();
+                    state.setType(carried.getItemType());
+                    state.setRawData(carried.getData());
+
+                    add(new BlockRowEntry(when, EntityUtil.getName(event.getEntity()), EventCompat.ENDERMAN_PLACE, state));
+                }
                 break;
             default:
                 if (event.getBlock().getType() == Material.REDSTONE_ORE) {
