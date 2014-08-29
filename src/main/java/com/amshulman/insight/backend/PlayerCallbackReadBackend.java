@@ -14,14 +14,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.amshulman.insight.InsightPlugin;
-import com.amshulman.insight.backend.ReadBackend;
 import com.amshulman.insight.management.PlayerInfoManager;
 import com.amshulman.insight.query.QueryParameterBuilder;
 import com.amshulman.insight.query.QueryParameters;
-import com.amshulman.insight.results.ChatSender;
 import com.amshulman.insight.results.InsightResultSet;
 import com.amshulman.insight.results.ResultSetFormatter;
 import com.amshulman.insight.util.PlayerInfo;
+import com.amshulman.insight.util.craftbukkit.PlayerUtil;
 import com.amshulman.mbapi.MbapiPlugin;
 
 @RequiredArgsConstructor
@@ -98,7 +97,7 @@ public class PlayerCallbackReadBackend implements AutoCloseable {
                 }
 
                 if (fancyResults) {
-                    ChatSender.sendRawMessage((Player) sender, messages);
+                    PlayerUtil.getInstance().sendRawMessages((Player) sender, messages);
                 } else {
                     sender.sendMessage(messages);
                 }

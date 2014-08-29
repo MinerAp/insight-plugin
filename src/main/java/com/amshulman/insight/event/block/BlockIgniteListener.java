@@ -12,7 +12,7 @@ import com.amshulman.insight.row.BlockRowEntry;
 import com.amshulman.insight.types.EventCompat;
 import com.amshulman.insight.util.EntityUtil;
 import com.amshulman.insight.util.NonPlayerLookup;
-import com.amshulman.insight.util.craftbukkit.Block;
+import com.amshulman.insight.util.craftbukkit.BlockUtil;
 
 public class BlockIgniteListener extends InternalEventHandler<BlockIgniteEvent> {
 
@@ -20,7 +20,7 @@ public class BlockIgniteListener extends InternalEventHandler<BlockIgniteEvent> 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void listen(BlockIgniteEvent event) {
 
-        if (!Block.getInstance().willIgnite(event.getBlock().getRelative(BlockFace.DOWN))) {
+        if (!BlockUtil.getInstance().willIgnite(event.getBlock().getRelative(BlockFace.DOWN))) {
             return;
         }
 

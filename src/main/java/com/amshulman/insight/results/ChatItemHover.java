@@ -10,7 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.amshulman.insight.util.craftbukkit.NMSItemStack;
+import com.amshulman.insight.util.craftbukkit.ItemStackUtil;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -56,7 +56,7 @@ final class ChatItemHover extends ChatHover {
             if (src.tag != null) {
                 ItemStack stack = new ItemStack(src.id, 1, src.Damage == null ? 0 : src.Damage);
                 stack.setItemMeta(src.tag);
-                String tag = NMSItemStack.getInstance().getTag(stack);
+                String tag = ItemStackUtil.getInstance().getTag(stack);
                 if (tag != null) {
                     obj.addProperty("tag", tag);
                 }
