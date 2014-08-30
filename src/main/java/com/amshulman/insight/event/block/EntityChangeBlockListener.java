@@ -63,6 +63,11 @@ public class EntityChangeBlockListener extends InternalEventHandler<EntityChange
                     add(new BlockRowEntry(when, EntityUtil.getName(event.getEntity()), EventCompat.ENDERMAN_PLACE, state));
                 }
                 break;
+            case SILVERFISH: // silverfish entering blocks is not logged
+                if (Material.AIR == event.getTo()) {
+                    add(new BlockRowEntry(when, EntityUtil.getName(EntityType.SILVERFISH), EventCompat.BLOCK_BREAK, event.getBlock()));
+                }
+                break;
             default:
                 if (event.getBlock().getType() == Material.REDSTONE_ORE) {
                     return; // Not logged
