@@ -24,11 +24,14 @@ import com.amshulman.insight.backend.PlayerCallbackReadBackend;
 import com.amshulman.insight.management.PlayerInfoManager;
 import com.amshulman.insight.query.QueryParameterBuilder;
 import com.amshulman.insight.query.QueryParameters;
+import com.amshulman.insight.util.Commands.InsightCommands;
 import com.amshulman.insight.util.InsightConfigurationContext;
 import com.amshulman.insight.util.QueryUtil;
 import com.amshulman.insight.util.WandUtil;
 
 public class WandListener implements Listener {
+
+    private static final String WAND_QUERY_PERMISSION = InsightCommands.WAND.getPrefix() + InsightCommands.WAND.name();
 
     private final PlayerInfoManager infoManager;
     private final PlayerCallbackReadBackend readBackend;
@@ -45,9 +48,9 @@ public class WandListener implements Listener {
         }
 
         if (Action.LEFT_CLICK_BLOCK.equals(event.getAction())) {
-            query(event.getPlayer().getName(), event.getClickedBlock().getLocation());
+            query(event.getPlayer(), event.getClickedBlock().getLocation());
         } else if (Action.RIGHT_CLICK_BLOCK.equals(event.getAction())) {
-            query(event.getPlayer().getName(), event.getClickedBlock().getRelative(event.getBlockFace()).getLocation());
+            query(event.getPlayer(), event.getClickedBlock().getRelative(event.getBlockFace()).getLocation());
         } else {
             return;
         }
@@ -60,7 +63,7 @@ public class WandListener implements Listener {
         if (event.getRemover() instanceof Player) {
             Player player = (Player) event.getRemover();
             if (WandUtil.isWand(player.getItemInHand())) {
-                query(player.getName(), event.getEntity().getLocation());
+                query(player, event.getEntity().getLocation());
                 event.setCancelled(true);
             }
         }
@@ -79,7 +82,7 @@ public class WandListener implements Listener {
             Player player = (Player) event.getDamager();
             if (WandUtil.isWand(player.getItemInHand())) {
                 if (!(event.getEntity() instanceof LivingEntity)) {
-                    query(player.getName(), event.getEntity().getLocation());
+                    query(player, event.getEntity().getLocation());
                 }
                 event.setCancelled(true);
             }
@@ -88,7 +91,7 @@ public class WandListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onWandDrop(PlayerDropItemEvent event) {
-        if (WandUtil.isWand(event.getItemDrop().getItemStack())) {
+        if (WandUtil.isWand(event.getItemDrop().getItemStack()) && event.getPlayer().hasPermission(WAND_QUERY_PERMISSION)) {
             event.getPlayer().sendMessage(ChatColor.RED + "You cannot drop this item.");
             event.setCancelled(true);
         }
@@ -96,9 +99,11 @@ public class WandListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerDeath(EntityDeathEvent event) {
-        for (Iterator<ItemStack> iter = event.getDrops().iterator(); iter.hasNext();) {
-            if (WandUtil.isWand(iter.next())) {
-                iter.remove();
+        if (event.getEntity() instanceof Player && ((Player) event.getEntity()).hasPermission(WAND_QUERY_PERMISSION)) {
+            for (Iterator<ItemStack> iter = event.getDrops().iterator(); iter.hasNext();) {
+                if (WandUtil.isWand(iter.next())) {
+                    iter.remove();
+                }
             }
         }
     }
@@ -110,11 +115,15 @@ public class WandListener implements Listener {
         }
     }
 
-    private void query(String playerName, Location loc) {
-        QueryParameters wandQueryParams = infoManager.getPlayerInfo(playerName).getWandQueryParameters();
+    private void query(Player player, Location loc) {
+        if (!player.hasPermission(WAND_QUERY_PERMISSION)) {
+            return;
+        }
+
+        QueryParameters wandQueryParams = infoManager.getPlayerInfo(player.getName()).getWandQueryParameters();
         QueryParameterBuilder queryBuilder = QueryUtil.copyCommonParameters(wandQueryParams, readBackend.newQueryBuilder());
 
         queryBuilder.setArea(loc, wandQueryParams.getRadius());
-        readBackend.query(playerName, queryBuilder.build(), true);
+        readBackend.query(player.getName(), queryBuilder.build(), true);
     }
 }
