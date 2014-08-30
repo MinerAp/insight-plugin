@@ -16,8 +16,15 @@ import com.amshulman.insight.row.BlockRowEntry;
 import com.amshulman.insight.serialization.MetadataEntry;
 import com.amshulman.insight.serialization.SkullMeta;
 import com.amshulman.insight.types.EventCompat;
+import com.amshulman.insight.util.InsightConfigurationContext;
 
 public class BlockPlaceListener extends InternalEventHandler<BlockPlaceEvent> {
+
+    private final boolean loggingFarmland;
+
+    public BlockPlaceListener(InsightConfigurationContext configurationContext) {
+        loggingFarmland = configurationContext.isLoggingFarmland();
+    }
 
     @Override
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -27,7 +34,9 @@ public class BlockPlaceListener extends InternalEventHandler<BlockPlaceEvent> {
         }
 
         if (Material.SOIL.equals(event.getBlock().getType())) {
-            add(new BlockRowEntry(System.currentTimeMillis(), event.getPlayer().getName(), EventCompat.SOIL_TILL, event.getBlockReplacedState()));
+            if (loggingFarmland) {
+                add(new BlockRowEntry(System.currentTimeMillis(), event.getPlayer().getName(), EventCompat.SOIL_TILL, event.getBlockReplacedState()));
+            }
             return;
         }
 

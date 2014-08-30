@@ -7,9 +7,16 @@ import org.bukkit.event.block.BlockFadeEvent;
 import com.amshulman.insight.event.InternalEventHandler;
 import com.amshulman.insight.row.BlockRowEntry;
 import com.amshulman.insight.types.EventCompat;
+import com.amshulman.insight.util.InsightConfigurationContext;
 import com.amshulman.insight.util.NonPlayerLookup;
 
 public class BlockFadeListener extends InternalEventHandler<BlockFadeEvent> {
+
+    private final boolean loggingFarmland;
+
+    public BlockFadeListener(InsightConfigurationContext configurationContext) {
+        loggingFarmland = configurationContext.isLoggingFarmland();
+    }
 
     @Override
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -29,7 +36,9 @@ public class BlockFadeListener extends InternalEventHandler<BlockFadeEvent> {
             case GLOWING_REDSTONE_ORE:
                 break; // Not logged
             case SOIL:
-                add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.SOIL_REVERT, event.getBlock()));
+                if (loggingFarmland) {
+                    add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.SOIL_REVERT, event.getBlock()));
+                }
                 break;
             default:
                 System.out.println("BlockFadeListener - ??? " + event.getBlock().getType());

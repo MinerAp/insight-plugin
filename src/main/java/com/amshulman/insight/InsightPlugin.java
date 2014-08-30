@@ -102,7 +102,7 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
         registerEventHandler(new RegistrationHandler(configurationContext));
         registerEventHandler(new WandListener(configurationContext));
 
-        registerEventHandler(new BlockPlaceListener());
+        registerEventHandler(new BlockPlaceListener(configurationContext));
         registerEventHandler(new BlockBreakListener());
         registerEventHandler(new BlockFromToListener());
         registerEventHandler(new EntityExplodeListener());
@@ -171,7 +171,7 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
 
         if (configurationContext.isLoggingNaturalChanges()) { // TODO
             registerEventHandler(new BlockSpreadListener());
-            registerEventHandler(new BlockFadeListener());
+            registerEventHandler(new BlockFadeListener(configurationContext));
             registerEventHandler(new BlockFormListener());
             registerEventHandler(new EntityBlockFormListener());
             registerEventHandler(new StructureGrowListener());

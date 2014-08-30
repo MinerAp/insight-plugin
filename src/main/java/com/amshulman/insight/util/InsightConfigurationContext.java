@@ -51,6 +51,7 @@ public class InsightConfigurationContext extends ConfigurationContext implements
     boolean loggingNaturalChanges;
     boolean loggingExpChanges;
     boolean loggingSheep;
+    boolean loggingFarmland;
 
     public InsightConfigurationContext(MbapiPlugin plugin) {
         super(plugin);
@@ -106,6 +107,7 @@ public class InsightConfigurationContext extends ConfigurationContext implements
         loggingNaturalChanges = configuration.getBoolean("logging.nature");
         loggingExpChanges = configuration.getBoolean("logging.xp");
         loggingSheep = configuration.getBoolean("logging.sheep");
+        loggingFarmland = configuration.getBoolean("logging.farmland");
 
         infoManager = new PlayerInfoManager();
 

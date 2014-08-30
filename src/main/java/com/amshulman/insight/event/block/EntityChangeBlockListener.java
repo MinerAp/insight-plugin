@@ -20,9 +20,11 @@ import com.amshulman.insight.util.InsightConfigurationContext;
 public class EntityChangeBlockListener extends InternalEventHandler<EntityChangeBlockEvent> {
 
     private final boolean loggingSheep;
+    private final boolean loggingFarmland;
 
     public EntityChangeBlockListener(InsightConfigurationContext configurationContext) {
         loggingSheep = configurationContext.isLoggingSheep();
+        loggingFarmland = configurationContext.isLoggingFarmland();
     }
 
     @Override
@@ -72,7 +74,9 @@ public class EntityChangeBlockListener extends InternalEventHandler<EntityChange
                 if (event.getBlock().getType() == Material.REDSTONE_ORE) {
                     return; // Not logged
                 } else if (event.getBlock().getType() == Material.SOIL) {
-                    add(new BlockRowEntry(when, EntityUtil.getName(event.getEntity()), EventCompat.SOIL_TRAMPLE, event.getBlock()));
+                    if (loggingFarmland) {
+                        add(new BlockRowEntry(when, EntityUtil.getName(event.getEntity()), EventCompat.SOIL_TRAMPLE, event.getBlock()));
+                    }
                     return;
                 }
 
