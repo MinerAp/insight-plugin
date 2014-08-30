@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -15,7 +16,11 @@ public final class EntityUtil {
         } else if (actor == null) {
             return null;
         } else {
-            return actor.getType().getName();
+            return getName(actor.getType());
         }
+    }
+
+    public static String getName(EntityType type) {
+        return type.getName();
     }
 }
