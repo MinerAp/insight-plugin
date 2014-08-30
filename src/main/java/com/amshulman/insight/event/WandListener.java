@@ -1,5 +1,8 @@
 package com.amshulman.insight.event;
 
+import java.util.Iterator;
+
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -8,9 +11,14 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 import com.amshulman.insight.backend.PlayerCallbackReadBackend;
 import com.amshulman.insight.management.PlayerInfoManager;
@@ -75,6 +83,30 @@ public class WandListener implements Listener {
                 }
                 event.setCancelled(true);
             }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onWandDrop(PlayerDropItemEvent event) {
+        if (WandUtil.isWand(event.getItemDrop().getItemStack())) {
+            event.getPlayer().sendMessage(ChatColor.RED + "You cannot drop this item.");
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onPlayerDeath(EntityDeathEvent event) {
+        for (Iterator<ItemStack> iter = event.getDrops().iterator(); iter.hasNext();) {
+            if (WandUtil.isWand(iter.next())) {
+                iter.remove();
+            }
+        }
+    }
+
+    // @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onEvent(InventoryClickEvent event) {
+        if (WandUtil.isWand(event.getCurrentItem()) && event.getInventory().getType() != InventoryType.PLAYER) {
+            event.setCancelled(true);
         }
     }
 
