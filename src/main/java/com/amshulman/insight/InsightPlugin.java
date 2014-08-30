@@ -115,7 +115,7 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
             registerEventHandler(new SignChangeListener()); // TODO
         }
 
-        if (configurationContext.isLoggingInventory()) {
+        if (configurationContext.isLoggingInventory()) { // TODO
             registerEventHandler(new InventoryCloseListener(writeBackend));
             registerEventHandler(new InventoryOpenListener());
             registerEventHandler(new FurnaceBurnListener());
@@ -143,8 +143,8 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
             registerEventHandler(new PlayerUnleashEntityListener()); // TODO
         }
 
-        if (configurationContext.isLoggingDeaths()) {
-            registerEventHandler(new EntityDeathListener());
+        if (configurationContext.isLoggingDeaths() || configurationContext.isLoggingDrops()) {
+            registerEventHandler(new EntityDeathListener(configurationContext));
         }
 
         if (configurationContext.isLoggingPistons()) {
@@ -169,7 +169,7 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
             registerEventHandler(new BlockIgniteListener());
         }
 
-        if (configurationContext.isLoggingNaturalChanges()) {
+        if (configurationContext.isLoggingNaturalChanges()) { // TODO
             registerEventHandler(new BlockSpreadListener());
             registerEventHandler(new BlockFadeListener());
             registerEventHandler(new BlockFormListener());
