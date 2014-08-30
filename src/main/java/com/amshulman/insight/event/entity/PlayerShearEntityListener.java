@@ -1,5 +1,6 @@
 package com.amshulman.insight.event.entity;
 
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerShearEntityEvent;
@@ -14,6 +15,6 @@ public class PlayerShearEntityListener extends InternalEventHandler<PlayerShearE
     @Override
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void listen(PlayerShearEntityEvent event) {
-        add(new EntityRowEntry(System.currentTimeMillis(), event.getPlayer().getName(), EventCompat.SHEEP_SHEAR, event.getEntity().getLocation(), EntityUtil.getName(event.getEntity())));
+        add(new EntityRowEntry(System.currentTimeMillis(), event.getPlayer().getName(), EventCompat.SHEEP_SHEAR, event.getEntity().getLocation(), EntityUtil.getName(EntityType.SHEEP)));
     }
 }

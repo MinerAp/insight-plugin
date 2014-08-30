@@ -5,6 +5,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Enderman;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
@@ -31,14 +32,14 @@ public class EntityChangeBlockListener extends InternalEventHandler<EntityChange
         switch (event.getEntity().getType()) {
             case SHEEP:
                 if (loggingSheep) {
-                    add(new BlockRowEntry(when, EntityUtil.getName(event.getEntity()), EventCompat.SHEEP_EAT, event.getBlock()));
+                    add(new BlockRowEntry(when, EntityUtil.getName(EntityType.SHEEP), EventCompat.SHEEP_EAT, event.getBlock()));
                 }
                 break;
             case FALLING_BLOCK:
                 add(new BlockRowEntry(when, EntityUtil.getName(event.getEntity()), EventCompat.BLOCK_DROP, event.getBlock()));
                 break;
             case ZOMBIE:
-                add(new BlockRowEntry(when, EntityUtil.getName(event.getEntity()), EventCompat.BLOCK_BREAK, event.getBlock()));
+                add(new BlockRowEntry(when, EntityUtil.getName(EntityType.ZOMBIE), EventCompat.BLOCK_BREAK, event.getBlock()));
 
                 Block other;
                 if (event.getBlock().getData() < 8) {
@@ -47,13 +48,13 @@ public class EntityChangeBlockListener extends InternalEventHandler<EntityChange
                     other = event.getBlock().getRelative(BlockFace.DOWN);
                 }
 
-                add(new BlockRowEntry(when, EntityUtil.getName(event.getEntity()), EventCompat.BLOCK_BREAK, other));
+                add(new BlockRowEntry(when, EntityUtil.getName(EntityType.ZOMBIE), EventCompat.BLOCK_BREAK, other));
                 break;
             case ENDERMAN:
                 MaterialData carried = ((Enderman) event.getEntity()).getCarriedMaterial();
 
                 if (Material.AIR == carried.getItemType()) {
-                    add(new BlockRowEntry(when, EntityUtil.getName(event.getEntity()), EventCompat.ENDERMAN_REMOVE, event.getBlock()));
+                    add(new BlockRowEntry(when, EntityUtil.getName(EntityType.ENDERMAN), EventCompat.ENDERMAN_REMOVE, event.getBlock()));
                 } else {
                     BlockState state = event.getBlock().getState();
                     state.setType(carried.getItemType());

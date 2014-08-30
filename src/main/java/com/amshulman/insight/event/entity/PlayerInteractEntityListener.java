@@ -1,6 +1,7 @@
 package com.amshulman.insight.event.entity;
 
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -40,7 +41,7 @@ public class PlayerInteractEntityListener extends InternalEventHandler<PlayerInt
             }
         } else if (event.getPlayer().getItemInHand().getData() instanceof Dye) {
             if (loggingSheep) {
-                add(new EntityRowEntry(System.currentTimeMillis(), event.getPlayer().getName(), EventCompat.SHEEP_DYE, event.getRightClicked().getLocation(), EntityUtil.getName(event.getRightClicked())));
+                add(new EntityRowEntry(System.currentTimeMillis(), event.getPlayer().getName(), EventCompat.SHEEP_DYE, event.getRightClicked().getLocation(), EntityUtil.getName(EntityType.SHEEP)));
             }
         }
     }
