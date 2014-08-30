@@ -18,6 +18,10 @@ public class FurnaceBurnListener extends InternalEventHandler<FurnaceBurnEvent> 
     @Override
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void listen(FurnaceBurnEvent event) {
+        if (event.getBurnTime() <= 0) {
+            return;
+        }
+
         ItemStack fuel = InventoryUtils.cloneStack(event.getFuel(), 1);
         InventoryManager.directDiff(((Furnace) event.getBlock().getState()).getInventory(), fuel, 1);
         add(new ItemRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.ITEM_BURN, event.getBlock().getLocation(), fuel));
