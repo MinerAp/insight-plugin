@@ -4,6 +4,28 @@ load: POSTWORLD
 author: Andy Shulman
 main: com.amshulman.insight.InsightPlugin
 softdepend: [WorldEdit, PlayerHeads]
+website: http://dev.bukkit.org/bukkit-plugins/insight/
 commands:
   insight:
     aliases: [i]
+    usage: "Invalid usage! Please check http://dev.bukkit.org/bukkit-plugins/insight/ for help."
+
+permissions:
+  insight.lookup:
+      children:
+      insight: true
+  insight.next:
+    children:
+      insight: true
+  insight.page:
+    children:
+      insight: true
+  insight.prev:
+    children:
+      insight: true
+  insight.tp:
+    children:
+      insight: true
+  insight.wand:
+    children:
+      insight: true
