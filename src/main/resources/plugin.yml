@@ -23,6 +23,9 @@ permissions:
       insight.page: true
       insight.next: true
       insight.prev: true
+  insight.rollback:
+    children:
+      insight: true
   insight.tp:
     children:
       insight: true

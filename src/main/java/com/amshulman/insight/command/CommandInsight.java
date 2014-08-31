@@ -4,6 +4,7 @@ import com.amshulman.insight.command.insight.CommandInsightLookup;
 import com.amshulman.insight.command.insight.CommandInsightNext;
 import com.amshulman.insight.command.insight.CommandInsightPage;
 import com.amshulman.insight.command.insight.CommandInsightPrev;
+import com.amshulman.insight.command.insight.CommandInsightRollback;
 import com.amshulman.insight.command.insight.CommandInsightTp;
 import com.amshulman.insight.command.insight.CommandInsightWand;
 import com.amshulman.insight.util.Commands;
@@ -19,6 +20,7 @@ public class CommandInsight extends DelegatingCommand {
         registerSubcommand(new CommandInsightNext(configurationContext));
         registerSubcommand(new CommandInsightPage(configurationContext), "pg");
         registerSubcommand(new CommandInsightPrev(configurationContext));
+        registerSubcommand(new CommandInsightRollback(configurationContext), "rb");
         registerSubcommand(new CommandInsightTp(configurationContext));
         registerSubcommand(new CommandInsightWand(configurationContext), "w");
     }
