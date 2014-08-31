@@ -14,6 +14,6 @@ public class PlayerExpChangeListener extends InternalEventHandler<PlayerExpChang
     @Override
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void listen(PlayerExpChangeEvent event) {
-        add(new EntityRowEntry(System.currentTimeMillis(), event.getPlayer().getName(), EventCompat.ENTITY_KILL, event.getPlayer().getLocation(), EntityType.EXPERIENCE_ORB.toString()));
+        add(new EntityRowEntry(System.currentTimeMillis(), event.getPlayer().getName(), EventCompat.EXP_GAIN, event.getPlayer().getLocation(), EntityType.EXPERIENCE_ORB.toString()));
     }
 }
