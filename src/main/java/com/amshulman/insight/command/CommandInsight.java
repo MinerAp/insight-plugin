@@ -17,7 +17,7 @@ public class CommandInsight extends DelegatingCommand {
 
         registerSubcommand(new CommandInsightLookup(configurationContext), "l");
         registerSubcommand(new CommandInsightNext(configurationContext));
-        registerSubcommand(new CommandInsightPage(configurationContext));
+        registerSubcommand(new CommandInsightPage(configurationContext), "pg");
         registerSubcommand(new CommandInsightPrev(configurationContext));
         registerSubcommand(new CommandInsightTp(configurationContext));
         registerSubcommand(new CommandInsightWand(configurationContext), "w");
