@@ -1,6 +1,5 @@
 package com.amshulman.insight.command.insight;
 
-import org.antlr.v4.runtime.RecognitionException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -32,7 +31,7 @@ public class CommandInsightLookup extends ConsoleOrPlayerCommand {
     }
 
     @Override
-    protected boolean executeForPlayer(Player player, TypeSafeList<String> args) throws RecognitionException {
+    protected boolean executeForPlayer(Player player, TypeSafeList<String> args) {
         QueryParameters queryParams = QueryUtil.parseArgs(player, args);
         if (queryParams == null) {
             return true;
@@ -70,7 +69,7 @@ public class CommandInsightLookup extends ConsoleOrPlayerCommand {
     }
 
     @Override
-    protected boolean executeForConsole(ConsoleCommandSender console, TypeSafeList<String> args) throws RecognitionException {
+    protected boolean executeForConsole(ConsoleCommandSender console, TypeSafeList<String> args) {
         QueryParameters queryParams = QueryUtil.parseArgs(console, args);
         if (queryParams == null) {
             return true;
