@@ -12,20 +12,17 @@ commands:
 
 permissions:
   insight.lookup:
-      children:
-      insight: true
-  insight.next:
     children:
       insight: true
-  insight.page:
-    children:
-      insight: true
-  insight.prev:
-    children:
-      insight: true
-  insight.tp:
-    children:
-      insight: true
+      insight.page: true
+      insight.next: true
+      insight.prev: true
   insight.wand:
+    children:
+      insight: true
+      insight.page: true
+      insight.next: true
+      insight.prev: true
+  insight.tp:
     children:
       insight: true
