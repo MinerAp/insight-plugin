@@ -17,6 +17,7 @@ import com.amshulman.insight.event.block.BlockFadeListener;
 import com.amshulman.insight.event.block.BlockFormListener;
 import com.amshulman.insight.event.block.BlockFromToListener;
 import com.amshulman.insight.event.block.BlockIgniteListener;
+import com.amshulman.insight.event.block.BlockMultiPlaceListener;
 import com.amshulman.insight.event.block.BlockPlaceListener;
 import com.amshulman.insight.event.block.BlockSpreadListener;
 import com.amshulman.insight.event.block.EntityBlockFormListener;
@@ -103,6 +104,7 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
         registerEventHandler(new WandListener(configurationContext));
 
         registerEventHandler(new BlockPlaceListener(configurationContext));
+        registerEventHandler(new BlockMultiPlaceListener());
         registerEventHandler(new BlockBreakListener());
         registerEventHandler(new BlockFromToListener());
         registerEventHandler(new EntityExplodeListener());
