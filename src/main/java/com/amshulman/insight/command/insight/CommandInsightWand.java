@@ -21,7 +21,7 @@ import com.amshulman.typesafety.TypeSafeList;
 
 public class CommandInsightWand extends PlayerOnlyCommand {
 
-    PlayerInfoManager infoManager;
+    private final PlayerInfoManager infoManager;
 
     public CommandInsightWand(InsightConfigurationContext configurationContext) {
         super(configurationContext, InsightCommands.WAND, 0, Integer.MAX_VALUE);

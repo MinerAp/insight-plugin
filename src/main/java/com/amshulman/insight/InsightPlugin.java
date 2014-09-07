@@ -121,7 +121,7 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
             registerEventHandler(new InventoryCloseListener(writeBackend));
             registerEventHandler(new InventoryOpenListener());
             registerEventHandler(new FurnaceBurnListener());
-            registerEventHandler(new InventoryInteractListener());
+            registerEventHandler(new InventoryInteractListener(configurationContext));
         }
 
         if (configurationContext.isLoggingDrops()) {

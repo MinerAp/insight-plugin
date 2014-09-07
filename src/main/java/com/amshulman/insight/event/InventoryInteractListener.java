@@ -17,11 +17,16 @@ import org.bukkit.plugin.Plugin;
 import com.amshulman.insight.inventory.Container;
 import com.amshulman.insight.inventory.ContainerStateTracker;
 import com.amshulman.insight.inventory.InventoryManager;
+import com.amshulman.insight.util.InsightConfigurationContext;
 import com.amshulman.insight.util.InventoryUtils;
 
 public class InventoryInteractListener implements Listener {
 
-    public static final Plugin plugin = Bukkit.getPluginManager().getPlugin("Insight");
+    private final Plugin plugin;
+
+    public InventoryInteractListener(InsightConfigurationContext configurationContext) {
+        plugin = configurationContext.plugin;
+    }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onEvent(InventoryClickEvent event) {
@@ -130,7 +135,7 @@ public class InventoryInteractListener implements Listener {
     }
 
     // Obnoxious workaround because at the time the event is called the items have not been collected
-    private static void pernicious(final InventoryInteractEvent event) {
+    private void pernicious(final InventoryInteractEvent event) {
         Bukkit.getScheduler().runTask(plugin, new Runnable() {
 
             @Override
@@ -140,7 +145,7 @@ public class InventoryInteractListener implements Listener {
         });
     }
 
-    private static void foo(final InventoryClickEvent event) {
+    private void foo(final InventoryClickEvent event) {
         final Container before = InventoryManager.getContainer(event.getView().getTopInventory());
 
         Bukkit.getScheduler().runTask(plugin, new Runnable() {
@@ -157,7 +162,7 @@ public class InventoryInteractListener implements Listener {
         });
     }
 
-    private static void bar(final InventoryClickEvent event) {
+    private void bar(final InventoryClickEvent event) {
         final Container before = InventoryManager.getContainer(event.getView().getBottomInventory());
 
         Bukkit.getScheduler().runTask(plugin, new Runnable() {
