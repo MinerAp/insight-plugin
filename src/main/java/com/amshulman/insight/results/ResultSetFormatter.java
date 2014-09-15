@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.javatuples.Pair;
@@ -23,6 +22,7 @@ import com.amshulman.insight.serialization.BlockMetadata;
 import com.amshulman.insight.serialization.ItemMetadata;
 import com.amshulman.insight.serialization.SkullMeta;
 import com.amshulman.insight.types.EventCompat;
+import com.amshulman.insight.types.InsightLocation;
 import com.amshulman.insight.types.MaterialCompat;
 import com.amshulman.mbapi.util.CoreTypes;
 import com.amshulman.typesafety.TypeSafeList;
@@ -117,7 +117,7 @@ public final class ResultSetFormatter {
             sb.append("Examining changes at ")
               .append(HEADER_ACCENT).append(formatLocation(params.getPoint()))
               .append(HEADER_BASE).append(" in ")
-              .append(HEADER_ACCENT).append(params.getPoint().getWorld().getName());
+              .append(HEADER_ACCENT).append(params.getPoint().getWorld());
         } else {
             TypeSafeList<String> worlds = new TypeSafeListImpl<String>(new ArrayList<String>(params.getWorlds()), CoreTypes.STRING);
             Collections.sort(worlds.getCollection(), String.CASE_INSENSITIVE_ORDER);
@@ -155,7 +155,7 @@ public final class ResultSetFormatter {
             rootMessage.addMessage(new ChatMessage("Examining changes at ").setColor(HEADER_BASE));
             rootMessage.addMessage(new ChatMessage(formatLocation(params.getPoint())).setColor(HEADER_ACCENT));
             rootMessage.addMessage(new ChatMessage(" in ").setColor(HEADER_BASE));
-            rootMessage.addMessage(new ChatMessage(params.getPoint().getWorld().getName()).setColor(HEADER_ACCENT));
+            rootMessage.addMessage(new ChatMessage(params.getPoint().getWorld()).setColor(HEADER_ACCENT));
         } else {
             TypeSafeList<String> worlds = new TypeSafeListImpl<String>(new ArrayList<String>(params.getWorlds()), CoreTypes.STRING);
             Collections.sort(worlds.getCollection(), String.CASE_INSENSITIVE_ORDER);
@@ -374,8 +374,8 @@ public final class ResultSetFormatter {
         }
     }
 
-    private static String formatLocation(Location l) {
-        return formatLocation(l.getBlockX(), l.getBlockY(), l.getBlockZ());
+    private static String formatLocation(InsightLocation l) {
+        return formatLocation(l.getX(), l.getY(), l.getZ());
     }
 
     private static String formatLocation(int x, int y, int z) {

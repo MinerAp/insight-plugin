@@ -24,6 +24,7 @@ import com.amshulman.insight.backend.PlayerCallbackReadBackend;
 import com.amshulman.insight.management.PlayerInfoManager;
 import com.amshulman.insight.query.QueryParameterBuilder;
 import com.amshulman.insight.query.QueryParameters;
+import com.amshulman.insight.types.InsightLocation;
 import com.amshulman.insight.util.Commands.InsightCommands;
 import com.amshulman.insight.util.InsightConfigurationContext;
 import com.amshulman.insight.util.QueryUtil;
@@ -123,7 +124,7 @@ public class WandListener implements Listener {
         QueryParameters wandQueryParams = infoManager.getPlayerInfo(player.getName()).getWandQueryParameters();
         QueryParameterBuilder queryBuilder = QueryUtil.copyCommonParameters(wandQueryParams, readBackend.newQueryBuilder());
 
-        queryBuilder.setArea(loc, wandQueryParams.getRadius());
+        queryBuilder.setArea(new InsightLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), loc.getWorld().getName()), wandQueryParams.getRadius());
         readBackend.query(player.getName(), queryBuilder.build(), true);
     }
 }

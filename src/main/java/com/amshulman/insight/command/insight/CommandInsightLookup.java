@@ -1,6 +1,7 @@
 package com.amshulman.insight.command.insight;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -9,6 +10,7 @@ import com.amshulman.insight.backend.PlayerCallbackReadBackend;
 import com.amshulman.insight.parser.QueryParser;
 import com.amshulman.insight.query.QueryParameterBuilder;
 import com.amshulman.insight.query.QueryParameters;
+import com.amshulman.insight.types.InsightLocation;
 import com.amshulman.insight.util.Commands.InsightCommands;
 import com.amshulman.insight.util.InsightConfigurationContext;
 import com.amshulman.insight.util.QueryUtil;
@@ -52,7 +54,8 @@ public class CommandInsightLookup extends ConsoleOrPlayerCommand {
                     return true;
                 }
             } else {
-                queryBuilder.setArea(player.getLocation(), queryParams.getRadius());
+                Location loc = player.getLocation();
+                queryBuilder.setArea(new InsightLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), loc.getWorld().getName()), queryParams.getRadius());
             }
         } else {
             if (queryParams.getWorlds().isEmpty()) {
