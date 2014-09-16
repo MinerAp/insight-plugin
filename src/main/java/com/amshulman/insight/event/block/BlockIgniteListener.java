@@ -31,9 +31,6 @@ public class BlockIgniteListener extends InternalEventHandler<BlockIgniteEvent> 
             case SPREAD:
                 add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.FIRE_SPREAD, fire));
                 return;
-            case FLINT_AND_STEEL:
-                add(new BlockRowEntry(System.currentTimeMillis(), event.getPlayer().getName(), EventCompat.BLOCK_IGNITE, fire));
-                break;
             case LAVA:
                 add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.LAVA, EventCompat.BLOCK_IGNITE, fire));
                 break;
@@ -43,6 +40,7 @@ public class BlockIgniteListener extends InternalEventHandler<BlockIgniteEvent> 
             case EXPLOSION:
                 add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.BLOCK_IGNITE, fire));
                 break;
+            case FLINT_AND_STEEL:
             case FIREBALL:
                 add(new BlockRowEntry(System.currentTimeMillis(), EntityUtil.getName(event.getIgnitingEntity()), EventCompat.BLOCK_IGNITE, fire));
                 break;
