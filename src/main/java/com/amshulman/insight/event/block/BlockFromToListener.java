@@ -12,12 +12,9 @@ import com.amshulman.insight.event.InternalEventHandler;
 import com.amshulman.insight.row.BlockRowEntry;
 import com.amshulman.insight.types.EventCompat;
 import com.amshulman.insight.util.NonPlayerLookup;
-import com.google.common.collect.ObjectArrays;
+import com.amshulman.insight.util.Util;
 
 public class BlockFromToListener extends InternalEventHandler<BlockFromToEvent> {
-
-    private static final BlockFace[] CARDINAL_DIRECTIONS = new BlockFace[] { BlockFace.NORTH, BlockFace.WEST, BlockFace.EAST, BlockFace.SOUTH };
-    private static final BlockFace[] ALL_FLOW_DIRECTIONS = ObjectArrays.concat(CARDINAL_DIRECTIONS, BlockFace.DOWN);
 
     @Override
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -28,7 +25,7 @@ public class BlockFromToListener extends InternalEventHandler<BlockFromToEvent> 
             case STATIONARY_WATER:
                 add(new BlockRowEntry(when, NonPlayerLookup.WATER, EventCompat.BLOCK_FLOW, event.getToBlock()));
 
-                for (BlockFace face : ALL_FLOW_DIRECTIONS) {
+                for (BlockFace face : Util.ALL_FLOW_DIRECTIONS) {
                     Block b = event.getToBlock().getRelative(face);
                     if (isLava(b.getType())) {
                         if (isSourceBlock(b)) {
@@ -62,7 +59,7 @@ public class BlockFromToListener extends InternalEventHandler<BlockFromToEvent> 
     }
 
     private static boolean hasAdjacentWater(Block block) {
-        for (BlockFace face : CARDINAL_DIRECTIONS) {
+        for (BlockFace face : Util.CARDINAL_DIRECTIONS) {
             if (isWater(block.getRelative(face).getType())) {
                 return true;
             }
