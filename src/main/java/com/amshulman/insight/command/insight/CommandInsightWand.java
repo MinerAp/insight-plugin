@@ -14,7 +14,7 @@ import com.amshulman.insight.util.Commands.InsightCommands;
 import com.amshulman.insight.util.InsightConfigurationContext;
 import com.amshulman.insight.util.PlayerInfo;
 import com.amshulman.insight.util.QueryUtil;
-import com.amshulman.insight.util.WandUtil;
+import com.amshulman.insight.util.Util;
 import com.amshulman.mbapi.commands.PlayerOnlyCommand;
 import com.amshulman.typesafety.TypeSafeCollections;
 import com.amshulman.typesafety.TypeSafeList;
@@ -37,7 +37,7 @@ public class CommandInsightWand extends PlayerOnlyCommand {
         boolean hasWands = false;
         ItemStack[] contents = inv.getContents();
         for (int i = contents.length - 1; i >= 0; --i) {
-            if (WandUtil.isWand(contents[i])) {
+            if (Util.isWand(contents[i])) {
                 inv.setItem(i, null);
                 hasWands = true;
             }
@@ -71,7 +71,7 @@ public class CommandInsightWand extends PlayerOnlyCommand {
             inv.setItem(emptySlot, inHand);
         }
 
-        inv.setItemInHand(WandUtil.getWand());
+        inv.setItemInHand(Util.getWand());
         return true;
     }
 

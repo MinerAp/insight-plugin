@@ -28,7 +28,7 @@ import com.amshulman.insight.types.InsightLocation;
 import com.amshulman.insight.util.Commands.InsightCommands;
 import com.amshulman.insight.util.InsightConfigurationContext;
 import com.amshulman.insight.util.QueryUtil;
-import com.amshulman.insight.util.WandUtil;
+import com.amshulman.insight.util.Util;
 
 public class WandListener implements Listener {
 
@@ -44,7 +44,7 @@ public class WandListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onWandInteract(PlayerInteractEvent event) {
-        if (!WandUtil.isWand(event.getItem())) {
+        if (!Util.isWand(event.getItem())) {
             return;
         }
 
@@ -63,7 +63,7 @@ public class WandListener implements Listener {
     public void onWandDamage(HangingBreakByEntityEvent event) {
         if (event.getRemover() instanceof Player) {
             Player player = (Player) event.getRemover();
-            if (WandUtil.isWand(player.getItemInHand())) {
+            if (Util.isWand(player.getItemInHand())) {
                 query(player, event.getEntity().getLocation());
                 event.setCancelled(true);
             }
@@ -72,7 +72,7 @@ public class WandListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onWandDamage(PlayerInteractEntityEvent event) {
-        if (WandUtil.isWand(event.getPlayer().getItemInHand())) {
+        if (Util.isWand(event.getPlayer().getItemInHand())) {
             event.setCancelled(true);
         }
     }
@@ -81,7 +81,7 @@ public class WandListener implements Listener {
     public void onWandDamage(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Player) {
             Player player = (Player) event.getDamager();
-            if (WandUtil.isWand(player.getItemInHand())) {
+            if (Util.isWand(player.getItemInHand())) {
                 if (!(event.getEntity() instanceof LivingEntity)) {
                     query(player, event.getEntity().getLocation());
                 }
@@ -92,7 +92,7 @@ public class WandListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onWandDrop(PlayerDropItemEvent event) {
-        if (WandUtil.isWand(event.getItemDrop().getItemStack()) && event.getPlayer().hasPermission(WAND_QUERY_PERMISSION)) {
+        if (Util.isWand(event.getItemDrop().getItemStack()) && event.getPlayer().hasPermission(WAND_QUERY_PERMISSION)) {
             event.getPlayer().sendMessage(ChatColor.RED + "You cannot drop this item.");
             event.setCancelled(true);
         }
@@ -102,7 +102,7 @@ public class WandListener implements Listener {
     public void onPlayerDeath(EntityDeathEvent event) {
         if (event.getEntity() instanceof Player && ((Player) event.getEntity()).hasPermission(WAND_QUERY_PERMISSION)) {
             for (Iterator<ItemStack> iter = event.getDrops().iterator(); iter.hasNext();) {
-                if (WandUtil.isWand(iter.next())) {
+                if (Util.isWand(iter.next())) {
                     iter.remove();
                 }
             }
@@ -111,7 +111,7 @@ public class WandListener implements Listener {
 
     // @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onEvent(InventoryClickEvent event) {
-        if (WandUtil.isWand(event.getCurrentItem()) && event.getInventory().getType() != InventoryType.PLAYER) {
+        if (Util.isWand(event.getCurrentItem()) && event.getInventory().getType() != InventoryType.PLAYER) {
             event.setCancelled(true);
         }
     }
