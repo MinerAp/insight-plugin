@@ -14,7 +14,7 @@ public final class EntityUtil {
         if (actor instanceof Player) {
             return ((Player) actor).getName();
         } else if (actor == null) {
-            return null;
+            return NonPlayerLookup.NATURE;
         } else {
             return getName(actor.getType());
         }

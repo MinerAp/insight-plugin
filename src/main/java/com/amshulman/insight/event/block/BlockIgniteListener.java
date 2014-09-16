@@ -44,11 +44,7 @@ public class BlockIgniteListener extends InternalEventHandler<BlockIgniteEvent> 
                 add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.BLOCK_IGNITE, fire));
                 break;
             case FIREBALL:
-                if (event.getIgnitingEntity() != null) {
-                    add(new BlockRowEntry(System.currentTimeMillis(), EntityUtil.getName(event.getIgnitingEntity()), EventCompat.BLOCK_IGNITE, fire));
-                } else {
-                    add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.BLOCK_IGNITE, fire));
-                }
+                add(new BlockRowEntry(System.currentTimeMillis(), EntityUtil.getName(event.getIgnitingEntity()), EventCompat.BLOCK_IGNITE, fire));
                 break;
             case ENDER_CRYSTAL:
                 break;
