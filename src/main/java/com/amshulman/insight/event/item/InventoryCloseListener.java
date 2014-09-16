@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
 import org.bukkit.event.EventHandler;
@@ -21,6 +23,7 @@ import com.amshulman.insight.inventory.InventoryManager;
 import com.amshulman.insight.row.ItemRowEntry;
 import com.amshulman.insight.types.EventCompat;
 import com.amshulman.insight.util.InventoryUtils;
+import com.amshulman.insight.util.Util;
 
 @RequiredArgsConstructor
 public class InventoryCloseListener extends InternalEventHandler<InventoryCloseEvent> {
@@ -61,8 +64,27 @@ public class InventoryCloseListener extends InternalEventHandler<InventoryCloseE
                 changes = InventoryManager.inventoryClose(event.getInventory(), event.getPlayer());
                 if (event.getInventory().getHolder() instanceof DoubleChest) {
                     DoubleChest dc = (DoubleChest) event.getInventory().getHolder();
+                    Chest left = (Chest) dc.getLeftSide();
+                    Chest right = (Chest) dc.getRightSide();
+
+                    Location leftLoc = null;
+                    Location rightLoc = null;
+                    if (left != null && right != null) {
+                        leftLoc = left.getLocation();
+                        rightLoc = right.getLocation();
+                    } else if (left == null && right == null) { // we're fucked
+                        Bukkit.getLogger().severe("??? - Could not find either half of the double chest. Throwing away changes.");
+                        break;
+                    } else if (left == null) {
+                        leftLoc = findOtherHalf(right);
+                        rightLoc = right.getLocation();
+                    } else if (right == null) {
+                        leftLoc = left.getLocation();
+                        rightLoc = findOtherHalf(left);
+                    }
+
                     backend.suggestFlush(); // ensure we have room for both sets of records
-                    process2(event.getPlayer().getName(), ((Chest) dc.getLeftSide()).getLocation(), ((Chest) dc.getRightSide()).getLocation(), changes, EventCompat.ITEM_INSERT, EventCompat.ITEM_REMOVE);
+                    process2(event.getPlayer().getName(), leftLoc, rightLoc, changes, EventCompat.ITEM_INSERT, EventCompat.ITEM_REMOVE);
                 } else {
                     process(event.getPlayer().getName(), changes.getLocation(), changes, EventCompat.ITEM_INSERT, EventCompat.ITEM_REMOVE);
                 }
@@ -115,5 +137,17 @@ public class InventoryCloseListener extends InternalEventHandler<InventoryCloseE
                 add(new ItemRowEntry(changes.getTimeOpened(), name, removeEvent, loc2, InventoryUtils.reverseStack(stack)));
             }
         }
+    }
+
+    private static Location findOtherHalf(Chest chest) {
+        Block block = chest.getBlock();
+        for (BlockFace face : Util.CARDINAL_DIRECTIONS) {
+            Block other = block.getRelative(face);
+            if (block.getType() == other.getType()) {
+                return other.getLocation();
+            }
+        }
+
+        return null;
     }
 }
