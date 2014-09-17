@@ -41,6 +41,11 @@ public class CommandInsightTp extends PlayerOnlyCommand {
             return true;
         }
 
+        if (recordNum <= 0 || playerInfo.getLastResults().getSize() < recordNum) {
+            player.sendMessage("record number out of bounds");
+            return true;
+        }
+
         InsightRecord record = playerInfo.getLastResults().getRecord(recordNum - 1);
 
         int heightAdjustment;
