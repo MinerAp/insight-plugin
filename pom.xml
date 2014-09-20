@@ -41,6 +41,7 @@
 	</distributionManagement>
 
 	<properties>
+		<dagger.version>2.0-SNAPSHOT</dagger.version>
 		<worldedit.version>5.6.2</worldedit.version>
 	</properties>
 
@@ -162,6 +163,13 @@
 			<artifactId>guava</artifactId>
 		</dependency>
 
+		<!-- Dagger -->
+		<dependency>
+			<groupId>com.google.dagger</groupId>
+			<artifactId>dagger</artifactId>
+			<version>${dagger.version}</version>
+		</dependency>
+
 		<!-- mbapi -->
 		<dependency>
 			<groupId>com.amshulman</groupId>
@@ -264,6 +272,17 @@
 						</manifestEntries>
 					</archive>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<dependencies>
+					<dependency>
+						<groupId>com.google.dagger</groupId>
+						<artifactId>dagger-compiler</artifactId>
+						<version>${dagger.version}</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>
