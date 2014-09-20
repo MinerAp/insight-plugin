@@ -256,9 +256,10 @@
 						<manifestEntries>
 							<Implementation-Title>Insight</Implementation-Title>
 							<Implementation-Version>${describe}</Implementation-Version>
-							<!-- <Implementation-Vendor>Miner</Implementation-Vendor> <Specification-Title>Bukkit</Specification-Title> 
-								<Specification-Version>${api.version}</Specification-Version> <Specification-Vendor>Bukkit 
-								Team</Specification-Vendor> -->
+							<!-- <Implementation-Vendor>MinerAp</Implementation-Vendor>
+							<Specification-Title>Insight-API</Specification-Title>
+							<Specification-Version>${api.version}</Specification-Version>
+							<Specification-Vendor>MinerAp</Specification-Vendor> -->
 							<Sealed>true</Sealed>
 						</manifestEntries>
 					</archive>
