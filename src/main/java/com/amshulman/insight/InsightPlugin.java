@@ -209,6 +209,7 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
         excludedWorlds.clear();
         super.onDisable();
         writeBackend.close();
+        writeBackend = null;
     }
 
     @Override
