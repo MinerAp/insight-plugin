@@ -1,5 +1,8 @@
 package com.amshulman.insight;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.annotation.Nonnull;
 
 import org.bukkit.Bukkit;
@@ -61,6 +64,7 @@ import com.amshulman.mbapi.MbapiPlugin;
 
 public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.util.InsightPlugin {
 
+    private final Set<String> excludedWorlds = new HashSet<String>();
     private WriteBackend writeBackend;
 
     @Override
@@ -92,6 +96,7 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
 
         writeBackend = configurationContext.getWriteBackend();
 
+        excludedWorlds.addAll(configurationContext.getExcludedWorlds());
         for (World world : Bukkit.getWorlds()) {
             writeBackend.registerWorld(world.getName());
         }
@@ -201,12 +206,15 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
 
     @Override
     public void onDisable() {
+        excludedWorlds.clear();
         super.onDisable();
         writeBackend.close();
     }
 
     @Override
     public void logEvent(@Nonnull RowEntry row) {
-        writeBackend.submit(row);
+        if (!excludedWorlds.contains(row.getWorld())) {
+            writeBackend.submit(row);
+        }
     }
 }

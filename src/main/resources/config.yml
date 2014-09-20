@@ -9,6 +9,8 @@ database:
   tuning:
     cacheSize: 1000
 
+excludedWorlds: []
+
 logging:
   inventory: true
   drops: true

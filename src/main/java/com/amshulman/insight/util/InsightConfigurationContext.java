@@ -1,5 +1,6 @@
 package com.amshulman.insight.util;
 
+import java.util.Collection;
 import java.util.logging.Logger;
 
 import lombok.EqualsAndHashCode;
@@ -37,6 +38,8 @@ public class InsightConfigurationContext extends ConfigurationContext implements
     ReadBackend rawReadBackend;
     WriteBackend writeBackend;
     PlayerInfoManager infoManager;
+
+    Collection<String> excludedWorlds;
 
     boolean loggingInventory;
     boolean loggingDrops;
@@ -89,6 +92,8 @@ public class InsightConfigurationContext extends ConfigurationContext implements
             worldEditEnabled = WorldEditBridge.isWorldEditEnabled();
         } catch (NoClassDefFoundError e) {}
         this.worldEditEnabled = worldEditEnabled;
+
+        excludedWorlds = configuration.getStringList("excludedWorlds");
 
         /* tuning */
         cacheSize = configuration.getInt("database.tuning.cacheSize");
