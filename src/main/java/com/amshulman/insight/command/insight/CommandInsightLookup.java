@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import com.amshulman.insight.backend.PlayerCallbackReadBackend;
+import com.amshulman.insight.backend.QueryReadBackend;
 import com.amshulman.insight.parser.QueryParser;
 import com.amshulman.insight.query.QueryParameterBuilder;
 import com.amshulman.insight.query.QueryParameters;
@@ -23,12 +23,12 @@ import com.amshulman.typesafety.impl.TypeSafeSetImpl;
 
 public class CommandInsightLookup extends ConsoleOrPlayerCommand {
 
-    private final PlayerCallbackReadBackend readBackend;
+    private final QueryReadBackend readBackend;
     private final boolean worldEditEnabled;
 
     public CommandInsightLookup(InsightConfigurationContext configurationContext) {
         super(configurationContext, InsightCommands.LOOKUP, 1, Integer.MAX_VALUE);
-        readBackend = configurationContext.getReadBackend();
+        readBackend = new QueryReadBackend(configurationContext);
         worldEditEnabled = configurationContext.isWorldEditEnabled();
     }
 

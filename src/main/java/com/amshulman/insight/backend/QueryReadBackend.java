@@ -1,36 +1,29 @@
 package com.amshulman.insight.backend;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
-import lombok.RequiredArgsConstructor;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import com.amshulman.insight.InsightPlugin;
 import com.amshulman.insight.management.PlayerInfoManager;
-import com.amshulman.insight.query.QueryParameterBuilder;
 import com.amshulman.insight.query.QueryParameters;
 import com.amshulman.insight.results.InsightResultSet;
 import com.amshulman.insight.results.ResultSetFormatter;
+import com.amshulman.insight.util.InsightConfigurationContext;
 import com.amshulman.insight.util.PlayerInfo;
 import com.amshulman.insight.util.craftbukkit.PlayerUtil;
 import com.amshulman.mbapi.MbapiPlugin;
 
-@RequiredArgsConstructor
-public class PlayerCallbackReadBackend implements AutoCloseable {
+public class QueryReadBackend extends AbstractCallbackReadBackend {
 
-    private final MbapiPlugin plugin = JavaPlugin.getPlugin(InsightPlugin.class);
-    private final ExecutorService threadPool = new ThreadPoolExecutor(5, 10, 1, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(100));
-
-    private final ReadBackend readBackend;
+    private final MbapiPlugin plugin;
     private final PlayerInfoManager infoManager;
+
+    public QueryReadBackend(InsightConfigurationContext configurationContext) {
+        super(configurationContext.getReadBackend());
+        plugin = configurationContext.plugin;
+        infoManager = configurationContext.getInfoManager();
+    }
 
     public void query(final String playerName, final QueryParameters params, final boolean fancyResults) {
         try {
@@ -103,14 +96,5 @@ public class PlayerCallbackReadBackend implements AutoCloseable {
                 }
             }
         });
-    }
-
-    public QueryParameterBuilder newQueryBuilder() {
-        return readBackend.newQueryBuilder();
-    }
-
-    @Override
-    public void close() {
-        readBackend.close();
     }
 }

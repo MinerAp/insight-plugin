@@ -3,7 +3,7 @@ package com.amshulman.insight.command.insight;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.amshulman.insight.backend.PlayerCallbackReadBackend;
+import com.amshulman.insight.backend.RollbackReadBackend;
 import com.amshulman.insight.query.QueryParameters;
 import com.amshulman.insight.util.Commands.InsightCommands;
 import com.amshulman.insight.util.InsightConfigurationContext;
@@ -14,12 +14,12 @@ import com.amshulman.typesafety.TypeSafeList;
 
 public class CommandInsightRollback extends PlayerOnlyCommand {
 
-    private final PlayerCallbackReadBackend readBackend;
+    private final RollbackReadBackend readBackend;
     private final boolean worldEditEnabled;
 
     public CommandInsightRollback(InsightConfigurationContext configurationContext) {
         super(configurationContext, InsightCommands.ROLLBACK, 1, Integer.MAX_VALUE);
-        readBackend = configurationContext.getReadBackend();
+        readBackend = new RollbackReadBackend(configurationContext);
         worldEditEnabled = configurationContext.isWorldEditEnabled();
     }
 

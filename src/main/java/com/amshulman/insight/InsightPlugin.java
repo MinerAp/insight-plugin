@@ -102,7 +102,7 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
         }
 
         // Give the query parser a list of known worlds to accept
-        QueryParser.setWorlds(configurationContext.getRawReadBackend().getWorlds());
+        QueryParser.setWorlds(configurationContext.getReadBackend().getWorlds());
 
         registerCommandExecutor(new CommandInsight(configurationContext));
         registerEventHandler(new RegistrationHandler(configurationContext));

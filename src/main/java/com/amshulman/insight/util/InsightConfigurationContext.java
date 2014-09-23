@@ -9,7 +9,6 @@ import lombok.Value;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import com.amshulman.insight.backend.BackendType;
-import com.amshulman.insight.backend.PlayerCallbackReadBackend;
 import com.amshulman.insight.backend.ReadBackend;
 import com.amshulman.insight.backend.SqlReadWriteBackend;
 import com.amshulman.insight.backend.WriteBackend;
@@ -34,8 +33,7 @@ public class InsightConfigurationContext extends ConfigurationContext implements
     boolean worldEditEnabled;
 
     Logger logger;
-    PlayerCallbackReadBackend readBackend;
-    ReadBackend rawReadBackend;
+    ReadBackend readBackend;
     WriteBackend writeBackend;
     PlayerInfoManager infoManager;
 
@@ -120,8 +118,7 @@ public class InsightConfigurationContext extends ConfigurationContext implements
             case MYSQL:
             case POSTGRES:
                 SqlReadWriteBackend sqlBackend = new SqlReadWriteBackend(this);
-                readBackend = new PlayerCallbackReadBackend(sqlBackend, infoManager);
-                rawReadBackend = sqlBackend;
+                readBackend = sqlBackend;
                 writeBackend = sqlBackend;
                 break;
             case REDIS:

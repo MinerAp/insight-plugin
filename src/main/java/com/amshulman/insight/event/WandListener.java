@@ -20,7 +20,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.amshulman.insight.backend.PlayerCallbackReadBackend;
+import com.amshulman.insight.backend.QueryReadBackend;
 import com.amshulman.insight.management.PlayerInfoManager;
 import com.amshulman.insight.query.QueryParameterBuilder;
 import com.amshulman.insight.query.QueryParameters;
@@ -35,10 +35,10 @@ public class WandListener implements Listener {
     private static final String WAND_QUERY_PERMISSION = InsightCommands.WAND.getPrefix() + InsightCommands.WAND.name();
 
     private final PlayerInfoManager infoManager;
-    private final PlayerCallbackReadBackend readBackend;
+    private final QueryReadBackend readBackend;
 
     public WandListener(InsightConfigurationContext configurationContext) {
-        readBackend = configurationContext.getReadBackend();
+        readBackend = new QueryReadBackend(configurationContext);
         infoManager = configurationContext.getInfoManager();
     }
 
