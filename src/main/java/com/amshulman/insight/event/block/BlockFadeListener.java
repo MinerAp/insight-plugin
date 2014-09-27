@@ -1,5 +1,6 @@
 package com.amshulman.insight.event.block;
 
+import org.bukkit.block.BlockState;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockFadeEvent;
@@ -9,6 +10,7 @@ import com.amshulman.insight.row.BlockRowEntry;
 import com.amshulman.insight.types.EventCompat;
 import com.amshulman.insight.util.InsightConfigurationContext;
 import com.amshulman.insight.util.NonPlayerLookup;
+import com.amshulman.insight.util.Util;
 
 public class BlockFadeListener extends InternalEventHandler<BlockFadeEvent> {
 
@@ -27,7 +29,8 @@ public class BlockFadeListener extends InternalEventHandler<BlockFadeEvent> {
                 return; // Fire extinguishing is not covered
             case ICE:
             case SNOW:
-                add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.BLOCK_MELT, event.getBlock()));
+                BlockState newState = Util.getBlockStateOrNullIfAir(event.getNewState());
+                add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.BLOCK_MELT, event.getBlock(), newState));
                 break;
             case GRASS:
             case MYCEL:
