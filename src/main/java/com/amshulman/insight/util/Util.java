@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -33,5 +34,13 @@ public class Util {
 
     public static boolean isWand(ItemStack other) {
         return WAND.isSimilar(other);
+    }
+
+    public static BlockState getBlockStateOrNullIfAir(BlockState state) {
+        if (state.getType() == Material.AIR) {
+            return null;
+        }
+
+        return state;
     }
 }

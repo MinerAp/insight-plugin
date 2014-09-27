@@ -14,6 +14,7 @@ import com.amshulman.insight.serialization.MetadataEntry;
 import com.amshulman.insight.serialization.SkullMeta;
 import com.amshulman.insight.types.EventCompat;
 import com.amshulman.insight.util.InsightConfigurationContext;
+import com.amshulman.insight.util.Util;
 
 public class BlockPlaceListener extends InternalEventHandler<BlockPlaceEvent> {
 
@@ -42,10 +43,7 @@ public class BlockPlaceListener extends InternalEventHandler<BlockPlaceEvent> {
             meta = new SkullMeta((Skull) event.getBlock().getState(), event.getPlayer().getItemInHand().getItemMeta());
         }
 
-        BlockState previousBlock = null;
-        if (event.getBlockReplacedState().getType() != Material.AIR) {
-            previousBlock = event.getBlockReplacedState();
-        }
+        BlockState previousBlock = Util.getBlockStateOrNullIfAir(event.getBlockReplacedState());
 
         add(new BlockRowEntry(System.currentTimeMillis(), event.getPlayer().getName(), EventCompat.BLOCK_PLACE, event.getBlock(), previousBlock, meta));
     }
