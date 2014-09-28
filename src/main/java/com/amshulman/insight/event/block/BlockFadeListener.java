@@ -23,24 +23,27 @@ public class BlockFadeListener extends InternalEventHandler<BlockFadeEvent> {
     @Override
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void listen(BlockFadeEvent event) {
+        BlockState newState;
 
         switch (event.getBlock().getType()) {
             case FIRE:
                 return; // Fire extinguishing is not covered
             case ICE:
             case SNOW:
-                BlockState newState = Util.getBlockStateOrNullIfAir(event.getNewState());
+                newState = Util.getBlockStateOrNullIfAir(event.getNewState());
                 add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.BLOCK_MELT, event.getBlock(), newState));
                 break;
             case GRASS:
             case MYCEL:
-                add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.BLOCK_DIE, event.getBlock()));
+                newState = Util.getBlockStateOrNullIfAir(event.getNewState());
+                add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.BLOCK_DIE, event.getBlock(), newState));
                 break;
             case GLOWING_REDSTONE_ORE:
                 break; // Not logged
             case SOIL:
                 if (loggingFarmland) {
-                    add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.SOIL_REVERT, event.getBlock()));
+                    newState = Util.getBlockStateOrNullIfAir(event.getNewState());
+                    add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.SOIL_REVERT, event.getBlock(), newState));
                 }
                 break;
             default:

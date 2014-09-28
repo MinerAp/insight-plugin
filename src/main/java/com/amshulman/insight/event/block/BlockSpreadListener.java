@@ -9,6 +9,7 @@ import com.amshulman.insight.event.InternalEventHandler;
 import com.amshulman.insight.row.BlockRowEntry;
 import com.amshulman.insight.types.EventCompat;
 import com.amshulman.insight.util.NonPlayerLookup;
+import com.amshulman.insight.util.Util;
 
 public class BlockSpreadListener extends InternalEventHandler<BlockSpreadEvent> {
 
@@ -21,11 +22,8 @@ public class BlockSpreadListener extends InternalEventHandler<BlockSpreadEvent> 
             case GRASS:
             case MYCEL:
             case VINE:
-                BlockState state = event.getBlock().getState();
-                state.setType(event.getSource().getType());
-                state.setRawData(event.getSource().getData());
-
-                add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.BLOCK_GROW, state));
+                BlockState previousState = Util.getBlockStateOrNullIfAir(event.getBlock().getState());
+                add(new BlockRowEntry(System.currentTimeMillis(), NonPlayerLookup.NATURE, EventCompat.BLOCK_GROW, event.getNewState(), previousState));
                 break;
             case FIRE:
                 break; // handled by BlockIgniteListener

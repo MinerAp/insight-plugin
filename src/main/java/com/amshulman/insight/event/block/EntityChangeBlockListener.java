@@ -34,7 +34,11 @@ public class EntityChangeBlockListener extends InternalEventHandler<EntityChange
         switch (event.getEntity().getType()) {
             case SHEEP:
                 if (loggingSheep) {
-                    add(new BlockRowEntry(when, EntityUtil.getName(EntityType.SHEEP), EventCompat.SHEEP_EAT, event.getBlock()));
+                    BlockState newState = event.getBlock().getState();
+                    newState.setType(event.getTo());
+                    newState.setRawData((byte) 0);
+
+                    add(new BlockRowEntry(when, EntityUtil.getName(EntityType.SHEEP), EventCompat.SHEEP_EAT, event.getBlock(), newState));
                 }
                 break;
             case FALLING_BLOCK:
@@ -75,7 +79,11 @@ public class EntityChangeBlockListener extends InternalEventHandler<EntityChange
                     return; // Not logged
                 } else if (event.getBlock().getType() == Material.SOIL) {
                     if (loggingFarmland) {
-                        add(new BlockRowEntry(when, EntityUtil.getName(event.getEntity()), EventCompat.SOIL_TRAMPLE, event.getBlock()));
+                        BlockState newState = event.getBlock().getState();
+                        newState.setType(event.getTo());
+                        newState.setRawData((byte) 0);
+
+                        add(new BlockRowEntry(when, EntityUtil.getName(event.getEntity()), EventCompat.SOIL_TRAMPLE, event.getBlock(), newState));
                     }
                     return;
                 }

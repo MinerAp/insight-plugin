@@ -33,7 +33,7 @@ public class BlockPlaceListener extends InternalEventHandler<BlockPlaceEvent> {
 
         if (Material.SOIL.equals(event.getBlock().getType())) {
             if (loggingFarmland) {
-                add(new BlockRowEntry(System.currentTimeMillis(), event.getPlayer().getName(), EventCompat.SOIL_TILL, event.getBlockReplacedState()));
+                add(new BlockRowEntry(System.currentTimeMillis(), event.getPlayer().getName(), EventCompat.SOIL_TILL, event.getBlockReplacedState(), event.getBlock().getState()));
             }
             return;
         }
