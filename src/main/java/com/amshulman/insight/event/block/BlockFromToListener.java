@@ -52,6 +52,7 @@ public class BlockFromToListener extends InternalEventHandler<BlockFromToEvent> 
             case AIR:
                 System.out.println("[???] BlockFromToListener: " + event.getBlock().getType() + " -> " + event.getToBlock().getType());
                 System.out.println("[???] BlockFromToListener: " + event.getBlock().getLocation() + " -> " + event.getToBlock().getLocation());
+                break;
             default:
                 System.out.println("BlockFromToListener - ??? " + event.getBlock().getType() + " " + event.getToBlock().getType());
                 break;
