@@ -198,7 +198,7 @@ public final class ResultSetFormatter {
         boolean multipleBlocks = !(params.isLocationSet() && params.getRadius() == 0);
         boolean multipleWorlds = params.getWorlds().size() > 1;
 
-        for (InsightRecord r : resultSet) {
+        for (InsightRecord<?> r : resultSet) {
             StringBuilder msg = new StringBuilder();
             ++current;
 
@@ -230,11 +230,11 @@ public final class ResultSetFormatter {
             }
 
             if (multipleBlocks) {
-                msg.append(' ').append(formatLocation(r.getX(), r.getY(), r.getZ()));
+                msg.append(' ').append(formatLocation(r.getLocation()));
             }
 
             if (multipleWorlds) {
-                msg.append(" in " + r.getWorld());
+                msg.append(" in " + r.getLocation().getWorld());
             }
 
             messages.add(msg.toString());
@@ -245,13 +245,13 @@ public final class ResultSetFormatter {
         QueryParameters params = resultSet.getQueryParameters();
         boolean multipleBlocks = !(params.isLocationSet() && params.getRadius() == 0);
 
-        for (InsightRecord r : resultSet) {
+        for (InsightRecord<?> r : resultSet) {
             ChatRootMessage rootMessage = new ChatRootMessage();
             ++current;
 
             // record id
             if (multipleBlocks) {
-                String location = formatLocation(r.getX(), r.getY(), r.getZ());
+                String location = formatLocation(r.getLocation());
                 rootMessage.addMessage(new ChatMessage("[" + current + "]").setHoverEvent(new ChatTextHover(new ChatMessage(location))).setColor(BODY_ACCENT));
                 rootMessage.addMessage(new ChatMessage(" "));
             } else {

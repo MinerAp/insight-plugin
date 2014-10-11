@@ -46,7 +46,7 @@ public class CommandInsightTp extends PlayerOnlyCommand {
             return true;
         }
 
-        InsightRecord record = playerInfo.getLastResults().getRecord(recordNum - 1);
+        InsightRecord<?> record = playerInfo.getLastResults().getRecord(recordNum - 1);
 
         int heightAdjustment;
         float yaw, pitch;
@@ -60,7 +60,7 @@ public class CommandInsightTp extends PlayerOnlyCommand {
             pitch = 0;
         }
 
-        player.teleport(LocationUtil.center(Bukkit.getWorld(record.getWorld()), record.getX(), record.getY() + heightAdjustment, record.getZ(), yaw, pitch));
+        player.teleport(LocationUtil.center(Bukkit.getWorld(record.getLocation().getWorld()), record.getLocation().getX(), record.getLocation().getY() + heightAdjustment, record.getLocation().getZ(), yaw, pitch));
         return true;
     }
 
