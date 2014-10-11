@@ -111,7 +111,7 @@ public class InventoryCloseListener extends InternalEventHandler<InventoryCloseE
 
     private void process(String name, Location loc, Container changes, ItemAction insertEvent, ItemAction removeEvent) {
         if (loc == null) {
-            Bukkit.getLogger().warning("??? - throwing away changes because we have no where to put them");
+            Bukkit.getLogger().warning("??? - throwing away changes for " + name + " because we have no where to put them");
             for (ItemStack stack : changes) {
                 Bukkit.getLogger().warning(stack.toString());
             }
