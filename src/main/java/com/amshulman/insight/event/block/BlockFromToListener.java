@@ -20,30 +20,59 @@ public class BlockFromToListener extends InternalEventHandler<BlockFromToEvent> 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void listen(final BlockFromToEvent event) {
         long when = System.currentTimeMillis();
+        BlockState previousState;
+
         switch (event.getBlock().getType()) {
             case WATER:
             case STATIONARY_WATER:
-                add(new BlockRowEntry(when, NonPlayerLookup.WATER, EventCompat.BLOCK_FLOW, event.getToBlock()));
+                previousState = getState(event.getToBlock(), Material.WATER, (byte) (event.getBlock().getData() + 1));
+                add(new BlockRowEntry(when, NonPlayerLookup.WATER, EventCompat.BLOCK_FLOW, event.getToBlock(), previousState));
 
                 for (BlockFace face : Util.ALL_FLOW_DIRECTIONS) {
                     Block b = event.getToBlock().getRelative(face);
                     if (isLava(b.getType())) {
+                        previousState = Util.getBlockStateOrNullIfAir(b.getState());
                         if (isSourceBlock(b)) {
-                            add(new BlockRowEntry(++when, NonPlayerLookup.WATER, EventCompat.BLOCK_FORM, getState(b, Material.OBSIDIAN)));
+                            add(new BlockRowEntry(++when, NonPlayerLookup.WATER, EventCompat.BLOCK_FORM, getState(b, Material.OBSIDIAN), previousState));
                         } else {
-                            add(new BlockRowEntry(++when, NonPlayerLookup.WATER, EventCompat.BLOCK_FORM, getState(b, Material.COBBLESTONE)));
+                            add(new BlockRowEntry(++when, NonPlayerLookup.WATER, EventCompat.BLOCK_FORM, getState(b, Material.COBBLESTONE), previousState));
                         }
                     }
                 }
                 break;
             case LAVA:
             case STATIONARY_LAVA:
-                if (event.getFace() == BlockFace.DOWN && isWater(event.getToBlock().getType())) {
-                    add(new BlockRowEntry(when, NonPlayerLookup.LAVA, EventCompat.BLOCK_FORM, getState(event.getToBlock(), Material.STONE)));
-                } else if (event.getFace() != BlockFace.DOWN && hasAdjacentWater(event.getToBlock())) {
-                    add(new BlockRowEntry(when, NonPlayerLookup.LAVA, EventCompat.BLOCK_FORM, getState(event.getToBlock(), Material.COBBLESTONE)));
+                if (event.getFace() == BlockFace.DOWN) {
+                    if (isWater(event.getToBlock().getType())) {
+                        previousState = Util.getBlockStateOrNullIfAir(event.getToBlock().getState());
+                        add(new BlockRowEntry(when, NonPlayerLookup.LAVA, EventCompat.BLOCK_FORM, getState(event.getToBlock(), Material.STONE), previousState));
+                    } else if (event.getToBlock().getType() == Material.REDSTONE_WIRE && hasAdjacentWater(event.getToBlock())) {
+                        previousState = event.getToBlock().getState();
+                        add(new BlockRowEntry(when, NonPlayerLookup.LAVA, EventCompat.BLOCK_FORM, getState(event.getToBlock(), Material.OBSIDIAN), previousState));
+                    } else if (event.getToBlock().getType() == Material.TRIPWIRE && event.getToBlock().getData() == 0 && hasAdjacentWater(event.getToBlock()) &&
+                            ((event.getToBlock().getRelative(BlockFace.SOUTH).getType() == Material.TRIPWIRE_HOOK && event.getToBlock().getRelative(BlockFace.SOUTH).getData() == 2)
+                             || (event.getToBlock().getRelative(BlockFace.WEST).getType() == Material.TRIPWIRE_HOOK && event.getToBlock().getRelative(BlockFace.WEST).getData() == 3))) {
+                        System.out.println(BlockFace.SELF + ": " + event.getToBlock().getData());
+                        for (BlockFace face : Util.CARDINAL_DIRECTIONS) {
+                            Block b = event.getToBlock().getRelative(face);
+                            if (b.getType() == Material.TRIPWIRE_HOOK) {
+                                System.out.println(face + ": " + b.getData());
+                            }
+                        }
+                        previousState = event.getToBlock().getState();
+                        add(new BlockRowEntry(when, NonPlayerLookup.LAVA, EventCompat.BLOCK_FORM, getState(event.getToBlock(), Material.OBSIDIAN), previousState));
+                    } else {
+                        previousState = getState(event.getToBlock(), Material.LAVA, (byte) 8);
+                        add(new BlockRowEntry(when, NonPlayerLookup.LAVA, EventCompat.BLOCK_FLOW, event.getToBlock(), previousState));
+                    }
                 } else {
-                    add(new BlockRowEntry(when, NonPlayerLookup.LAVA, EventCompat.BLOCK_FLOW, event.getToBlock()));
+                    if (hasAdjacentWater(event.getToBlock())) {
+                        previousState = Util.getBlockStateOrNullIfAir(event.getToBlock().getState());
+                        add(new BlockRowEntry(when, NonPlayerLookup.LAVA, EventCompat.BLOCK_FORM, getState(event.getToBlock(), Material.COBBLESTONE), previousState));
+                    } else {
+                        previousState = getState(event.getToBlock(), Material.LAVA, (byte) (event.getBlock().getData() + 2));
+                        add(new BlockRowEntry(when, NonPlayerLookup.LAVA, EventCompat.BLOCK_FLOW, event.getToBlock(), previousState));
+                    }
                 }
                 break;
             case DRAGON_EGG:
@@ -81,9 +110,13 @@ public class BlockFromToListener extends InternalEventHandler<BlockFromToEvent> 
     }
 
     private final BlockState getState(Block block, Material newMat) {
+        return getState(block, newMat, (byte) 0);
+    }
+
+    private final BlockState getState(Block block, Material newMat, byte newData) {
         BlockState state = block.getState();
         state.setType(newMat);
-        state.setRawData((byte) 0);
+        state.setRawData(newData);
         return state;
     }
 }
