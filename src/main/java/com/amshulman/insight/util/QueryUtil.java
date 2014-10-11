@@ -90,8 +90,8 @@ public final class QueryUtil {
     }
 
     private static void copyOrder(QueryParameters from, QueryParameterBuilder to) {
-        if (from.isReverseOrder()) {
-            to.reverseOrder();
+        if (from.isOrderReversed()) {
+            to.reverseOrder(true);
         }
     }
 
