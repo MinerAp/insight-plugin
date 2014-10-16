@@ -5,6 +5,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Enderman;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -73,6 +74,15 @@ public class EntityChangeBlockListener extends InternalEventHandler<EntityChange
                 if (Material.AIR == event.getTo()) {
                     add(new BlockRowEntry(when, EntityUtil.getName(EntityType.SILVERFISH), EventCompat.BLOCK_BREAK, event.getBlock()));
                 }
+                break;
+            case BOAT:
+                Entity passenger = event.getEntity().getPassenger();
+                if (passenger == null) {
+                    add(new BlockRowEntry(when, EntityUtil.getName(EntityType.BOAT), EventCompat.BLOCK_BREAK, event.getBlock()));
+                } else {
+                    add(new BlockRowEntry(when, EntityUtil.getName(passenger), EventCompat.BLOCK_BREAK, event.getBlock()));
+                }
+
                 break;
             default:
                 if (event.getBlock().getType() == Material.REDSTONE_ORE) {
