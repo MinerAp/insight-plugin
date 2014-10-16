@@ -78,10 +78,7 @@ public class BlockFromToListener extends InternalEventHandler<BlockFromToEvent> 
             case DRAGON_EGG:
                 add(new BlockRowEntry(when, NonPlayerLookup.NATURE, EventCompat.BLOCK_TELEPORT, getState(event.getToBlock(), Material.DRAGON_EGG)));
                 break;
-            case AIR:
-                break;
             default:
-                System.out.println("BlockFromToListener - ??? " + event.getBlock().getType() + " " + event.getToBlock().getType());
                 break;
         }
     }
