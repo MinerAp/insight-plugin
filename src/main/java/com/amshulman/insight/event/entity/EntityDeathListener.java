@@ -1,6 +1,9 @@
 package com.amshulman.insight.event.entity;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
@@ -8,6 +11,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.projectiles.ProjectileSource;
 
 import com.amshulman.insight.event.InternalEventHandler;
 import com.amshulman.insight.row.EntityRowEntry;
@@ -15,6 +19,7 @@ import com.amshulman.insight.row.ItemRowEntry;
 import com.amshulman.insight.types.EventCompat;
 import com.amshulman.insight.util.EntityUtil;
 import com.amshulman.insight.util.InsightConfigurationContext;
+import com.amshulman.insight.util.NonPlayerLookup;
 
 public class EntityDeathListener extends InternalEventHandler<EntityDeathEvent> {
 
@@ -35,8 +40,21 @@ public class EntityDeathListener extends InternalEventHandler<EntityDeathEvent> 
 
         if (loggingDeaths) {
             if (previousEvent instanceof EntityDamageByEntityEvent) { // player killed
-                EntityDamageByEntityEvent entityKillEvent = (EntityDamageByEntityEvent) previousEvent;
-                add(new EntityRowEntry(System.currentTimeMillis(), EntityUtil.getName(entityKillEvent.getDamager()), EventCompat.ENTITY_KILL, loc, acteeName));
+                Entity killingEntity = ((EntityDamageByEntityEvent) previousEvent).getDamager();
+                String killerName;
+
+                if (killingEntity instanceof Projectile) {
+                    ProjectileSource shooter = ((Projectile) killingEntity).getShooter();
+                    if (shooter instanceof LivingEntity) {
+                        killerName = EntityUtil.getName((LivingEntity) shooter);
+                    } else {
+                        killerName = NonPlayerLookup.NATURE;
+                    }
+                } else {
+                    killerName = EntityUtil.getName(killingEntity);
+                }
+
+                add(new EntityRowEntry(System.currentTimeMillis(), killerName, EventCompat.ENTITY_KILL, loc, acteeName));
             } else if (previousEvent instanceof EntityDamageByBlockEvent) { // environment killed
                 EntityDamageByBlockEvent natureKillEvent = (EntityDamageByBlockEvent) previousEvent;
                 if (natureKillEvent.getDamager() != null) {
