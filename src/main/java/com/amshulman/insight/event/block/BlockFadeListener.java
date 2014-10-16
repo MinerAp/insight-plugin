@@ -47,7 +47,7 @@ public class BlockFadeListener extends InternalEventHandler<BlockFadeEvent> {
                 }
                 break;
             default:
-                System.out.println("BlockFadeListener - ??? " + event.getBlock().getType());
+                System.out.println("BlockFadeListener - ??? " + event.getBlock().getLocation() + ": " + event.getBlock().getType() + " -> " + event.getNewState().getType());
                 return;
         }
     }
