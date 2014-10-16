@@ -3,11 +3,15 @@ package com.amshulman.insight.inventory;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.FurnaceInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import com.amshulman.insight.util.InventoryUtils;
 
 public class InventoryManager {
 
@@ -84,6 +88,14 @@ public class InventoryManager {
             cst = new ContainerStateTracker(inventory);
             foo.put(inventory, cst);
             cst.openPlayerEditSession(player);
+
+            if (inventory.getType() == InventoryType.CRAFTING) {
+                for (ItemStack stack : InventoryUtils.getIngredientItems(inventory)) {
+                    if (stack != null && stack.getType() != Material.AIR) {
+                        cst.directDiff(player, stack, stack.getAmount());
+                    }
+                }
+            }
         } else if (!cst.hasOpenEditSession(player)) {
 //            System.out.println("inventoryOpen - " + inventory.getType()); // DEBUG
             cst.openPlayerEditSession(player);
