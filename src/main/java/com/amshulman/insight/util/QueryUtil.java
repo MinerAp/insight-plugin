@@ -14,6 +14,7 @@ import com.amshulman.insight.parser.InsightParserErrorStrategy;
 import com.amshulman.insight.parser.InvalidTokenException;
 import com.amshulman.insight.parser.QueryLexer;
 import com.amshulman.insight.parser.QueryParser;
+import com.amshulman.insight.parser.UnexpectedTokenException;
 import com.amshulman.insight.query.QueryParameterBuilder;
 import com.amshulman.insight.query.QueryParameters;
 import com.amshulman.insight.types.InsightMaterial;
@@ -29,10 +30,12 @@ public final class QueryUtil {
 
         try {
             return parser.parse().queryParameters;
-        } catch (RecognitionException e) {
-            sender.sendMessage(ChatColor.RED + "Invalid argument: " + e.getOffendingToken().getText());
+        } catch (UnexpectedTokenException e) { // order matters
+            sender.sendMessage(ChatColor.RED + "\"" + e.getOffendingToken().getText() + "\" specified twice");
         } catch (InvalidTokenException e) {
             sender.sendMessage(ChatColor.RED + "Unknown " + e.getType().toString().toLowerCase() + " specified: " + e.getMessage());
+        } catch (RecognitionException e) {
+            sender.sendMessage(ChatColor.RED + "Invalid argument: " + e.getOffendingToken().getText());
         }
 
         return null;
