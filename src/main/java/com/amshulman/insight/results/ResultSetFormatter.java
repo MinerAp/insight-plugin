@@ -270,7 +270,7 @@ public final class ResultSetFormatter {
             if (r.getAction() instanceof BlockAction) {
                 ChatMessage msg = new ChatMessage(" " + MaterialCompat.getFriendlyName(r.getMaterial()));
                 Pair<Material, Short> mat = MaterialCompat.getBukkitMaterial(r.getMaterial().getName(), r.getMaterial().getSubtype());
-                ChatItemHover hover;
+                ChatHover hover;
 
                 switch (mat.getValue0()) {
                     case BED_BLOCK:
@@ -306,7 +306,7 @@ public final class ResultSetFormatter {
                         break;
                     case COCOA:
                         hover = new ChatItemHover(Material.INK_SACK);
-                        hover.setDamage((short) 3);
+                        ((ChatItemHover) hover).setDamage((short) 3);
                         break;
                     case TRIPWIRE:
                         hover = new ChatItemHover(Material.STRING);
@@ -323,8 +323,8 @@ public final class ResultSetFormatter {
                     case SKULL:
                         ItemStack skull = ((SkullMeta) ((BlockMetadata) r.getMetadata()).getMeta()).getItemStack();
                         hover = new ChatItemHover(Material.SKULL_ITEM);
-                        hover.setDamage(skull.getDurability());
-                        hover.setMetadata(skull.getItemMeta());
+                        ((ChatItemHover) hover).setDamage(skull.getDurability());
+                        ((ChatItemHover) hover).setMetadata(skull.getItemMeta());
                         break;
                     case REDSTONE_COMPARATOR_OFF:
                     case REDSTONE_COMPARATOR_ON:
@@ -336,7 +336,7 @@ public final class ResultSetFormatter {
                     default:
                         hover = new ChatItemHover(mat.getValue0());
                         if (mat.getValue1() != 0) {
-                            hover.setDamage(mat.getValue1());
+                            ((ChatItemHover) hover).setDamage(mat.getValue1());
                         }
                         break;
                 }
