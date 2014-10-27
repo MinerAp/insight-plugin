@@ -280,6 +280,7 @@ public final class ResultSetFormatter {
                         hover = new ChatItemHover(Material.REDSTONE);
                         break;
                     case SIGN_POST:
+                    case WALL_SIGN:
                         hover = new ChatItemHover(Material.SIGN);
                         break;
                     case WOODEN_DOOR:
