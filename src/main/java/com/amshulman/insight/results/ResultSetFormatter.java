@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -20,6 +21,7 @@ import com.amshulman.insight.action.ItemAction;
 import com.amshulman.insight.query.QueryParameters;
 import com.amshulman.insight.serialization.BlockMetadata;
 import com.amshulman.insight.serialization.ItemMetadata;
+import com.amshulman.insight.serialization.SignMeta;
 import com.amshulman.insight.serialization.SkullMeta;
 import com.amshulman.insight.types.EventCompat;
 import com.amshulman.insight.types.InsightLocation;
@@ -272,73 +274,78 @@ public final class ResultSetFormatter {
                 Pair<Material, Short> mat = MaterialCompat.getBukkitMaterial(r.getMaterial().getName(), r.getMaterial().getSubtype());
                 ChatHover hover;
 
-                switch (mat.getValue0()) {
-                    case BED_BLOCK:
-                        hover = new ChatItemHover(Material.BED);
-                        break;
-                    case REDSTONE_WIRE:
-                        hover = new ChatItemHover(Material.REDSTONE);
-                        break;
-                    case SIGN_POST:
-                    case WALL_SIGN:
-                        hover = new ChatItemHover(Material.SIGN);
-                        break;
-                    case WOODEN_DOOR:
-                        hover = new ChatItemHover(Material.WOOD_DOOR);
-                        break;
-                    case IRON_DOOR_BLOCK:
-                        hover = new ChatItemHover(Material.IRON_DOOR);
-                        break;
-                    case SUGAR_CANE_BLOCK:
-                        hover = new ChatItemHover(Material.SUGAR_CANE);
-                        break;
-                    case CAKE_BLOCK:
-                        hover = new ChatItemHover(Material.CAKE);
-                        break;
-                    case NETHER_WARTS:
-                        hover = new ChatItemHover(Material.NETHER_STALK);
-                        break;
-                    case BREWING_STAND:
-                        hover = new ChatItemHover(Material.BREWING_STAND_ITEM);
-                        break;
-                    case CAULDRON:
-                        hover = new ChatItemHover(Material.CAULDRON_ITEM);
-                        break;
-                    case COCOA:
-                        hover = new ChatItemHover(Material.INK_SACK);
-                        ((ChatItemHover) hover).setDamage((short) 3);
-                        break;
-                    case TRIPWIRE:
-                        hover = new ChatItemHover(Material.STRING);
-                        break;
-                    case FLOWER_POT:
-                        hover = new ChatItemHover(Material.FLOWER_POT_ITEM);
-                        break;
-                    case CARROT:
-                        hover = new ChatItemHover(Material.CARROT_ITEM);
-                        break;
-                    case POTATO:
-                        hover = new ChatItemHover(Material.POTATO_ITEM);
-                        break;
-                    case SKULL:
-                        ItemStack skull = ((SkullMeta) ((BlockMetadata) r.getMetadata()).getMeta()).getItemStack();
-                        hover = new ChatItemHover(Material.SKULL_ITEM);
-                        ((ChatItemHover) hover).setDamage(skull.getDurability());
-                        ((ChatItemHover) hover).setMetadata(skull.getItemMeta());
-                        break;
-                    case REDSTONE_COMPARATOR_OFF:
-                    case REDSTONE_COMPARATOR_ON:
-                        hover = new ChatItemHover(Material.REDSTONE_COMPARATOR);
-                        break;
-                    case AIR:
-                        hover = null;
-                        break;
-                    default:
-                        hover = new ChatItemHover(mat.getValue0());
-                        if (mat.getValue1() != 0) {
-                            ((ChatItemHover) hover).setDamage(mat.getValue1());
-                        }
-                        break;
+                if (r.getAction() == EventCompat.SIGN_CHANGE) {
+                    SignMeta meta = (SignMeta) ((BlockMetadata) r.getMetadata()).getMeta();
+                    hover = new ChatTextHover(new ChatMessage(StringUtils.join(meta.getText(), '\n')));
+                } else {
+                    switch (mat.getValue0()) {
+                        case BED_BLOCK:
+                            hover = new ChatItemHover(Material.BED);
+                            break;
+                        case REDSTONE_WIRE:
+                            hover = new ChatItemHover(Material.REDSTONE);
+                            break;
+                        case SIGN_POST:
+                        case WALL_SIGN:
+                            hover = new ChatItemHover(Material.SIGN);
+                            break;
+                        case WOODEN_DOOR:
+                            hover = new ChatItemHover(Material.WOOD_DOOR);
+                            break;
+                        case IRON_DOOR_BLOCK:
+                            hover = new ChatItemHover(Material.IRON_DOOR);
+                            break;
+                        case SUGAR_CANE_BLOCK:
+                            hover = new ChatItemHover(Material.SUGAR_CANE);
+                            break;
+                        case CAKE_BLOCK:
+                            hover = new ChatItemHover(Material.CAKE);
+                            break;
+                        case NETHER_WARTS:
+                            hover = new ChatItemHover(Material.NETHER_STALK);
+                            break;
+                        case BREWING_STAND:
+                            hover = new ChatItemHover(Material.BREWING_STAND_ITEM);
+                            break;
+                        case CAULDRON:
+                            hover = new ChatItemHover(Material.CAULDRON_ITEM);
+                            break;
+                        case COCOA:
+                            hover = new ChatItemHover(Material.INK_SACK);
+                            ((ChatItemHover) hover).setDamage((short) 3);
+                            break;
+                        case TRIPWIRE:
+                            hover = new ChatItemHover(Material.STRING);
+                            break;
+                        case FLOWER_POT:
+                            hover = new ChatItemHover(Material.FLOWER_POT_ITEM);
+                            break;
+                        case CARROT:
+                            hover = new ChatItemHover(Material.CARROT_ITEM);
+                            break;
+                        case POTATO:
+                            hover = new ChatItemHover(Material.POTATO_ITEM);
+                            break;
+                        case SKULL:
+                            ItemStack skull = ((SkullMeta) ((BlockMetadata) r.getMetadata()).getMeta()).getItemStack();
+                            hover = new ChatItemHover(Material.SKULL_ITEM);
+                            ((ChatItemHover) hover).setDamage(skull.getDurability());
+                            ((ChatItemHover) hover).setMetadata(skull.getItemMeta());
+                            break;
+                        case REDSTONE_COMPARATOR_OFF:
+                        case REDSTONE_COMPARATOR_ON:
+                            hover = new ChatItemHover(Material.REDSTONE_COMPARATOR);
+                            break;
+                        case AIR:
+                            hover = null;
+                            break;
+                        default:
+                            hover = new ChatItemHover(mat.getValue0());
+                            if (mat.getValue1() != 0) {
+                                ((ChatItemHover) hover).setDamage(mat.getValue1());
+                            }
+                            break;
+                    }
                 }
 
                 rootMessage.addMessage(msg.setHoverEvent(hover));
