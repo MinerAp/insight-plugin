@@ -2,6 +2,7 @@ package com.amshulman.insight.event.entity;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LightningStrike;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -50,14 +51,24 @@ public class EntityDeathListener extends InternalEventHandler<EntityDeathEvent> 
                     } else {
                         killerName = NonPlayerLookup.NATURE;
                     }
+                } else if (killingEntity instanceof LightningStrike) {
+                    killerName = NonPlayerLookup.NATURE;
                 } else {
                     killerName = EntityUtil.getName(killingEntity);
+                }
+
+                if (killerName == null) {
+                    System.out.println("[???] Bad killer name via path #1, killer is a " + killingEntity.getClass());
                 }
 
                 add(new EntityRowEntry(System.currentTimeMillis(), killerName, EventCompat.ENTITY_KILL, loc, acteeName));
             } else if (previousEvent instanceof EntityDamageByBlockEvent) { // environment killed
                 EntityDamageByBlockEvent natureKillEvent = (EntityDamageByBlockEvent) previousEvent;
                 if (natureKillEvent.getDamager() != null) {
+                    if (natureKillEvent.getDamager().getType().name() == null) {
+                        System.out.println("[???] Bad killer name via path #2, killer is a " + natureKillEvent.getDamager().getClass());
+                    }
+
                     add(new EntityRowEntry(System.currentTimeMillis(), natureKillEvent.getDamager().getType().name(), EventCompat.ENTITY_KILL, loc, acteeName));
                 } else { // death by lava or void
                     add(new EntityRowEntry(System.currentTimeMillis(), acteeName, EventCompat.ENTITY_DEATH, loc, acteeName));
