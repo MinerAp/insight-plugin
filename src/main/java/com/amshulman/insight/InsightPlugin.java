@@ -29,10 +29,10 @@ import com.amshulman.insight.event.block.EntityExplodeListener;
 import com.amshulman.insight.event.block.LeavesDecayListener;
 import com.amshulman.insight.event.block.PlayerBucketEmptyListener;
 import com.amshulman.insight.event.block.PlayerBucketFillListener;
+import com.amshulman.insight.event.block.SignChangeListener;
 import com.amshulman.insight.event.block.StructureGrowListener;
 import com.amshulman.insight.event.block.todo.BlockPistonExtendListener;
 import com.amshulman.insight.event.block.todo.BlockPistonRetractListener;
-import com.amshulman.insight.event.block.todo.SignChangeListener;
 import com.amshulman.insight.event.entity.EntityDamageByEntityListener;
 import com.amshulman.insight.event.entity.EntityDeathListener;
 import com.amshulman.insight.event.entity.HangingBreakByEntityListener;
@@ -114,12 +114,13 @@ public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.
         registerEventHandler(new BlockFromToListener());
         registerEventHandler(new EntityExplodeListener());
 
+        registerEventHandler(new SignChangeListener());
+
         boolean unused = true;
         if (!unused) {
             registerEventHandler(new CreatureSpawnListener()); // TODO
             registerEventHandler(new EntityTargetListener()); // TODO
             registerEventHandler(new PotionSplashListener()); // TODO
-            registerEventHandler(new SignChangeListener()); // TODO
         }
 
         if (configurationContext.isLoggingInventory()) { // TODO
