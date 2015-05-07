@@ -9,10 +9,12 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.amshulman.insight.action.ItemAction;
@@ -57,7 +59,7 @@ public class InventoryCloseListener extends InternalEventHandler<InventoryCloseE
             case MERCHANT:
             case WORKBENCH:
                 changes = InventoryManager.inventoryClose(event.getInventory(), event.getPlayer());
-                process(event.getPlayer().getName(), changes.getLocation(), changes, EventCompat.ITEM_INSERT, EventCompat.ITEM_REMOVE);
+                process(event.getPlayer().getName(), changes.getLocation(), changes, EventCompat.ITEM_INSERT, EventCompat.ITEM_REMOVE, event.getPlayer(), event.getInventory());
                 break;
 
             case CHEST:
@@ -86,19 +88,19 @@ public class InventoryCloseListener extends InternalEventHandler<InventoryCloseE
                     backend.suggestFlush(); // ensure we have room for both sets of records
                     process2(event.getPlayer().getName(), leftLoc, rightLoc, changes, EventCompat.ITEM_INSERT, EventCompat.ITEM_REMOVE);
                 } else {
-                    process(event.getPlayer().getName(), changes.getLocation(), changes, EventCompat.ITEM_INSERT, EventCompat.ITEM_REMOVE);
+                    process(event.getPlayer().getName(), changes.getLocation(), changes, EventCompat.ITEM_INSERT, EventCompat.ITEM_REMOVE, event.getPlayer(), event.getInventory());
                 }
                 break;
 
             case ENDER_CHEST:
                 changes = InventoryManager.inventoryClose(event.getInventory(), event.getPlayer());
-                process(event.getPlayer().getName(), changes.getLocation(), changes, EventCompat.ENDERCHEST_INSERT, EventCompat.ENDERCHEST_REMOVE);
+                process(event.getPlayer().getName(), changes.getLocation(), changes, EventCompat.ENDERCHEST_INSERT, EventCompat.ENDERCHEST_REMOVE, event.getPlayer(), event.getInventory());
                 break;
 
             case CRAFTING:
                 changes = InventoryManager.inventoryCloseIfOpen(event.getInventory(), event.getPlayer());
                 if (changes != null) {
-                    process(event.getPlayer().getName(), event.getPlayer().getLocation(), changes, EventCompat.CRAFTING_INSERT, EventCompat.CRAFTING_REMOVE);
+                    process(event.getPlayer().getName(), event.getPlayer().getLocation(), changes, EventCompat.CRAFTING_INSERT, EventCompat.CRAFTING_REMOVE, event.getPlayer(), event.getInventory());
                 }
                 break;
 
@@ -109,9 +111,9 @@ public class InventoryCloseListener extends InternalEventHandler<InventoryCloseE
         }
     }
 
-    private void process(String name, Location loc, Container changes, ItemAction insertEvent, ItemAction removeEvent) {
+    private void process(String name, Location loc, Container changes, ItemAction insertEvent, ItemAction removeEvent, HumanEntity player, Inventory inv) {
         if (loc == null) {
-            Bukkit.getLogger().warning("??? - throwing away changes for " + name + " because we have no where to put them");
+            Bukkit.getLogger().warning("??? - throwing away changes for " + name + " at " + player.getLocation() + " using " + inv.getType());
             for (ItemStack stack : changes) {
                 Bukkit.getLogger().warning(stack.toString());
             }
