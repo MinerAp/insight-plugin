@@ -151,6 +151,18 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<dependency>
+			<groupId>com.amshulman</groupId>
+			<artifactId>insight-cb-v1_8_R3</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.bukkit</groupId>
+					<artifactId>craftbukkit</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 
 		<!-- WorldEdit -->
 		<dependency>
