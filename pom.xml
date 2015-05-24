@@ -134,8 +134,8 @@
 			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
-					<groupId>org.bukkit</groupId>
-					<artifactId>craftbukkit</artifactId>
+					<groupId>org.spigotmc</groupId>
+					<artifactId>spigot</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -146,8 +146,8 @@
 			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
-					<groupId>org.bukkit</groupId>
-					<artifactId>craftbukkit</artifactId>
+					<groupId>org.spigotmc</groupId>
+					<artifactId>spigot</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -158,8 +158,8 @@
 			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
-					<groupId>org.bukkit</groupId>
-					<artifactId>craftbukkit</artifactId>
+					<groupId>org.spigotmc</groupId>
+					<artifactId>spigot</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
