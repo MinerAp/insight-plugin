@@ -59,10 +59,11 @@ import com.amshulman.insight.event.tbd.PotionSplashListener;
 import com.amshulman.insight.parser.QueryParser;
 import com.amshulman.insight.row.RowEntry;
 import com.amshulman.insight.util.CraftBukkitUtil;
+import com.amshulman.insight.util.InsightAPI;
 import com.amshulman.insight.util.InsightConfigurationContext;
 import com.amshulman.mbapi.MbapiPlugin;
 
-public class InsightPlugin extends MbapiPlugin implements com.amshulman.insight.util.InsightPlugin {
+public class InsightPlugin extends MbapiPlugin implements InsightAPI {
 
     private final Set<String> excludedWorlds = new HashSet<String>();
     private WriteBackend writeBackend;
