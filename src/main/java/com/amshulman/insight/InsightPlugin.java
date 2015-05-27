@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
+import com.amshulman.insight.action.InsightAction;
 import com.amshulman.insight.backend.WriteBackend;
 import com.amshulman.insight.command.CommandInsight;
 import com.amshulman.insight.event.InternalEventHandler;
@@ -58,6 +59,7 @@ import com.amshulman.insight.event.tbd.PlayerQuitListener;
 import com.amshulman.insight.event.tbd.PotionSplashListener;
 import com.amshulman.insight.parser.QueryParser;
 import com.amshulman.insight.row.RowEntry;
+import com.amshulman.insight.types.EventRegistry;
 import com.amshulman.insight.util.CraftBukkitUtil;
 import com.amshulman.insight.util.InsightAPI;
 import com.amshulman.insight.util.InsightConfigurationContext;
@@ -219,5 +221,10 @@ public class InsightPlugin extends MbapiPlugin implements InsightAPI {
         if (!excludedWorlds.contains(row.getWorld())) {
             writeBackend.submit(row);
         }
+    }
+
+    @Override
+    public void registerAction(InsightAction action) {
+        EventRegistry.addAction(action);
     }
 }
