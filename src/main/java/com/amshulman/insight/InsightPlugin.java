@@ -59,6 +59,7 @@ import com.amshulman.insight.event.tbd.PlayerQuitListener;
 import com.amshulman.insight.event.tbd.PotionSplashListener;
 import com.amshulman.insight.parser.QueryParser;
 import com.amshulman.insight.row.RowEntry;
+import com.amshulman.insight.types.EventCompat;
 import com.amshulman.insight.types.EventRegistry;
 import com.amshulman.insight.util.CraftBukkitUtil;
 import com.amshulman.insight.util.InsightAPI;
@@ -106,6 +107,8 @@ public class InsightPlugin extends MbapiPlugin implements InsightAPI {
 
         // Give the query parser a list of known worlds to accept
         QueryParser.setWorlds(configurationContext.getReadBackend().getWorlds());
+
+        EventCompat.init();
 
         registerCommandExecutor(new CommandInsight(configurationContext));
         registerEventHandler(new RegistrationHandler(configurationContext));

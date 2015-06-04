@@ -90,6 +90,8 @@ public class EventCompat {
         EventRegistry.addActionsToAlias("PICKUP", ITEM_PICKUP);
     }
 
+    public static void init() {}
+
     private static BlockAction createBlockAction(String name, String friendlyDescription, BlockRollbackAction rollbackAction) {
         BlockAction action = new BlockActionImpl(name, friendlyDescription, rollbackAction);
         EventRegistry.addAction(action);
