@@ -6,8 +6,6 @@ database:
     databaseName: insight
     username: 
     password: 
-  tuning:
-    cacheSize: 1000
 
 excludedWorlds: []
 
@@ -26,3 +24,6 @@ logging:
   xp: true
   sheep: true
   farmland: true
+
+tuning:
+  cacheSize: 1000

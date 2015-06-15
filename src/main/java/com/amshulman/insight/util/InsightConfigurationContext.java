@@ -94,7 +94,7 @@ public class InsightConfigurationContext extends ConfigurationContext implements
         excludedWorlds = configuration.getStringList("excludedWorlds");
 
         /* tuning */
-        cacheSize = configuration.getInt("database.tuning.cacheSize");
+        cacheSize = configuration.getInt("tuning.cacheSize");
 
         /* logging choices */
         loggingInventory = configuration.getBoolean("logging.inventory");
