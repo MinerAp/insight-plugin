@@ -9,5 +9,5 @@ public class RollbackReadBackend extends AbstractCallbackReadBackend {
         super(configurationContext.getReadBackend());
     }
 
-    public void rollback(final String playerName, final QueryParameters params, final boolean fancyResults) {}
+    public void rollback(String playerName, QueryParameters params, boolean force) {}
 }

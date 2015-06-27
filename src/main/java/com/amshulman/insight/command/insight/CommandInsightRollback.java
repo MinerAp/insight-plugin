@@ -15,6 +15,7 @@ import com.amshulman.insight.util.InsightConfigurationContext;
 import com.amshulman.insight.util.QueryUtil;
 import com.amshulman.insight.worldedit.WorldEditBridge;
 import com.amshulman.mbapi.commands.PlayerOnlyCommand;
+import com.amshulman.mbapi.util.PermissionsEnum;
 import com.amshulman.typesafety.TypeSafeCollections;
 import com.amshulman.typesafety.TypeSafeList;
 
@@ -24,13 +25,21 @@ public class CommandInsightRollback extends PlayerOnlyCommand {
     private final boolean worldEditEnabled;
 
     public CommandInsightRollback(InsightConfigurationContext configurationContext) {
-        super(configurationContext, InsightCommands.ROLLBACK, 1, Integer.MAX_VALUE);
+        this(configurationContext, InsightCommands.ROLLBACK);
+    }
+
+    protected CommandInsightRollback(InsightConfigurationContext configurationContext, PermissionsEnum commandName) {
+        super(configurationContext, commandName, 1, Integer.MAX_VALUE);
         readBackend = new RollbackReadBackend(configurationContext);
         worldEditEnabled = configurationContext.isWorldEditEnabled();
     }
 
     @Override
     protected boolean executeForPlayer(Player player, TypeSafeList<String> args) {
+        return rollback(player, args, false);
+    }
+
+    protected final boolean rollback(Player player, TypeSafeList<String> args, boolean force) {
         QueryParameters queryParams = QueryUtil.parseArgs(player, args);
         if (queryParams == null) {
             return true;
@@ -64,12 +73,12 @@ public class CommandInsightRollback extends PlayerOnlyCommand {
             }
         }
 
-        readBackend.rollback(player.getName(), queryBuilder.build(), true);
+        readBackend.rollback(player.getName(), queryBuilder.build(), force);
         return true;
     }
 
     @Override
-    public TypeSafeList<String> onTabComplete(CommandSender sender, TypeSafeList<String> args) {
+    public final TypeSafeList<String> onTabComplete(CommandSender sender, TypeSafeList<String> args) {
         return TypeSafeCollections.emptyList();
     }
 }

@@ -11,7 +11,7 @@ public enum Commands implements PermissionsEnum {
     }
 
     public enum InsightCommands implements PermissionsEnum {
-        LOOKUP, NEXT, ROLLBACK, PAGE, PREV, TP, WAND;
+        FORCEROLLBACK, LOOKUP, NEXT, ROLLBACK, PAGE, PREV, TP, WAND;
 
         @Override
         public String getPrefix() {
