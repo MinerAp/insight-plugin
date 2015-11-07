@@ -1,5 +1,6 @@
 package com.amshulman.insight.event.block;
 
+import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -11,6 +12,7 @@ import com.amshulman.insight.types.EventCompat;
 import com.amshulman.insight.util.InsightConfigurationContext;
 import com.amshulman.insight.util.NonPlayerLookup;
 import com.amshulman.insight.util.Util;
+import com.amshulman.insight.util.craftbukkit.BlockUtil;
 
 public class BlockFadeListener extends InternalEventHandler<BlockFadeEvent> {
 
@@ -47,6 +49,10 @@ public class BlockFadeListener extends InternalEventHandler<BlockFadeEvent> {
                 }
                 break;
             default:
+                if (event.getNewState().getType() == Material.AIR && BlockUtil.getInstance().willIgnite(event.getBlock())) {
+                    break; // https://hub.spigotmc.org/jira/browse/SPIGOT-1264
+                }
+
                 System.out.println("BlockFadeListener - ??? " + event.getBlock().getLocation() + ": " + event.getBlock().getType() + " -> " + event.getNewState().getType());
                 return;
         }
