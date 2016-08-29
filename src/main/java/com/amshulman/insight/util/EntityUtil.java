@@ -21,6 +21,14 @@ public final class EntityUtil {
     }
 
     public static String getName(EntityType type) {
-        return type.getName();
+        switch (type) {
+            case PRIMED_TNT:
+            case MINECART_TNT:
+                return "TNT";
+            case EXPERIENCE_ORB:
+                return "XP Orb";
+            default:
+                return type.getName();
+        }
     }
 }
