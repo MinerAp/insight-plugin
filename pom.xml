@@ -41,7 +41,7 @@
 	</distributionManagement>
 
 	<properties>
-		<worldedit.version>5.6.2</worldedit.version>
+		<worldedit.version>6.1</worldedit.version>
 	</properties>
 
 	<dependencies>
@@ -94,8 +94,20 @@
 
 		<!-- WorldEdit -->
 		<dependency>
-			<groupId>com.sk89q</groupId>
-			<artifactId>worldedit</artifactId>
+			<groupId>com.sk89q.worldedit</groupId>
+			<artifactId>worldedit-bukkit</artifactId>
+			<version>${worldedit.version}</version>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.sk89q.worldedit</groupId>
+			<artifactId>worldedit-core</artifactId>
 			<version>${worldedit.version}</version>
 			<scope>provided</scope>
 			<exclusions>

@@ -5,9 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.amshulman.insight.query.QueryParameterBuilder;
 import com.sk89q.worldedit.IncompleteRegionException;
-import com.sk89q.worldedit.LocalPlayer;
 import com.sk89q.worldedit.LocalSession;
-import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.regions.Region;
 
@@ -32,12 +30,11 @@ public class WorldEditBridge {
         Region region = null;
 
         try {
-            LocalPlayer lp = new BukkitPlayer(worldEditPlugin, worldEditPlugin.getWorldEdit().getServer(), player);
-            LocalSession ls = worldEditPlugin.getWorldEdit().getSession(lp);
-            if (!ls.isSelectionDefined(lp.getWorld())) {
+            LocalSession ls = worldEditPlugin.getSession(player);
+            if (!ls.isSelectionDefined(ls.getSelectionWorld())) {
                 return false;
             }
-            region = ls.getSelection(lp.getWorld());
+            region = ls.getSelection(ls.getSelectionWorld());
         } catch (IncompleteRegionException e) {
             e.printStackTrace();
             return false;
