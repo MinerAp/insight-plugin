@@ -8,6 +8,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.block.Skull;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -39,10 +40,26 @@ public class BlockBreakListener extends InternalEventHandler<BlockBreakEvent> {
             case CHEST:
             case TRAPPED_CHEST:
                 Chest chest = (Chest) block;
-                Location location = chest.getLocation();
+                Location destroyedChest = chest.getLocation();
+                Location otherChest = null;
+                if (chest.getInventory().getHolder() instanceof DoubleChest) {
+                    DoubleChest dc = (DoubleChest) chest.getInventory().getHolder();
+                    Chest left = (Chest) dc.getLeftSide();
+                    Chest right = (Chest) dc.getRightSide();
+                    if (destroyedChest.equals(left.getLocation())) {
+                        otherChest = right.getLocation();
+                    } else if (destroyedChest.equals(right.getLocation())) {
+                        otherChest = left.getLocation();
+                    } else {
+                        System.err.println("Double chest destroyed but neither half is the destroyed chest");
+                    }
+                }
                 for (ItemStack item : chest.getBlockInventory()) {
                     if (item != null) {
-                        add(new ItemRowEntry(time, name, EventCompat.ITEM_REMOVE, location, item));
+                        add(new ItemRowEntry(time, name, EventCompat.ITEM_REMOVE, destroyedChest, item));
+                        if (otherChest != null) {
+                            add(new ItemRowEntry(time, name, EventCompat.ITEM_REMOVE, otherChest, item));
+                        }
                     }
                 }
                 ++time;
