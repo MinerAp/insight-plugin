@@ -1,11 +1,8 @@
 package com.amshulman.insight.results;
 
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
+final class ChatTextHover extends ChatHover {
 
-@FieldDefaults(level = AccessLevel.PRIVATE) class ChatTextHover extends ChatHover {
-
-    ChatTextHover(ChatRootMessage chatRootMessage) {
-        super(HoverEventType.show_text, chatRootMessage);
+    ChatTextHover(String message) {
+        super(HoverEventType.show_text, message);
     }
 }

@@ -1,14 +1,12 @@
 package com.amshulman.insight.command.insight;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import com.amshulman.insight.management.PlayerInfoManager;
 import com.amshulman.insight.results.ResultSetFormatter;
 import com.amshulman.insight.util.Commands.InsightCommands;
 import com.amshulman.insight.util.InsightConfigurationContext;
 import com.amshulman.insight.util.PlayerInfo;
-import com.amshulman.insight.util.craftbukkit.PlayerUtil;
 import com.amshulman.mbapi.commands.ConsoleAndPlayerCommand;
 import com.amshulman.typesafety.TypeSafeCollections;
 import com.amshulman.typesafety.TypeSafeList;
@@ -40,12 +38,8 @@ public class CommandInsightPage extends ConsoleAndPlayerCommand {
         }
 
         playerInfo.setLastRequestedPage(pageNum);
-        if (sender instanceof Player) {
-            PlayerUtil.getInstance().sendRawMessages((Player) sender, ResultSetFormatter.formatResults(playerInfo.getLastResults(), playerInfo.getLastRequestedPage(), true));
-        } else {
-            sender.sendMessage(ResultSetFormatter.formatResults(playerInfo.getLastResults(), playerInfo.getLastRequestedPage(), false));
-        }
-
+        ResultSetFormatter resultFormatter = new ResultSetFormatter(playerInfo.getLastResults(), pageNum);
+        resultFormatter.sendResults(sender);
         return true;
     }
 

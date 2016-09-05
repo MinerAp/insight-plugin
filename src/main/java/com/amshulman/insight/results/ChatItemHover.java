@@ -2,10 +2,6 @@ package com.amshulman.insight.results;
 
 import java.lang.reflect.Type;
 
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -21,38 +17,27 @@ import com.google.gson.reflect.TypeToken;
 final class ChatItemHover extends ChatHover {
 
     ChatItemHover(Material mat) {
-        super(HoverEventType.show_item, new ItemHolder(mat));
+        this(mat, (short) 0);
     }
 
-    public void setDamage(short damage) {
-        ((ItemHolder) value).damage = damage;
+    ChatItemHover(Material mat, short damage) {
+        super(HoverEventType.show_item, new ItemStack(mat, 1, damage));
     }
 
-    public void setMetadata(ItemMeta meta) {
-        ((ItemHolder) value).itemMeta = meta;
+    void setMetadata(ItemMeta meta) {
+        ((ItemStack) value).setItemMeta(meta);
     }
 
-    @FieldDefaults(level = AccessLevel.PRIVATE)
-    @RequiredArgsConstructor
-    private static class ItemHolder {
-
-        final Material material;
-        short damage = 0;
-        ItemMeta itemMeta = null;
-    }
-
-    private static final class ItemHolderTypeAdapter implements JsonSerializer<ItemHolder> {
+    private static final class ItemHolderTypeAdapter implements JsonSerializer<ItemStack> {
 
         @Override
-        public JsonElement serialize(ItemHolder src, Type typeOfSrc, JsonSerializationContext context) {
-            ItemStack itemStack = new ItemStack(src.material, 1, src.damage);
-            itemStack.setItemMeta(src.itemMeta);
-            return new JsonPrimitive(ItemStackUtil.getInstance().serializeItemAsJson(itemStack));
+        public JsonElement serialize(ItemStack src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(ItemStackUtil.getInstance().serializeItemAsJson(src));
         }
     }
 
     static GsonBuilder registerTypeAdapter(GsonBuilder builder) {
-        builder.registerTypeAdapter(new TypeToken<ItemHolder>() {}.getType(), new ItemHolderTypeAdapter());
+        builder.registerTypeAdapter(new TypeToken<ItemStack>() {}.getType(), new ItemHolderTypeAdapter());
         return builder;
     }
 }

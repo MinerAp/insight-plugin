@@ -2,16 +2,19 @@ package com.amshulman.insight.results;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 
 import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.javatuples.Pair;
 
@@ -19,6 +22,7 @@ import com.amshulman.insight.action.BlockAction;
 import com.amshulman.insight.action.EntityAction;
 import com.amshulman.insight.action.ItemAction;
 import com.amshulman.insight.query.QueryParameters;
+import com.amshulman.insight.results.UnformattedResults.ResultRow;
 import com.amshulman.insight.serialization.BlockMetadata;
 import com.amshulman.insight.serialization.ItemMetadata;
 import com.amshulman.insight.serialization.SignMeta;
@@ -26,364 +30,235 @@ import com.amshulman.insight.serialization.SkullMeta;
 import com.amshulman.insight.types.EventCompat;
 import com.amshulman.insight.types.InsightLocation;
 import com.amshulman.insight.types.MaterialCompat;
-import com.amshulman.mbapi.util.CoreTypes;
-import com.amshulman.typesafety.TypeSafeList;
-import com.amshulman.typesafety.impl.TypeSafeListImpl;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public final class ResultSetFormatter {
 
-    private static final DateFormat df = new SimpleDateFormat("MM-dd HH:mm:ss");
+    static DateFormat DATE_FORMAT = new SimpleDateFormat("MM-dd HH:mm:ss");
 
-    @Setter private static int pageSize = 9;
+    @NonFinal @Setter static int pageSize = 9;
 
-    private static final ChatColor HEADER_ACCENT = ChatColor.GOLD;
-    private static final ChatColor HEADER_BASE = ChatColor.GRAY;
-    private static final ChatColor BODY_ACCENT = ChatColor.RED;
-    private static final ChatColor BODY_BASE = ChatColor.GRAY;
+    static ChatColor HEADER_ACCENT = ChatColor.GOLD;
+    static ChatColor HEADER_BASE = ChatColor.GRAY;
+    static ChatColor BODY_ACCENT = ChatColor.RED;
+    static ChatColor BODY_BASE = ChatColor.GRAY;
 
-    public static String[] formatError(Throwable e, boolean fancyResults) {
-        String msg;
-        if (e == null || e.getMessage() == null) {
-            msg = "An unknown error occured. Please check the logs";
-        } else {
-            msg = e.getMessage();
-        }
+    @Getter InsightResultSet resultSet;
+    int pageNumber;
+    boolean multipleBlocks;
+    boolean multipleWorlds;
+    UnformattedResults results = new UnformattedResults();
 
-        if (fancyResults) {
-            msg = new Gson().toJson(new ChatMessage(msg).setColor(ChatColor.RED));
-        } else {
-            msg = ChatColor.RED + msg;
-        }
+    public ResultSetFormatter(InsightResultSet rs, int pageNumber) {
+        resultSet = rs;
+        this.pageNumber = pageNumber;
 
-        return new String[] { msg };
+        QueryParameters params = rs.getQueryParameters();
+        multipleBlocks = !(params.isLocationSet() && params.getRadius() == 0);
+        multipleWorlds = params.getWorlds().size() != 1;
+
+        prepareResults();
     }
 
-    public static String[] formatResults(InsightResultSet resultSet, int pageNumber, boolean fancyResults) {
-        if (resultSet == null) {
-            return null;
+    public void sendResults(CommandSender sender) {
+        if (sender == null) {
+            return;
+        } else if (sender instanceof Player) {
+            FancyTextFormatter.send((Player) sender, results);
+        } else {
+            PlainTextFormatter.send(sender, results);
         }
+    }
 
-        Gson gson = fancyResults ? ChatItemHover.registerTypeAdapter(new GsonBuilder()).create() : null;
-        TypeSafeList<String> messages = new TypeSafeListImpl<String>(new ArrayList<String>(pageSize + 1), CoreTypes.STRING);
+    private void prepareResults() {
+        if (resultSet == null) {
+            throw new NullPointerException();
+        }
 
         if (resultSet.getSize() == 0) {
-            if (fancyResults) {
-                messages.add(gson.toJson(new ChatMessage("No results found.")));
-            } else {
-                messages.add("No results found.");
-            }
-
-            return messages.toArray();
-        }
-
-        if (fancyResults) {
-            messages.add(gson.toJson(prepareFancyHeader(resultSet, pageNumber)));
-        } else {
-            messages.add(buildHeader(resultSet, pageNumber));
+            results.getHeaderRow().setError("No results found.").setColor(HEADER_BASE);
+            return;
         }
 
         int start = (pageNumber - 1) * pageSize;
-        int end = pageNumber * pageSize;
+        int end = Math.min(pageNumber * pageSize, resultSet.getSize());
 
         if (start > resultSet.getSize() || pageNumber <= 0) {
-            if (fancyResults) {
-                messages.add(gson.toJson(String.format("There is no page %d.", pageNumber)));
-            } else {
-                messages.add(String.format("There is no page %d.", pageNumber));
-            }
-
-            return messages.toArray();
+            results.getHeaderRow().setError(String.format("There is no page %d.", pageNumber)).setColor(HEADER_BASE);
+            return;
         }
 
-        if (end > resultSet.getSize()) {
-            end = resultSet.getSize();
-        }
+        buildHeader();
 
-        if (fancyResults) {
-            buildFancyResults(gson, resultSet.getResultSubset(start, end), messages, start);
-        } else {
-            buildResults(resultSet.getResultSubset(start, end), messages, start);
+        int rowNumber = 1;
+        for (InsightRecord<?> r : resultSet.getResultSubset(start, end)) {
+            buildResultRow(r, rowNumber);
+            ++rowNumber;
         }
-
-        return messages.toArray();
     }
 
-    private static String buildHeader(InsightResultSet resultSet, int pageNumber) {
-        StringBuilder sb = new StringBuilder(100).append(HEADER_BASE);
+    private void buildHeader() {
         QueryParameters params = resultSet.getQueryParameters();
 
         if (params.isLocationSet() && params.getRadius() == 0) {
-            sb.append("Examining changes at ")
-              .append(HEADER_ACCENT).append(formatLocation(params.getPoint()))
-              .append(HEADER_BASE).append(" in ")
-              .append(HEADER_ACCENT).append(params.getPoint().getWorld());
+            StringBuilder sb = new StringBuilder(100);
+            sb.append(HEADER_BASE).append("Examining changes at ");
+            sb.append(HEADER_ACCENT).append(formatLocation(params.getPoint()));
+            sb.append(HEADER_BASE).append(" in ");
+            results.getHeaderRow().setExamineMessage(sb.toString());
+            results.getHeaderRow().setNumWorldsMessage(HEADER_ACCENT + params.getPoint().getWorld());
         } else {
-            TypeSafeList<String> worlds = new TypeSafeListImpl<String>(new ArrayList<String>(params.getWorlds()), CoreTypes.STRING);
-            Collections.sort(worlds.getCollection(), String.CASE_INSENSITIVE_ORDER);
+            String[] worlds = params.getWorlds().toArray(new String[0]);
+            Arrays.sort(worlds, String.CASE_INSENSITIVE_ORDER);
 
-            if (worlds.size() == 1) {
-                sb.append("Examining changes in ").append(HEADER_ACCENT).append(worlds.get(0));
-            } else if (worlds.size() == 2) {
-                sb.append("Examining changes across ")
-                  .append(HEADER_ACCENT).append(worlds.get(0))
-                  .append(HEADER_BASE).append(" and ")
-                  .append(HEADER_ACCENT + worlds.get(1));
+            if (worlds.length == 1) {
+                results.getHeaderRow().setExamineMessage(HEADER_BASE + "Examining changes in ");
+                results.getHeaderRow().setNumWorldsMessage(HEADER_ACCENT + worlds[0]);
             } else {
-                sb.append("Examining changes across ").append(HEADER_ACCENT).append(worlds.get(0));
-                for (int i = 1; i < worlds.size() - 1; ++i) {
-                    sb.append(HEADER_BASE).append(", ").append(HEADER_ACCENT).append(worlds.get(i));
-                }
-                sb.append(HEADER_BASE).append(", and ").append(HEADER_ACCENT).append(worlds.get(worlds.size() - 1));
+                results.getHeaderRow().setExamineMessage(HEADER_BASE + "Examining changes across ");
+                results.getHeaderRow().setNumWorldsMessage(HEADER_ACCENT + Integer.toString(worlds.length) + " worlds");
+                results.getHeaderRow().setWorldsHoverMessage(listWorlds(worlds));
             }
         }
 
-        sb.append(HEADER_BASE).append(", page ")
-          .append(HEADER_ACCENT).append(pageNumber)
-          .append(HEADER_BASE).append(" of ")
-          .append(HEADER_ACCENT).append((resultSet.getSize() + pageSize - 1) / pageSize)
-          .append(HEADER_BASE).append(":");
+        StringBuilder sb = new StringBuilder(100);
+        sb.append(HEADER_BASE).append(", page ");
+        sb.append(HEADER_ACCENT).append(pageNumber);
+        sb.append(HEADER_BASE).append(" of ");
+        sb.append(HEADER_ACCENT).append((resultSet.getSize() + pageSize - 1) / pageSize);
+        sb.append(HEADER_BASE).append(":");
+        results.getHeaderRow().setPagesMessage(sb.toString());
+    }
 
+    private String listWorlds(String[] worlds) {
+        StringBuilder sb = new StringBuilder(100);
+        if (worlds.length == 1) {
+            sb.append(HEADER_ACCENT).append(worlds[0]);
+        } else if (worlds.length == 2) {
+            sb.append(HEADER_ACCENT).append(worlds[0]);
+            sb.append(HEADER_BASE).append(" and ");
+            sb.append(HEADER_ACCENT).append(worlds[1]);
+        } else {
+            sb.append(HEADER_ACCENT).append(worlds[0]);
+            for (int i = 1; i < worlds.length - 1; ++i) {
+                sb.append(HEADER_BASE).append(", ");
+                sb.append(HEADER_ACCENT).append(worlds[1]);
+            }
+            sb.append(HEADER_BASE).append(", and ");
+            sb.append(HEADER_ACCENT).append(worlds[worlds.length - 1]);
+        }
         return sb.toString();
     }
 
-    private static ChatRootMessage prepareFancyHeader(InsightResultSet resultSet, int pageNumber) {
-        ChatRootMessage rootMessage = new ChatRootMessage();
-        QueryParameters params = resultSet.getQueryParameters();
+    private void buildResultRow(InsightRecord<?> r, int rowNumber) {
+        ResultRow resultRow = results.addResultRow();
+        resultRow.setRowNumber("[" + rowNumber + "]").setColor(BODY_ACCENT);
 
-        if (params.isLocationSet() && params.getRadius() == 0) {
-            rootMessage.addMessage(new ChatMessage("Examining changes at ").setColor(HEADER_BASE));
-            rootMessage.addMessage(new ChatMessage(formatLocation(params.getPoint())).setColor(HEADER_ACCENT));
-            rootMessage.addMessage(new ChatMessage(" in ").setColor(HEADER_BASE));
-            rootMessage.addMessage(new ChatMessage(params.getPoint().getWorld()).setColor(HEADER_ACCENT));
-        } else {
-            TypeSafeList<String> worlds = new TypeSafeListImpl<String>(new ArrayList<String>(params.getWorlds()), CoreTypes.STRING);
-            Collections.sort(worlds.getCollection(), String.CASE_INSENSITIVE_ORDER);
-
-            if (worlds.size() == 1) {
-                rootMessage.addMessage(new ChatMessage("Examining changes in ").setColor(HEADER_BASE));
-                rootMessage.addMessage(new ChatMessage(worlds.get(0)).setColor(HEADER_ACCENT));
-            } else {
-                rootMessage.addMessage(new ChatMessage("Examining changes across ").setColor(HEADER_BASE));
-                ChatRootMessage worldsText = new ChatRootMessage();
-
-                if (worlds.size() == 2) {
-                    worldsText.addMessage(new ChatMessage(worlds.get(0)).setColor(HEADER_ACCENT));
-                    worldsText.addMessage(new ChatMessage(" and ").setColor(HEADER_BASE));
-                    worldsText.addMessage(new ChatMessage(worlds.get(1)).setColor(HEADER_ACCENT));
-                } else {
-                    worldsText.addMessage(new ChatMessage(worlds.get(0)).setColor(HEADER_ACCENT));
-                    for (int i = 1; i < worlds.size() - 1; ++i) {
-                        worldsText.addMessage(new ChatMessage(", ").setColor(HEADER_BASE));
-                        worldsText.addMessage(new ChatMessage(worlds.get(i)).setColor(HEADER_ACCENT));
-                    }
-                    worldsText.addMessage(new ChatMessage(", and ").setColor(HEADER_BASE));
-                    worldsText.addMessage(new ChatMessage(worlds.get(worlds.size() - 1)).setColor(HEADER_ACCENT));
-                }
-
-                rootMessage.addMessage(new ChatMessage(worlds.size() + " worlds").setColor(HEADER_ACCENT).setHoverEvent(new ChatTextHover(worldsText)));
-            }
-        }
-
-        rootMessage.addMessage(new ChatMessage(", page ").setColor(HEADER_BASE));
-        rootMessage.addMessage(new ChatMessage(Integer.toString(pageNumber)).setColor(HEADER_ACCENT));
-        rootMessage.addMessage(new ChatMessage(" of ").setColor(HEADER_BASE));
-        rootMessage.addMessage(new ChatMessage(Integer.toString((resultSet.getSize() + pageSize - 1) / pageSize)).setColor(HEADER_ACCENT));
-        rootMessage.addMessage(new ChatMessage(":").setColor(HEADER_BASE));
-        return rootMessage;
-    }
-
-    private static void buildResults(InsightResultSet resultSet, TypeSafeList<String> messages, int current) {
-        QueryParameters params = resultSet.getQueryParameters();
-        boolean multipleBlocks = !(params.isLocationSet() && params.getRadius() == 0);
-        boolean multipleWorlds = params.getWorlds().size() > 1;
-
-        for (InsightRecord<?> r : resultSet) {
-            StringBuilder msg = new StringBuilder();
-            ++current;
-
-            // record id
-            msg.append(BODY_ACCENT).append("[").append(current).append("] ");
-
-            msg.append(BODY_BASE).append(df.format(r.getDatetime())).append(' '); // date and time
-            msg.append(ChatColor.WHITE).append(r.getActor()).append(' '); // actor
-            msg.append(r.getAction().getFriendlyDescription()); // action
-
-            if (r.getAction() instanceof BlockAction) {
-                msg.append(' ').append(MaterialCompat.getFriendlyName(r.getMaterial()));
-            } else if (r.getAction() instanceof EntityAction) {
-                if (r.getAction() != EventCompat.ENTITY_DEATH) {
-                    msg.append(' ').append(r.getActee());
-                }
-            } else if (r.getAction() instanceof ItemAction) {
-                if (r.getAction() != EventCompat.ITEM_ROTATE) {
-                    int quantity = 1;
-
-                    if (r.getMetadata() != null) {
-                        quantity = ((ItemMetadata) r.getMetadata()).getQuantity();
-                    }
-
-                    msg.append(' ').append(quantity);
-                }
-
-                msg.append(' ').append(MaterialCompat.getFriendlyName(r.getMaterial()));
-            }
-
-            if (multipleBlocks) {
-                msg.append(' ').append(formatLocation(r.getLocation()));
-            }
-
+        if (multipleBlocks) {
+            String location = formatLocation(r.getLocation());
             if (multipleWorlds) {
-                msg.append(" in " + r.getLocation().getWorld());
+                location += " in " + r.getLocation().getWorld();
+            }
+            resultRow.setLocation(location).setColor(BODY_BASE);
+        }
+
+        // date and time
+        resultRow.setDatetime(DATE_FORMAT.format(r.getDatetime())).setColor(BODY_BASE);
+
+        // actor
+        resultRow.setActor(r.getActor());
+
+        // action
+        resultRow.setAction(r.getAction().getFriendlyDescription());
+
+        // actee/material and hover
+        if (r.getAction() instanceof BlockAction) {
+            resultRow.setActeeOrMaterial(MaterialCompat.getFriendlyName(r.getMaterial()));
+            resultRow.setActeeOrMaterialHover(getBlockHover(r));
+        } else if (r.getAction() instanceof EntityAction) {
+            if (r.getAction() != EventCompat.ENTITY_DEATH) {
+                resultRow.setActeeOrMaterial(r.getActee());
+            }
+        } else if (r.getAction() instanceof ItemAction) {
+            String item = MaterialCompat.getFriendlyName(r.getMaterial());
+            if (r.getAction() != EventCompat.ITEM_ROTATE) {
+                int quantity = r.getMetadata() == null ? 1 : ((ItemMetadata) r.getMetadata()).getQuantity();
+                item = quantity + " " + item;
             }
 
-            messages.add(msg.toString());
+            resultRow.setActeeOrMaterial(item);
+            resultRow.setActeeOrMaterialHover(getItemHover(r));
         }
     }
 
-    private static void buildFancyResults(Gson gson, InsightResultSet resultSet, TypeSafeList<String> messages, int current) {
-        QueryParameters params = resultSet.getQueryParameters();
-        boolean multipleBlocks = !(params.isLocationSet() && params.getRadius() == 0);
+    private static ChatHover getBlockHover(InsightRecord<?> r) {
+        Pair<Material, Short> mat = MaterialCompat.getBukkitMaterial(r.getMaterial().getName(), r.getMaterial().getSubtype());
 
-        for (InsightRecord<?> r : resultSet) {
-            ChatRootMessage rootMessage = new ChatRootMessage();
-            ++current;
-
-            // record id
-            if (multipleBlocks) {
-                String location = formatLocation(r.getLocation());
-                rootMessage.addMessage(new ChatMessage("[" + current + "]").setHoverEvent(new ChatTextHover(new ChatMessage(location))).setColor(BODY_ACCENT));
-                rootMessage.addMessage(new ChatMessage(" "));
+        try {
+            if (r.getAction() == EventCompat.SIGN_CHANGE) {
+                SignMeta meta = (SignMeta) ((BlockMetadata) r.getMetadata()).getMeta();
+                return new ChatTextHover(StringUtils.join(meta.getText(), '\n'));
             } else {
-                rootMessage.addMessage(new ChatMessage("[" + current + "] ").setColor(BODY_ACCENT));
+                switch (mat.getValue0()) {
+                case BED_BLOCK:
+                    return new ChatItemHover(Material.BED);
+                case REDSTONE_WIRE:
+                    return new ChatItemHover(Material.REDSTONE);
+                case SIGN_POST:
+                case WALL_SIGN:
+                    return new ChatItemHover(Material.SIGN);
+                case WOODEN_DOOR:
+                    return new ChatItemHover(Material.WOOD_DOOR);
+                case IRON_DOOR_BLOCK:
+                    return new ChatItemHover(Material.IRON_DOOR);
+                case SUGAR_CANE_BLOCK:
+                    return new ChatItemHover(Material.SUGAR_CANE);
+                case CAKE_BLOCK:
+                    return new ChatItemHover(Material.CAKE);
+                case NETHER_WARTS:
+                    return new ChatItemHover(Material.NETHER_STALK);
+                case BREWING_STAND:
+                    return new ChatItemHover(Material.BREWING_STAND_ITEM);
+                case CAULDRON:
+                    return new ChatItemHover(Material.CAULDRON_ITEM);
+                case COCOA:
+                    return new ChatItemHover(Material.INK_SACK, (short) 3);
+                case TRIPWIRE:
+                    return new ChatItemHover(Material.STRING);
+                case FLOWER_POT:
+                    return new ChatItemHover(Material.FLOWER_POT_ITEM);
+                case CARROT:
+                    return new ChatItemHover(Material.CARROT_ITEM);
+                case POTATO:
+                    return new ChatItemHover(Material.POTATO_ITEM);
+                case SKULL:
+                    ItemStack skull = ((SkullMeta) ((BlockMetadata) r.getMetadata()).getMeta()).getItemStack();
+                    ChatItemHover skullHover = new ChatItemHover(Material.SKULL_ITEM, skull.getDurability());
+                    skullHover.setMetadata(skull.getItemMeta());
+                    return skullHover;
+                case REDSTONE_COMPARATOR_OFF:
+                case REDSTONE_COMPARATOR_ON:
+                    return new ChatItemHover(Material.REDSTONE_COMPARATOR);
+                case AIR:
+                    return null;
+                default:
+                    return new ChatItemHover(mat.getValue0(), mat.getValue1());
+                }
             }
-
-            // date and time
-            rootMessage.addMessage(new ChatMessage(df.format(r.getDatetime()) + " ").setColor(BODY_BASE));
-
-            // actor
-            rootMessage.addMessage(new ChatMessage(r.getActor() + " "));
-
-            // action
-            rootMessage.addMessage(new ChatMessage(r.getAction().getFriendlyDescription()));
-
-            if (r.getAction() instanceof BlockAction) {
-                ChatMessage msg = new ChatMessage(" " + MaterialCompat.getFriendlyName(r.getMaterial()));
-                Pair<Material, Short> mat = MaterialCompat.getBukkitMaterial(r.getMaterial().getName(), r.getMaterial().getSubtype());
-                ChatHover hover = null;
-
-                try {
-                    if (r.getAction() == EventCompat.SIGN_CHANGE) {
-                        SignMeta meta = (SignMeta) ((BlockMetadata) r.getMetadata()).getMeta();
-                        hover = new ChatTextHover(new ChatMessage(StringUtils.join(meta.getText(), '\n')));
-                    } else {
-                        switch (mat.getValue0()) {
-                            case BED_BLOCK:
-                                hover = new ChatItemHover(Material.BED);
-                                break;
-                            case REDSTONE_WIRE:
-                                hover = new ChatItemHover(Material.REDSTONE);
-                                break;
-                            case SIGN_POST:
-                            case WALL_SIGN:
-                                hover = new ChatItemHover(Material.SIGN);
-                                break;
-                            case WOODEN_DOOR:
-                                hover = new ChatItemHover(Material.WOOD_DOOR);
-                                break;
-                            case IRON_DOOR_BLOCK:
-                                hover = new ChatItemHover(Material.IRON_DOOR);
-                                break;
-                            case SUGAR_CANE_BLOCK:
-                                hover = new ChatItemHover(Material.SUGAR_CANE);
-                                break;
-                            case CAKE_BLOCK:
-                                hover = new ChatItemHover(Material.CAKE);
-                                break;
-                            case NETHER_WARTS:
-                                hover = new ChatItemHover(Material.NETHER_STALK);
-                                break;
-                            case BREWING_STAND:
-                                hover = new ChatItemHover(Material.BREWING_STAND_ITEM);
-                                break;
-                            case CAULDRON:
-                                hover = new ChatItemHover(Material.CAULDRON_ITEM);
-                                break;
-                            case COCOA:
-                                hover = new ChatItemHover(Material.INK_SACK);
-                                ((ChatItemHover) hover).setDamage((short) 3);
-                                break;
-                            case TRIPWIRE:
-                                hover = new ChatItemHover(Material.STRING);
-                                break;
-                            case FLOWER_POT:
-                                hover = new ChatItemHover(Material.FLOWER_POT_ITEM);
-                                break;
-                            case CARROT:
-                                hover = new ChatItemHover(Material.CARROT_ITEM);
-                                break;
-                            case POTATO:
-                                hover = new ChatItemHover(Material.POTATO_ITEM);
-                                break;
-                            case SKULL:
-                                ItemStack skull = ((SkullMeta) ((BlockMetadata) r.getMetadata()).getMeta()).getItemStack();
-                                hover = new ChatItemHover(Material.SKULL_ITEM);
-                                ((ChatItemHover) hover).setDamage(skull.getDurability());
-                                ((ChatItemHover) hover).setMetadata(skull.getItemMeta());
-                                break;
-                            case REDSTONE_COMPARATOR_OFF:
-                            case REDSTONE_COMPARATOR_ON:
-                                hover = new ChatItemHover(Material.REDSTONE_COMPARATOR);
-                                break;
-                            case AIR:
-                                hover = null;
-                                break;
-                            default:
-                                hover = new ChatItemHover(mat.getValue0());
-                                if (mat.getValue1() != 0) {
-                                    ((ChatItemHover) hover).setDamage(mat.getValue1());
-                                }
-                                break;
-                        }
-                    }
-                } catch (NullPointerException e) {
-                    System.err.println("Unreadable or missing metadata at " + r);
-                }
-
-                rootMessage.addMessage(msg.setHoverEvent(hover));
-            } else if (r.getAction() instanceof EntityAction) {
-                if (r.getAction() != EventCompat.ENTITY_DEATH) {
-                    rootMessage.addMessage(new ChatMessage(" " + r.getActee()));
-                }
-            } else if (r.getAction() instanceof ItemAction) {
-                Pair<Material, Short> mat = MaterialCompat.getBukkitMaterial(r.getMaterial().getName(), r.getMaterial().getSubtype());
-                ChatItemHover hover = new ChatItemHover(mat.getValue0());
-                int quantity = 1;
-
-                if (mat.getValue1() != 0) {
-                    hover.setDamage(mat.getValue1());
-                }
-
-                if (r.getMetadata() != null) {
-                    ItemMetadata itemMeta = (ItemMetadata) r.getMetadata();
-
-                    quantity = itemMeta.getQuantity();
-                    hover.setMetadata(itemMeta.getMeta());
-                }
-
-                if (r.getAction() != EventCompat.ITEM_ROTATE) {
-                    rootMessage.addMessage(new ChatMessage(" " + quantity + " "));
-                } else {
-                    rootMessage.addMessage(new ChatMessage(" "));
-                }
-
-                rootMessage.addMessage(new ChatMessage(MaterialCompat.getFriendlyName(r.getMaterial())).setHoverEvent(hover));
-            }
-
-            messages.add(gson.toJson(rootMessage));
+        } catch (NullPointerException e) {
+            System.err.println("Unreadable or missing metadata at " + r);
+            return null;
         }
+    }
+
+    private static ChatHover getItemHover(InsightRecord<?> r) {
+        Pair<Material, Short> mat = MaterialCompat.getBukkitMaterial(r.getMaterial().getName(), r.getMaterial().getSubtype());
+        ChatItemHover hover = new ChatItemHover(mat.getValue0(), mat.getValue1());
+        if (r.getMetadata() != null) {
+            ItemMetadata itemMeta = (ItemMetadata) r.getMetadata();
+            hover.setMetadata(itemMeta.getMeta());
+        }
+        return hover;
     }
 
     private static String formatLocation(InsightLocation l) {
