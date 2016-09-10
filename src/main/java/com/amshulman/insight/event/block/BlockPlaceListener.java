@@ -40,7 +40,7 @@ public class BlockPlaceListener extends InternalEventHandler<BlockPlaceEvent> {
 
         MetadataEntry meta = null;
         if (Material.SKULL.equals(event.getBlock().getType())) {
-            meta = new SkullMeta((Skull) event.getBlock().getState(), event.getPlayer().getItemInHand().getItemMeta());
+            meta = new SkullMeta((Skull) event.getBlock().getState());
         }
 
         BlockState previousBlock = Util.getBlockStateOrNullIfAir(event.getBlockReplacedState());
