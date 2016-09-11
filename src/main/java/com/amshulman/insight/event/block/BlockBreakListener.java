@@ -9,6 +9,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
+import org.bukkit.block.Sign;
 import org.bukkit.block.Skull;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -20,6 +21,7 @@ import com.amshulman.insight.event.InternalEventHandler;
 import com.amshulman.insight.row.BlockRowEntry;
 import com.amshulman.insight.row.ItemRowEntry;
 import com.amshulman.insight.serialization.MetadataEntry;
+import com.amshulman.insight.serialization.SignMeta;
 import com.amshulman.insight.serialization.SkullMeta;
 import com.amshulman.insight.types.EventCompat;
 
@@ -34,6 +36,9 @@ public class BlockBreakListener extends InternalEventHandler<BlockBreakEvent> {
 
         MetadataEntry meta = null;
         switch (block.getType()) {
+            case SIGN_POST:
+                meta = new SignMeta(((Sign) block).getLines());
+                break;
             case SKULL:
                 meta = new SkullMeta((Skull) block);
                 break;
