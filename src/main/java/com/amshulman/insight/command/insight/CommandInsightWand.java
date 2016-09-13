@@ -32,7 +32,7 @@ public class CommandInsightWand extends PlayerOnlyCommand {
     protected boolean executeForPlayer(Player player, TypeSafeList<String> args) {
         PlayerInfo playerInfo = infoManager.getPlayerInfo(player.getName());
         PlayerInventory inv = player.getInventory();
-        ItemStack inHand = inv.getItemInHand();
+        ItemStack inHand = inv.getItemInMainHand();
 
         boolean hasWands = false;
         ItemStack[] contents = inv.getContents();
@@ -71,7 +71,7 @@ public class CommandInsightWand extends PlayerOnlyCommand {
             inv.setItem(emptySlot, inHand);
         }
 
-        inv.setItemInHand(Util.getWand());
+        inv.setItemInMainHand(Util.getWand());
         return true;
     }
 

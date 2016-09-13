@@ -63,7 +63,7 @@ public class WandListener implements Listener {
     public void onWandDamage(HangingBreakByEntityEvent event) {
         if (event.getRemover() instanceof Player) {
             Player player = (Player) event.getRemover();
-            if (Util.isWand(player.getItemInHand())) {
+            if (Util.isWand(player.getInventory().getItemInMainHand())) {
                 query(player, event.getEntity().getLocation());
                 event.setCancelled(true);
             }
@@ -72,7 +72,7 @@ public class WandListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onWandDamage(PlayerInteractEntityEvent event) {
-        if (Util.isWand(event.getPlayer().getItemInHand())) {
+        if (Util.isWand(event.getPlayer().getInventory().getItemInMainHand())) {
             event.setCancelled(true);
         }
     }
@@ -81,7 +81,7 @@ public class WandListener implements Listener {
     public void onWandDamage(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Player) {
             Player player = (Player) event.getDamager();
-            if (Util.isWand(player.getItemInHand())) {
+            if (Util.isWand(player.getInventory().getItemInMainHand())) {
                 if (!(event.getEntity() instanceof LivingEntity)) {
                     query(player, event.getEntity().getLocation());
                 }
