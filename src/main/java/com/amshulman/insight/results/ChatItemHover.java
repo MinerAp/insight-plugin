@@ -9,7 +9,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.amshulman.insight.util.craftbukkit.ItemStackUtil;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
@@ -32,7 +31,7 @@ final class ChatItemHover extends ChatHover {
 
         @Override
         public JsonElement serialize(ItemStack src, Type typeOfSrc, JsonSerializationContext context) {
-            return new JsonPrimitive(ItemStackUtil.getInstance().serializeItemAsJson(src));
+            return ItemStackUtil.getInstance().serializeItemAsJson(src);
         }
     }
 
