@@ -82,24 +82,48 @@ public class EntityChangeBlockListener extends InternalEventHandler<EntityChange
                 } else {
                     add(new BlockRowEntry(when, EntityUtil.getName(passenger), EventCompat.BLOCK_BREAK, event.getBlock()));
                 }
-
+                break;
+            case VILLAGER:
+                if (event.getBlock().getType() == Material.AIR) {
+                    BlockState block = event.getBlock().getState();
+                    block.setType(event.getTo());
+                    add(new BlockRowEntry(when, EntityUtil.getName(EntityType.VILLAGER), EventCompat.BLOCK_PLACE, block));
+                } else if (event.getBlock().getType() == Material.SOIL) {
+                    logFarmlandTrample(when, event);
+                } else {
+                    add(new BlockRowEntry(when, EntityUtil.getName(EntityType.VILLAGER), EventCompat.BLOCK_BREAK, event.getBlock()));
+                }
+                break;
+            case RABBIT:
+                if (event.getBlock().getType() == Material.CARROT) {
+                    add(new BlockRowEntry(when, EntityUtil.getName(EntityType.RABBIT), EventCompat.BLOCK_BREAK, event.getBlock()));
+                }
+                break;
+            case ARROW:
+                if (event.getBlock().getType() == Material.TNT) {
+                    // TODO: Record TNT activating.
+                }
                 break;
             default:
                 if (event.getBlock().getType() == Material.REDSTONE_ORE) {
                     return; // Not logged
                 } else if (event.getBlock().getType() == Material.SOIL) {
-                    if (loggingFarmland) {
-                        BlockState newState = event.getBlock().getState();
-                        newState.setType(event.getTo());
-                        newState.setRawData((byte) 0);
-
-                        add(new BlockRowEntry(when, EntityUtil.getName(event.getEntity()), EventCompat.SOIL_TRAMPLE, event.getBlock(), newState));
-                    }
+                    logFarmlandTrample(when, event);
                     return;
                 }
 
                 System.out.println("EntityChangeBlockListener - ??? " + event.getEntityType() + " " + event.getBlock().getType());
                 break;
+        }
+    }
+
+    void logFarmlandTrample(long when, EntityChangeBlockEvent event) {
+        if (loggingFarmland) {
+            BlockState newState = event.getBlock().getState();
+            newState.setType(event.getTo());
+            newState.setRawData((byte) 0);
+
+            add(new BlockRowEntry(when, EntityUtil.getName(event.getEntity()), EventCompat.SOIL_TRAMPLE, event.getBlock(), newState));
         }
     }
 }

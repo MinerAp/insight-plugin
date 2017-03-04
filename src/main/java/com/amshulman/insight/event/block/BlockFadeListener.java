@@ -28,6 +28,7 @@ public class BlockFadeListener extends InternalEventHandler<BlockFadeEvent> {
         switch (event.getBlock().getType()) {
             case FIRE:
                 return; // Fire extinguishing is not covered
+            case FROSTED_ICE:
             case ICE:
             case SNOW:
                 newState = Util.getBlockStateOrNullIfAir(event.getNewState());

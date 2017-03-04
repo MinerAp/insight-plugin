@@ -17,6 +17,7 @@ public class BlockSpreadListener extends InternalEventHandler<BlockSpreadEvent> 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void listen(BlockSpreadEvent event) {
         switch (event.getSource().getType()) {
+            case CHORUS_FLOWER:
             case BROWN_MUSHROOM:
             case RED_MUSHROOM:
             case GRASS:
