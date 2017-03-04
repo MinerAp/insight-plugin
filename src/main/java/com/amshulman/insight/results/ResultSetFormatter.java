@@ -90,7 +90,7 @@ public final class ResultSetFormatter {
 
         buildHeader();
 
-        int rowNumber = 1;
+        int rowNumber = start + 1;
         for (InsightRecord<?> r : resultSet.getResultSubset(start, end)) {
             buildResultRow(r, rowNumber);
             ++rowNumber;
