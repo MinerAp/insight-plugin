@@ -7,6 +7,7 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import org.bukkit.block.ShulkerBox;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.AnvilInventory;
@@ -33,8 +34,8 @@ public class InventoryUtils {
         return DROPS_INGREDIENTS.contains(type);
     }
 
-    public static boolean hasItemRestrictions(InventoryType type) {
-        return ITEM_RESTRICTIONS.contains(type);
+    public static boolean hasItemRestrictions(Inventory inventory) {
+        return ITEM_RESTRICTIONS.contains(inventory.getType()) || inventory.getHolder() instanceof ShulkerBox;
     }
 
     public static boolean isResultsSlotNormalRemoval(InventoryAction action) {

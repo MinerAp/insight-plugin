@@ -49,6 +49,11 @@ public class InventoryInteractListener implements Listener {
             return;
         }
 
+        if (InventoryUtils.hasItemRestrictions(event.getInventory())) {
+            pernicious(event); // brewing stands, beacons, and shulker boxes only accept transfers of certain items
+            return;
+        }
+
         switch (event.getAction()) {
             /* Basic insertions */
             case PLACE_ALL:
@@ -106,8 +111,6 @@ public class InventoryInteractListener implements Listener {
             case MOVE_TO_OTHER_INVENTORY:
                 if (InventoryUtils.isLoggedContainerType(clickedInventoryType)) {
                     InventoryManager.recordItemRemoval(event.getInventory(), event.getWhoClicked(), event.getCurrentItem());
-                } else if (InventoryUtils.hasItemRestrictions(primaryInventoryType)) {
-                    pernicious(event); // brewing stands and beacons only accept transfers of certain items
                 } else if (!InventoryUtils.hasCraftingSemantics(primaryInventoryType)) {
                     InventoryManager.recordItemInsertion(event.getInventory(), event.getWhoClicked(), event.getCurrentItem());
                 }
