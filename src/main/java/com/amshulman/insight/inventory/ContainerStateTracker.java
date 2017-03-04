@@ -146,21 +146,21 @@ public class ContainerStateTracker {
                 int diff = itemAfter.getAmount() - itemBefore.getAmount();
 
                 if (diff != 0) {
-                    ItemStack changedStack = itemBefore.clone();
+                    ItemStack changedStack = new ItemStack(itemBefore);
                     changedStack.setAmount(diff);
                     changes.add(changedStack);
                 }
 
                 after.remove(itemAfter);
             } else { // complete removal
-                ItemStack changedStack = itemBefore.clone();
+                ItemStack changedStack = new ItemStack(itemBefore);
                 changedStack.setAmount(-itemBefore.getAmount());
                 changes.add(changedStack);
             }
         }
 
         for (ItemStack itemAfter : after) {
-            changes.add(itemAfter.clone());
+            changes.add(new ItemStack(itemAfter));
         }
 
         return changes;

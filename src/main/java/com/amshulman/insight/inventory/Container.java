@@ -43,7 +43,7 @@ public final class Container implements Iterable<ItemStack>, Cloneable {
             }
 
             if (stack.hasItemMeta() || stack.getDurability() != 0) {
-                add(stack.clone());
+                add(new ItemStack(stack));
                 continue;
             }
 

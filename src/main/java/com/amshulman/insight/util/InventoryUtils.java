@@ -70,7 +70,7 @@ public class InventoryUtils {
     }
 
     public static ItemStack cloneStack(ItemStack stack, int newAmount) {
-        ItemStack newStack = stack.clone();
+        ItemStack newStack = new ItemStack(stack);
         newStack.setAmount(newAmount);
         return newStack;
     }
