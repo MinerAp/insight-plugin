@@ -32,16 +32,16 @@
 	<distributionManagement>
 		<repository>
 			<id>minerap-release</id>
-			<url>http://repo.minerap.com/content/repositories/releases/</url>
+			<url>https://repo.minerap.com/repository/minerap-releases/</url>
 		</repository>
 		<snapshotRepository>
 			<id>minerap-snapshot</id>
-			<url>http://repo.minerap.com/content/repositories/snapshots/</url>
+			<url>https://repo.minerap.com/repository/minerap-snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
 	<properties>
-		<worldedit.version>6.1</worldedit.version>
+		<worldedit.version>6.1.4-SNAPSHOT</worldedit.version>
 	</properties>
 
 	<dependencies>
@@ -81,7 +81,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.amshulman</groupId>
-			<artifactId>insight-cb-v1_10_R1</artifactId>
+			<artifactId>insight-cb-v1_11_R1</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
 			<exclusions>
@@ -155,12 +155,12 @@
 		<repository>
 			<id>minerap-repo</id>
 			<name>MinerAp</name>
-			<url>http://repo.minerap.com/content/groups/public/</url>
+			<url>https://repo.minerap.com/repository/public/</url>
 		</repository>
 		<repository>
 			<id>sk89q-repo</id>
 			<name>WorldEdit</name>
-			<url>http://maven.sk89q.com/repo/</url>
+			<url>https://maven.sk89q.com/repo/</url>
 		</repository>
 	</repositories>
 
