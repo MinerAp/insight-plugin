@@ -1,7 +1,6 @@
 package com.amshulman.insight.results;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
 import lombok.AccessLevel;
@@ -34,7 +33,7 @@ import com.amshulman.insight.types.MaterialCompat;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public final class ResultSetFormatter {
 
-    static DateFormat DATE_FORMAT = new SimpleDateFormat("MM-dd HH:mm:ss");
+    static DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("MM-dd HH:mm:ss");
 
     @NonFinal @Setter static int pageSize = 9;
 
@@ -163,7 +162,7 @@ public final class ResultSetFormatter {
         }
 
         // date and time
-        resultRow.setDatetime(DATE_FORMAT.format(r.getDatetime())).setColor(BODY_BASE);
+        resultRow.setDatetime(r.getDatetime().format(DATE_FORMAT)).setColor(BODY_BASE);
 
         // actor
         resultRow.setActor(r.getActor());
